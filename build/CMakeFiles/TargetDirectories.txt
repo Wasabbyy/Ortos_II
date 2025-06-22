@@ -1,0 +1,3 @@
+/Users/filipstupar/Documents/BP_Game/build/CMakeFiles/BP_Game.dir
+/Users/filipstupar/Documents/BP_Game/build/CMakeFiles/edit_cache.dir
+/Users/filipstupar/Documents/BP_Game/build/CMakeFiles/rebuild_cache.dir
