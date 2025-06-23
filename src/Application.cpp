@@ -15,8 +15,13 @@ int main() {
 
     glfwMakeContextCurrent(window);
 
+// ✅ Add these lines to enable alpha blending
+glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
     Player player;
-    player.loadTexture("../assets/player_down1.png", 64, 64, 8); // Example sprite sheet
+    player.loadTexture("../assets/Vampire.png", 64, 64, 4); // Example sprite sheet
     InputHandler inputHandler;
 
     float lastTime = glfwGetTime();
@@ -25,13 +30,12 @@ int main() {
         float currentTime = glfwGetTime();
         float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
-
+    
         glClear(GL_COLOR_BUFFER_BIT);
-
-        inputHandler.processInput(window, player);
-        player.updateAnimation(deltaTime);
+    
+        inputHandler.processInput(window, player, deltaTime); // Pass deltaTime here
         player.draw();
-
+    
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
