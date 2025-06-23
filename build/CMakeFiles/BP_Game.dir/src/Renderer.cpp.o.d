@@ -1,6 +1,5 @@
-CMakeFiles/BP_Game.dir/src/main.cpp.o: \
-  /Users/filipstupar/Documents/BP_Game/src/main.cpp \
-  /Users/filipstupar/Documents/BP_Game/include/Application.hpp \
+CMakeFiles/BP_Game.dir/src/Renderer.cpp.o: \
+  /Users/filipstupar/Documents/BP_Game/src/Renderer.cpp \
   /Users/filipstupar/Documents/BP_Game/include/Renderer.hpp \
   /Users/filipstupar/Documents/BP_Game/include/Shader.hpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/string \
@@ -987,10 +986,4 @@ CMakeFiles/BP_Game.dir/src/main.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/stack \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__fwd/stack.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/print \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/unistd.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/unistd.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_posix_vdisable.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/select.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_select.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_uuid_t.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/gethostuuid.h
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/unistd.h

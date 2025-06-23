@@ -9,7 +9,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/filipstupar/Documents/BP_Game/src/glad.c" "CMakeFiles/BP_Game.dir/src/glad.c.o" "gcc" "CMakeFiles/BP_Game.dir/src/glad.c.o.d"
-  "/Users/filipstupar/Documents/BP_Game/src/main.cpp" "CMakeFiles/BP_Game.dir/src/main.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/main.cpp.o.d"
+  "/Users/filipstupar/Documents/BP_Game/src/Application.cpp" "CMakeFiles/BP_Game.dir/src/Application.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/Application.cpp.o.d"
+  "/Users/filipstupar/Documents/BP_Game/src/InputHandler.cpp" "CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o.d"
+  "/Users/filipstupar/Documents/BP_Game/src/Player.cpp" "CMakeFiles/BP_Game.dir/src/Player.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/Player.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

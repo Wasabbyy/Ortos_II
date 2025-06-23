@@ -72,10 +72,52 @@ include CMakeFiles/BP_Game.dir/flags.make
 CMakeFiles/BP_Game.dir/codegen:
 .PHONY : CMakeFiles/BP_Game.dir/codegen
 
+CMakeFiles/BP_Game.dir/src/Application.cpp.o: CMakeFiles/BP_Game.dir/flags.make
+CMakeFiles/BP_Game.dir/src/Application.cpp.o: /Users/filipstupar/Documents/BP_Game/src/Application.cpp
+CMakeFiles/BP_Game.dir/src/Application.cpp.o: CMakeFiles/BP_Game.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/BP_Game.dir/src/Application.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/BP_Game.dir/src/Application.cpp.o -MF CMakeFiles/BP_Game.dir/src/Application.cpp.o.d -o CMakeFiles/BP_Game.dir/src/Application.cpp.o -c /Users/filipstupar/Documents/BP_Game/src/Application.cpp
+
+CMakeFiles/BP_Game.dir/src/Application.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/BP_Game.dir/src/Application.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/BP_Game/src/Application.cpp > CMakeFiles/BP_Game.dir/src/Application.cpp.i
+
+CMakeFiles/BP_Game.dir/src/Application.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/BP_Game.dir/src/Application.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/BP_Game/src/Application.cpp -o CMakeFiles/BP_Game.dir/src/Application.cpp.s
+
+CMakeFiles/BP_Game.dir/src/Player.cpp.o: CMakeFiles/BP_Game.dir/flags.make
+CMakeFiles/BP_Game.dir/src/Player.cpp.o: /Users/filipstupar/Documents/BP_Game/src/Player.cpp
+CMakeFiles/BP_Game.dir/src/Player.cpp.o: CMakeFiles/BP_Game.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/BP_Game.dir/src/Player.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/BP_Game.dir/src/Player.cpp.o -MF CMakeFiles/BP_Game.dir/src/Player.cpp.o.d -o CMakeFiles/BP_Game.dir/src/Player.cpp.o -c /Users/filipstupar/Documents/BP_Game/src/Player.cpp
+
+CMakeFiles/BP_Game.dir/src/Player.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/BP_Game.dir/src/Player.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/BP_Game/src/Player.cpp > CMakeFiles/BP_Game.dir/src/Player.cpp.i
+
+CMakeFiles/BP_Game.dir/src/Player.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/BP_Game.dir/src/Player.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/BP_Game/src/Player.cpp -o CMakeFiles/BP_Game.dir/src/Player.cpp.s
+
+CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o: CMakeFiles/BP_Game.dir/flags.make
+CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o: /Users/filipstupar/Documents/BP_Game/src/InputHandler.cpp
+CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o: CMakeFiles/BP_Game.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o -MF CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o.d -o CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o -c /Users/filipstupar/Documents/BP_Game/src/InputHandler.cpp
+
+CMakeFiles/BP_Game.dir/src/InputHandler.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/BP_Game.dir/src/InputHandler.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/BP_Game/src/InputHandler.cpp > CMakeFiles/BP_Game.dir/src/InputHandler.cpp.i
+
+CMakeFiles/BP_Game.dir/src/InputHandler.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/BP_Game.dir/src/InputHandler.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/BP_Game/src/InputHandler.cpp -o CMakeFiles/BP_Game.dir/src/InputHandler.cpp.s
+
 CMakeFiles/BP_Game.dir/src/glad.c.o: CMakeFiles/BP_Game.dir/flags.make
 CMakeFiles/BP_Game.dir/src/glad.c.o: /Users/filipstupar/Documents/BP_Game/src/glad.c
 CMakeFiles/BP_Game.dir/src/glad.c.o: CMakeFiles/BP_Game.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/BP_Game.dir/src/glad.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/BP_Game.dir/src/glad.c.o"
 	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/BP_Game.dir/src/glad.c.o -MF CMakeFiles/BP_Game.dir/src/glad.c.o.d -o CMakeFiles/BP_Game.dir/src/glad.c.o -c /Users/filipstupar/Documents/BP_Game/src/glad.c
 
 CMakeFiles/BP_Game.dir/src/glad.c.i: cmake_force
@@ -86,34 +128,24 @@ CMakeFiles/BP_Game.dir/src/glad.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/BP_Game.dir/src/glad.c.s"
 	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/filipstupar/Documents/BP_Game/src/glad.c -o CMakeFiles/BP_Game.dir/src/glad.c.s
 
-CMakeFiles/BP_Game.dir/src/main.cpp.o: CMakeFiles/BP_Game.dir/flags.make
-CMakeFiles/BP_Game.dir/src/main.cpp.o: /Users/filipstupar/Documents/BP_Game/src/main.cpp
-CMakeFiles/BP_Game.dir/src/main.cpp.o: CMakeFiles/BP_Game.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/BP_Game.dir/src/main.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/BP_Game.dir/src/main.cpp.o -MF CMakeFiles/BP_Game.dir/src/main.cpp.o.d -o CMakeFiles/BP_Game.dir/src/main.cpp.o -c /Users/filipstupar/Documents/BP_Game/src/main.cpp
-
-CMakeFiles/BP_Game.dir/src/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/BP_Game.dir/src/main.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/BP_Game/src/main.cpp > CMakeFiles/BP_Game.dir/src/main.cpp.i
-
-CMakeFiles/BP_Game.dir/src/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/BP_Game.dir/src/main.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/BP_Game/src/main.cpp -o CMakeFiles/BP_Game.dir/src/main.cpp.s
-
 # Object files for target BP_Game
 BP_Game_OBJECTS = \
-"CMakeFiles/BP_Game.dir/src/glad.c.o" \
-"CMakeFiles/BP_Game.dir/src/main.cpp.o"
+"CMakeFiles/BP_Game.dir/src/Application.cpp.o" \
+"CMakeFiles/BP_Game.dir/src/Player.cpp.o" \
+"CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o" \
+"CMakeFiles/BP_Game.dir/src/glad.c.o"
 
 # External object files for target BP_Game
 BP_Game_EXTERNAL_OBJECTS =
 
+BP_Game: CMakeFiles/BP_Game.dir/src/Application.cpp.o
+BP_Game: CMakeFiles/BP_Game.dir/src/Player.cpp.o
+BP_Game: CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o
 BP_Game: CMakeFiles/BP_Game.dir/src/glad.c.o
-BP_Game: CMakeFiles/BP_Game.dir/src/main.cpp.o
 BP_Game: CMakeFiles/BP_Game.dir/build.make
 BP_Game: /opt/homebrew/lib/libglfw.3.4.dylib
 BP_Game: CMakeFiles/BP_Game.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable BP_Game"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable BP_Game"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/BP_Game.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -3,8 +3,10 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "/opt/homebrew/include/**",
+                "${workspaceFolder}/include",         // for Renderer.hpp, etc.
+                "${workspaceFolder}/src",             // for source files, optional
+                "/opt/homebrew/include",              // for GLM and other Homebrew libs
+                "${workspaceFolder}/**"               // fallback for everything else
             ],
             "defines": [],
             "macFrameworkPath": [
