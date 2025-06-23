@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/BP_Game.dir/src/Player.cpp.o.d"
   "CMakeFiles/BP_Game.dir/src/glad.c.o"
   "CMakeFiles/BP_Game.dir/src/glad.c.o.d"
+  "CMakeFiles/BP_Game.dir/src/stb_image.cpp.o"
+  "CMakeFiles/BP_Game.dir/src/stb_image.cpp.o.d"
 )
 
 # Per-language clean rules from dependency scanning.

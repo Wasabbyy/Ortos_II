@@ -19,6 +19,7 @@ set(SOURCES
     src/Player.cpp
     src/InputHandler.cpp
     src/glad.c
+    src/stb_image.cpp
     # Add other source files as needed
 )
 

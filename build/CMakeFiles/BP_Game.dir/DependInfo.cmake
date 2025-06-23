@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/filipstupar/Documents/BP_Game/src/Application.cpp" "CMakeFiles/BP_Game.dir/src/Application.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/Application.cpp.o.d"
   "/Users/filipstupar/Documents/BP_Game/src/InputHandler.cpp" "CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o.d"
   "/Users/filipstupar/Documents/BP_Game/src/Player.cpp" "CMakeFiles/BP_Game.dir/src/Player.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/Player.cpp.o.d"
+  "/Users/filipstupar/Documents/BP_Game/src/stb_image.cpp" "CMakeFiles/BP_Game.dir/src/stb_image.cpp.o" "gcc" "CMakeFiles/BP_Game.dir/src/stb_image.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.
