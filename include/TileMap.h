@@ -25,4 +25,5 @@ private:
     int textureWidth, textureHeight;
     int tileWidth, tileHeight;
     int width, height;
+    std::vector<std::vector<std::vector<int>>> layers;
 };
