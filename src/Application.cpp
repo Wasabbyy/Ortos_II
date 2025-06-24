@@ -4,6 +4,7 @@
 #include "TileMap.h"
 #include <iostream>
 #include "nlohmann/json.hpp"
+#include <stb_image.h>
 using json = nlohmann::json;
 
 
@@ -12,19 +13,24 @@ int main() {
         return -1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(1366, 768, "Ortos II", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Ortos II", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         return -1;
     }
 
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
     glfwMakeContextCurrent(window);
 
-    // ✅ Add these lines to enable alpha blending
+    //  Add these lines to enable alpha blending
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST); // Ensure depth testing is disabled
+    glEnable(GL_TEXTURE_2D);  // Ensure textures are enabled
 
-    // ✅ Set up viewport and orthographic projection
+    //  Set up viewport and orthographic projection
     int windowWidth = 1920;
     int windowHeight = 1080;
     glfwSetWindowSize(window, windowWidth, windowHeight);
@@ -37,8 +43,10 @@ int main() {
     glLoadIdentity();
 
     Player player;
+    stbi_set_flip_vertically_on_load(true);
     player.loadTexture("../assets/graphic/Vampire_Walk.png", 64, 64, 4); // Example sprite sheet
     player.loadIdleTexture("../assets/graphic/Vampire_Idle.png", 64, 64, 2); 
+    stbi_set_flip_vertically_on_load(false);
     InputHandler inputHandler;
 
     float lastTime = glfwGetTime();

@@ -2,10 +2,10 @@
 #include <string>
 
 enum class Direction {
-    Down = 0,
-    Left = 2,
-    Right = 3,
-    Up = 1
+    Down = 2,
+    Left = 1,
+    Right = 0,
+    Up = 3
 };
 
 class Player {

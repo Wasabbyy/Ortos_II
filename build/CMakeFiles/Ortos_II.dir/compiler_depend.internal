@@ -894,6 +894,7 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o
  /Users/filipstupar/Documents/OrtosII/include/nlohmann/ordered_map.hpp
  /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley.hpp
  /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley_undef.hpp
+ /Users/filipstupar/Documents/OrtosII/include/stb_image.h
  /opt/homebrew/include/GLFW/glfw3.h
 
 CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o

@@ -3,13 +3,13 @@
 #include <iostream> // for std::cout
 
 void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaTime) {
-    const float moveSpeed = 0.5f; // units per second
+    const float moveSpeed = 300.0f; // units per second
     const float aspectRatio = 16.0f / 9.0f; // Hardcoded for 16:9 resolution
 
     float dx = 0.0f, dy = 0.0f;
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) dy += 1.0f;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) dy -= 1.0f;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) dy += 1.0f;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) dy -= 1.0f;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) dx -= 1.0f;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) dx += 1.0f;
 

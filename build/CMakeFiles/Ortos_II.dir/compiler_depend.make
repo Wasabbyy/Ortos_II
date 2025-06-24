@@ -893,6 +893,7 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: /Users/filipstupar/Documents/Orto
   /Users/filipstupar/Documents/OrtosII/include/nlohmann/ordered_map.hpp \
   /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley.hpp \
   /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
+  /Users/filipstupar/Documents/OrtosII/include/stb_image.h \
   /opt/homebrew/include/GLFW/glfw3.h
 
 CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o: /Users/filipstupar/Documents/OrtosII/src/InputHandler.cpp \
@@ -4001,9 +4002,9 @@ CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: /Users/filipstupar/Documents/OrtosII
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/fstream:
 
-/Users/filipstupar/Documents/OrtosII/include/stb_image.h:
-
 /Users/filipstupar/Documents/OrtosII/src/InputHandler.cpp:
+
+/Users/filipstupar/Documents/OrtosII/include/stb_image.h:
 
 /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley_undef.hpp:
 

@@ -891,4 +891,5 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/any \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/chrono \
   /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/macro_unscope.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley_undef.hpp
+  /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
+  /Users/filipstupar/Documents/OrtosII/include/stb_image.h

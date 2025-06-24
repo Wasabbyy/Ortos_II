@@ -4,7 +4,7 @@
 #include <iostream>
 
 Player::Player()
-    : x(0.0f), y(0.0f), textureID(0),
+    : x(960.0f), y(540.0f), textureID(0),
       frameWidth(0), frameHeight(0),
       textureWidth(0), textureHeight(0),
       totalFrames(1), 
@@ -19,11 +19,23 @@ Player::~Player() {
 }
 
 void Player::draw() const {
+
     unsigned int texID;
     int texWidth, texHeight;
     int frameW, frameH;
     int currentF;
     int totalF;
+    if (isIdle && idleTextureID == 0) {
+        std::cerr << "Idle texture not loaded!" << std::endl;
+        return;
+    }
+    if (!isIdle && textureID == 0) {
+        std::cerr << "Walking texture not loaded!" << std::endl;
+        return;
+    }
+
+    //std::cout << "Drawing player at position (" << x << ", " << y << ")" << std::endl;
+
 
     // Use the isIdle flag to determine which texture to use
     if (isIdle) { // Use idle animation
@@ -61,8 +73,9 @@ void Player::draw() const {
     float v2 = static_cast<float>((row + 1) * frameH) / texHeight;
 
     float scale = 2.0f;
-    float spriteWidth = 0.1f * scale;
-    float spriteHeight = 0.1f * scale;
+    float spriteWidth = static_cast<float>(frameW)* scale;
+    float spriteHeight = static_cast<float>(frameH)*scale;
+    
 
     glBegin(GL_QUADS);
     glTexCoord2f(u1, v2); glVertex2f(x - spriteWidth, y - spriteHeight);
@@ -86,6 +99,8 @@ void Player::loadTexture(const std::string& filePath, int frameWidth, int frameH
         return;
     }
 
+    std::cout << "Loaded texture: " << filePath << " (" << width << "x" << height << ")" << std::endl;
+
     textureWidth = width;
     textureHeight = height;
 
@@ -105,6 +120,8 @@ void Player::loadTexture(const std::string& filePath, int frameWidth, int frameH
 
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     stbi_image_free(data);
+
+    std::cout << "Texture loaded successfully with ID: " << textureID << std::endl;
 }
 
 void Player::updateAnimation(float deltaTime, bool isMoving) {

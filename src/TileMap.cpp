@@ -180,40 +180,30 @@ void Tilemap::draw(float offsetX, float offsetY) const {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureID);
 
-    float scale = 4.0f; // Upscale factor
+    // Calculate scale to stretch the tilemap across the screen
+    float scaleX = static_cast<float>(1920) / (tileWidth * width);
+    float scaleY = static_cast<float>(1080) / (tileHeight * height);
 
     for (int y = 0; y < height; ++y) {
-        if (y >= tiles.size()) {
-            std::cerr << "Error: Out-of-bounds access in tiles (y = " << y << ")." << std::endl;
-            continue;
-        }
         for (int x = 0; x < width; ++x) {
-            if (x >= tiles[y].size()) {
-                std::cerr << "Error: Out-of-bounds access in tiles[y] (x = " << x << ")." << std::endl;
-                continue;
-            }
-
             int tileID = tiles[y][x];
-            if (tileID == 0) continue; // Skip empty tiles (0 typically means no tile)
+            if (tileID == 0) continue; // Skip empty tiles
 
-            // Calculate which tile in the tileset to use
             int tilesPerRow = textureWidth / tileWidth;
-            int tileIndex = tileID - 1; // Assuming tile IDs start at 1 in Tiled
-            
+            int tileIndex = tileID - 1;
+
             int tileX = tileIndex % tilesPerRow;
             int tileY = tileIndex / tilesPerRow;
 
-            // Texture coordinates
             float u1 = static_cast<float>(tileX * tileWidth) / textureWidth;
             float v1 = static_cast<float>(tileY * tileHeight) / textureHeight;
             float u2 = static_cast<float>((tileX + 1) * tileWidth) / textureWidth;
             float v2 = static_cast<float>((tileY + 1) * tileHeight) / textureHeight;
 
-            // World coordinates (with camera offset and scaling)
-            float worldX = x * tileWidth * scale + offsetX;
-            float worldY = y * tileHeight * scale + offsetY;
-            float scaledTileWidth = tileWidth * scale;
-            float scaledTileHeight = tileHeight * scale;
+            float worldX = x * tileWidth * scaleX + offsetX;
+            float worldY = y * tileHeight * scaleY + offsetY;
+            float scaledTileWidth = tileWidth * scaleX;
+            float scaledTileHeight = tileHeight * scaleY;
 
             glBegin(GL_QUADS);
                 glTexCoord2f(u1, v2); glVertex2f(worldX, worldY);
@@ -223,7 +213,7 @@ void Tilemap::draw(float offsetX, float offsetY) const {
             glEnd();
         }
     }
-    
+
     glDisable(GL_TEXTURE_2D);
 }
 
