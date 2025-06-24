@@ -4,6 +4,7 @@
 
 void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaTime) {
     const float moveSpeed = 0.5f; // units per second
+    const float aspectRatio = 16.0f / 9.0f; // Hardcoded for 16:9 resolution
 
     float dx = 0.0f, dy = 0.0f;
 
@@ -15,10 +16,12 @@ void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaT
     bool isMoving = (dx != 0.0f || dy != 0.0f);
 
     if (isMoving) {
-        // Normalize the direction vector
-        float length = std::sqrt(dx * dx + dy * dy);
-        dx = (dx / length) * moveSpeed * deltaTime;
-        dy = (dy / length) * moveSpeed * deltaTime;
+        // Normalize the direction vector if moving diagonally
+        float length = std::sqrt(dx * dx + (dy * dy) * (aspectRatio * aspectRatio));
+        if (length > 0.0f) {
+            dx = (dx / length) * moveSpeed * deltaTime / aspectRatio;
+            dy = (dy / length) * moveSpeed * deltaTime * aspectRatio;
+        }
 
         player.move(dx, dy);
 

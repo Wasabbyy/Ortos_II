@@ -60,7 +60,7 @@ void Player::draw() const {
     float u2 = static_cast<float>((col + 1) * frameW) / texWidth;
     float v2 = static_cast<float>((row + 1) * frameH) / texHeight;
 
-    float scale = 3.0f;
+    float scale = 2.0f;
     float spriteWidth = 0.1f * scale;
     float spriteHeight = 0.1f * scale;
 

@@ -7,7 +7,7 @@ int main() {
         return -1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Ortos II", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1366, 768, "Ortos II", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
         return -1;
