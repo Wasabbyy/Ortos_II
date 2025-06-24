@@ -1,6 +1,6 @@
-CMakeFiles/BP_Game.dir/src/Player.cpp.o: \
-  /Users/filipstupar/Documents/BP_Game/src/Player.cpp \
-  /Users/filipstupar/Documents/BP_Game/include/Player.h \
+CMakeFiles/Ortos_II.dir/src/Player.cpp.o: \
+  /Users/filipstupar/Documents/OrtosII/src/Player.cpp \
+  /Users/filipstupar/Documents/OrtosII/include/Player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/max.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -648,7 +648,7 @@ CMakeFiles/BP_Game.dir/src/Player.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gltypes.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/OpenGL.framework/Headers/OpenGLAvailability.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/os/availability.h \
-  /Users/filipstupar/Documents/BP_Game/include/stb_image.h \
+  /Users/filipstupar/Documents/OrtosII/include/stb_image.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/ios \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__locale \

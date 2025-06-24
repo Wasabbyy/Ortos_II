@@ -5,7 +5,7 @@
 # compile CXX with /Library/Developer/CommandLineTools/usr/bin/c++
 C_DEFINES = 
 
-C_INCLUDES = -I/Users/filipstupar/Documents/BP_Game/include -isystem /opt/homebrew/include
+C_INCLUDES = -I/Users/filipstupar/Documents/OrtosII/include -isystem /opt/homebrew/include
 
 C_FLAGSarm64 =  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
 
@@ -13,7 +13,7 @@ C_FLAGS =  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/filipstupar/Documents/BP_Game/include -isystem /opt/homebrew/include
+CXX_INCLUDES = -I/Users/filipstupar/Documents/OrtosII/include -isystem /opt/homebrew/include
 
 CXX_FLAGSarm64 = -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
 

@@ -57,10 +57,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/filipstupar/Documents/BP_Game
+CMAKE_SOURCE_DIR = /Users/filipstupar/Documents/OrtosII
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/filipstupar/Documents/BP_Game/build
+CMAKE_BINARY_DIR = /Users/filipstupar/Documents/OrtosII/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/BP_Game/build/CMakeFiles /Users/filipstupar/Documents/BP_Game/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/OrtosII/build/CMakeFiles /Users/filipstupar/Documents/OrtosII/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/BP_Game/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/OrtosII/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named BP_Game
+# Target rules for targets named Ortos_II
 
 # Build rule for target.
-BP_Game: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 BP_Game
-.PHONY : BP_Game
+Ortos_II: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Ortos_II
+.PHONY : Ortos_II
 
 # fast build rule for target.
-BP_Game/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/build
-.PHONY : BP_Game/fast
+Ortos_II/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/build
+.PHONY : Ortos_II/fast
 
 src/Application.o: src/Application.cpp.o
 .PHONY : src/Application.o
 
 # target to build an object file
 src/Application.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/Application.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.o
 .PHONY : src/Application.cpp.o
 
 src/Application.i: src/Application.cpp.i
@@ -142,7 +142,7 @@ src/Application.i: src/Application.cpp.i
 
 # target to preprocess a source file
 src/Application.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/Application.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.i
 .PHONY : src/Application.cpp.i
 
 src/Application.s: src/Application.cpp.s
@@ -150,7 +150,7 @@ src/Application.s: src/Application.cpp.s
 
 # target to generate assembly for a file
 src/Application.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/Application.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.s
 .PHONY : src/Application.cpp.s
 
 src/InputHandler.o: src/InputHandler.cpp.o
@@ -158,7 +158,7 @@ src/InputHandler.o: src/InputHandler.cpp.o
 
 # target to build an object file
 src/InputHandler.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/InputHandler.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o
 .PHONY : src/InputHandler.cpp.o
 
 src/InputHandler.i: src/InputHandler.cpp.i
@@ -166,7 +166,7 @@ src/InputHandler.i: src/InputHandler.cpp.i
 
 # target to preprocess a source file
 src/InputHandler.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/InputHandler.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.i
 .PHONY : src/InputHandler.cpp.i
 
 src/InputHandler.s: src/InputHandler.cpp.s
@@ -174,7 +174,7 @@ src/InputHandler.s: src/InputHandler.cpp.s
 
 # target to generate assembly for a file
 src/InputHandler.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/InputHandler.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s
 .PHONY : src/InputHandler.cpp.s
 
 src/Player.o: src/Player.cpp.o
@@ -182,7 +182,7 @@ src/Player.o: src/Player.cpp.o
 
 # target to build an object file
 src/Player.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/Player.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Player.cpp.o
 .PHONY : src/Player.cpp.o
 
 src/Player.i: src/Player.cpp.i
@@ -190,7 +190,7 @@ src/Player.i: src/Player.cpp.i
 
 # target to preprocess a source file
 src/Player.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/Player.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Player.cpp.i
 .PHONY : src/Player.cpp.i
 
 src/Player.s: src/Player.cpp.s
@@ -198,7 +198,7 @@ src/Player.s: src/Player.cpp.s
 
 # target to generate assembly for a file
 src/Player.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/Player.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Player.cpp.s
 .PHONY : src/Player.cpp.s
 
 src/glad.o: src/glad.c.o
@@ -206,7 +206,7 @@ src/glad.o: src/glad.c.o
 
 # target to build an object file
 src/glad.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/glad.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/glad.c.o
 .PHONY : src/glad.c.o
 
 src/glad.i: src/glad.c.i
@@ -214,7 +214,7 @@ src/glad.i: src/glad.c.i
 
 # target to preprocess a source file
 src/glad.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/glad.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/glad.c.i
 .PHONY : src/glad.c.i
 
 src/glad.s: src/glad.c.s
@@ -222,7 +222,7 @@ src/glad.s: src/glad.c.s
 
 # target to generate assembly for a file
 src/glad.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/glad.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/glad.c.s
 .PHONY : src/glad.c.s
 
 src/stb_image.o: src/stb_image.cpp.o
@@ -230,7 +230,7 @@ src/stb_image.o: src/stb_image.cpp.o
 
 # target to build an object file
 src/stb_image.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/stb_image.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o
 .PHONY : src/stb_image.cpp.o
 
 src/stb_image.i: src/stb_image.cpp.i
@@ -238,7 +238,7 @@ src/stb_image.i: src/stb_image.cpp.i
 
 # target to preprocess a source file
 src/stb_image.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/stb_image.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/stb_image.cpp.i
 .PHONY : src/stb_image.cpp.i
 
 src/stb_image.s: src/stb_image.cpp.s
@@ -246,7 +246,7 @@ src/stb_image.s: src/stb_image.cpp.s
 
 # target to generate assembly for a file
 src/stb_image.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/src/stb_image.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/stb_image.cpp.s
 .PHONY : src/stb_image.cpp.s
 
 # Help Target
@@ -257,7 +257,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... BP_Game"
+	@echo "... Ortos_II"
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"

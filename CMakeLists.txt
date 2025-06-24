@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(BP_Game)
+project(Ortos_II)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -24,11 +24,11 @@ set(SOURCES
 )
 
 # Create executable
-add_executable(BP_Game ${SOURCES})
+add_executable(Ortos_II ${SOURCES})
 
 # Link libraries - platform specific handling
 if(APPLE)
-    target_link_libraries(BP_Game
+    target_link_libraries(Ortos_II
         glfw
         "-framework OpenGL"
         "-framework Cocoa"
@@ -36,12 +36,12 @@ if(APPLE)
         "-framework CoreVideo"
     )
 elseif(UNIX AND NOT APPLE)  # Linux
-    target_link_libraries(BP_Game
+    target_link_libraries(Ortos_II
         glfw
         GL
     )
 elseif(WIN32)  # Windows
-    target_link_libraries(BP_Game
+    target_link_libraries(Ortos_II
         glfw
         opengl32
     )

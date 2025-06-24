@@ -5,4 +5,4 @@ cd build
 cmake .. && make
 
 # Run the executable
-./BP_Game
+./Ortos_II

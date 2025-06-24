@@ -54,20 +54,20 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/filipstupar/Documents/BP_Game
+CMAKE_SOURCE_DIR = /Users/filipstupar/Documents/OrtosII
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/filipstupar/Documents/BP_Game/build
+CMAKE_BINARY_DIR = /Users/filipstupar/Documents/OrtosII/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/BP_Game.dir/all
+all: CMakeFiles/Ortos_II.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
-codegen: CMakeFiles/BP_Game.dir/codegen
+codegen: CMakeFiles/Ortos_II.dir/codegen
 .PHONY : codegen
 
 # The main recursive "preinstall" target.
@@ -75,40 +75,40 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/BP_Game.dir/clean
+clean: CMakeFiles/Ortos_II.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/BP_Game.dir
+# Target rules for target CMakeFiles/Ortos_II.dir
 
 # All Build rule for target.
-CMakeFiles/BP_Game.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target BP_Game"
-.PHONY : CMakeFiles/BP_Game.dir/all
+CMakeFiles/Ortos_II.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Built target Ortos_II"
+.PHONY : CMakeFiles/Ortos_II.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/BP_Game.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/BP_Game/build/CMakeFiles 6
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/BP_Game.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/BP_Game/build/CMakeFiles 0
-.PHONY : CMakeFiles/BP_Game.dir/rule
+CMakeFiles/Ortos_II.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/OrtosII/build/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Ortos_II.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/filipstupar/Documents/OrtosII/build/CMakeFiles 0
+.PHONY : CMakeFiles/Ortos_II.dir/rule
 
 # Convenience name for target.
-BP_Game: CMakeFiles/BP_Game.dir/rule
-.PHONY : BP_Game
+Ortos_II: CMakeFiles/Ortos_II.dir/rule
+.PHONY : Ortos_II
 
 # codegen rule for target.
-CMakeFiles/BP_Game.dir/codegen:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/filipstupar/Documents/BP_Game/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Finished codegen for target BP_Game"
-.PHONY : CMakeFiles/BP_Game.dir/codegen
+CMakeFiles/Ortos_II.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=1,2,3,4,5,6 "Finished codegen for target Ortos_II"
+.PHONY : CMakeFiles/Ortos_II.dir/codegen
 
 # clean rule for target.
-CMakeFiles/BP_Game.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/BP_Game.dir/build.make CMakeFiles/BP_Game.dir/clean
-.PHONY : CMakeFiles/BP_Game.dir/clean
+CMakeFiles/Ortos_II.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/clean
+.PHONY : CMakeFiles/Ortos_II.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
