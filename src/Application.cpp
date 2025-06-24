@@ -21,7 +21,8 @@ glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
     Player player;
-    player.loadTexture("../assets/Vampire.png", 64, 64, 4); // Example sprite sheet
+    player.loadTexture("../assets/Vampire_Walk.png", 64, 64, 4); // Example sprite sheet
+    player.loadIdleTexture("../assets/Vampire_Idle.png", 64, 64, 2); 
     InputHandler inputHandler;
 
     float lastTime = glfwGetTime();
