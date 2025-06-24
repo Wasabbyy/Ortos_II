@@ -13,11 +13,16 @@ int main() {
         return -1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(1920, 1080, "Ortos II", nullptr, nullptr);
-    if (!window) {
-        glfwTerminate();
-        return -1;
-    }
+  // Get the primary monitor and its video mode
+  GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+  const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+
+  // Create a fullscreen window
+  GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Ortos II", primaryMonitor, nullptr);
+  if (!window) {
+      glfwTerminate();
+      return -1;
+  }
 
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
     glfwMakeContextCurrent(window);
