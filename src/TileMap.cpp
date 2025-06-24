@@ -219,16 +219,22 @@ void Tilemap::draw(float offsetX, float offsetY) const {
                 int tileX = tileIndex % tilesPerRow;
                 int tileY = tileIndex / tilesPerRow;
 
-                float u1 = static_cast<float>(tileX * tileWidth) / textureWidth;
-                float v1 = static_cast<float>(tileY * tileHeight) / textureHeight;
-                float u2 = static_cast<float>((tileX + 1) * tileWidth) / textureWidth;
-                float v2 = static_cast<float>((tileY + 1) * tileHeight) / textureHeight;
+              // Add a small padding to avoid texture bleeding
+                 const float padding = 0.5f; // Adjust as needed
+
+                float u1 = (tileX * tileWidth + padding) / textureWidth;
+                float v1 = (tileY * tileHeight + padding) / textureHeight;
+                float u2 = ((tileX + 1) * tileWidth - padding) / textureWidth;
+                float v2 = ((tileY + 1) * tileHeight - padding) / textureHeight;
+
 
                 float worldX = x * tileWidth * scaleX + offsetX;
                 float worldY = y * tileHeight * scaleY + offsetY;
                 float scaledTileWidth = tileWidth * scaleX;
                 float scaledTileHeight = tileHeight * scaleY;
 
+                std::swap(v1, v2);
+                
                 glBegin(GL_QUADS);
                     glTexCoord2f(u1, v2); glVertex2f(worldX, worldY);
                     glTexCoord2f(u2, v2); glVertex2f(worldX + scaledTileWidth, worldY);

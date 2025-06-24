@@ -58,7 +58,7 @@ int main() {
     Tilemap level;
 
     // Load the map (adjust paths as needed)
-    if (!level.loadFromJSON("/Users/filipstupar/Documents/OrtosII/assets/maps/mapa.json")) {
+    if (!level.loadFromJSON("/Users/filipstupar/Documents/OrtosII/assets/maps/maptest.json")) {
         std::cerr << "Failed to load map from JSON." << std::endl;
         return -1;
     }
