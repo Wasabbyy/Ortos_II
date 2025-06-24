@@ -20,6 +20,8 @@ set(SOURCES
     src/InputHandler.cpp
     src/glad.c
     src/stb_image.cpp
+    src/TileMap.cpp
+    src/tinyxml2.cpp
     # Add other source files as needed
 )
 

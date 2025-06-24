@@ -33,8 +33,8 @@ void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaT
         }
 
         // 🔧 Debug: print position after movement
-        std::cout << "Player Position -> X: " << player.getX()
-                  << " | Y: " << player.getY() << std::endl;
+       // std::cout << "Player Position -> X: " << player.getX()
+         //         << " | Y: " << player.getY() << std::endl;
     }
 
     player.updateAnimation(deltaTime, isMoving);
