@@ -22,6 +22,8 @@ public:
     float getY() const;
     void loadIdleTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames);
     void updateIdleAnimation(float deltaTime);
+    int getFrameWidth() const { return isIdle ? idleFrameWidth : frameWidth; }
+    int getFrameHeight() const { return isIdle ? idleFrameHeight : frameHeight; }
 
 private:
     float x, y;

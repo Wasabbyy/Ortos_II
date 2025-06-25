@@ -7,21 +7,19 @@
 #include <stb_image.h>
 using json = nlohmann::json;
 
-
 int main() {
     if (!glfwInit()) {
         return -1;
     }
 
-  GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
-  
-  const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-  GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Ortos II", primaryMonitor, nullptr);
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Ortos II", primaryMonitor, nullptr);
 
-  if (!window) {
-      glfwTerminate();
-      return -1;
-  }
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
 
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
     glfwMakeContextCurrent(window);
@@ -30,17 +28,11 @@ int main() {
     glDisable(GL_DEPTH_TEST); 
     glEnable(GL_TEXTURE_2D); 
 
-    //  Set up viewport and orthographic projection
+    // Set up viewport and orthographic projection
     int windowWidth = 1920;
     int windowHeight = 1080;
     glfwSetWindowSize(window, windowWidth, windowHeight);
     glViewport(0, 0, windowWidth, windowHeight);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0.0, windowWidth, windowHeight, 0.0, -1.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 
     Player player;
     stbi_set_flip_vertically_on_load(true);
@@ -53,10 +45,19 @@ int main() {
     Tilemap level;
 
     // Load the map
-    if (!level.loadFromJSON("../assets/maps/final.json")) {
+    if (!level.loadFromJSON("../assets/maps/test.json")) {
         std::cerr << "Failed to load map from JSON." << std::endl;
         return -1;
     }
+
+    // Set up projection to match tilemap size
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float mapWidth = level.getWidthInTiles() * level.getTileWidth();
+    float mapHeight = level.getHeightInTiles() * level.getTileHeight();
+    glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
     while (!glfwWindowShouldClose(window)) {
         float currentTime = glfwGetTime();
@@ -65,8 +66,7 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        inputHandler.processInput(window, player, deltaTime); 
-
+        inputHandler.processInput(window, player, deltaTime, level);
     
         level.draw();
         player.draw();

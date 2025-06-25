@@ -4,88 +4,75 @@
 #include <iostream>
 
 Player::Player()
-    : x(960.0f), y(540.0f), textureID(0),
+    : x(12 * 16.0f), // Start position in world coordinates
+      y(12 * 16.0f),
+      textureID(0),
       frameWidth(0), frameHeight(0),
       textureWidth(0), textureHeight(0),
       totalFrames(1), 
       animationSpeed(0.4f), elapsedTime(0.0f),
       currentFrame(0), direction(Direction::Down),
-      isMoving(false), isIdle(true) {} // Initialize isIdle
+      isMoving(false), isIdle(true) {}
 
 Player::~Player() {
-    if (textureID) {
-        glDeleteTextures(1, &textureID);
-    }
+    // Add cleanup logic if needed
 }
 
 void Player::draw() const {
+    if ((isIdle && idleTextureID == 0) || (!isIdle && textureID == 0)) return;
 
-    unsigned int texID;
-    int texWidth, texHeight;
-    int frameW, frameH;
-    int currentF;
-    int totalF;
-    if (isIdle && idleTextureID == 0) {
-        std::cerr << "Idle texture not loaded!" << std::endl;
-        return;
-    }
-    if (!isIdle && textureID == 0) {
-        std::cerr << "Walking texture not loaded!" << std::endl;
-        return;
-    }
-
-    //std::cout << "Drawing player at position (" << x << ", " << y << ")" << std::endl;
-
-
-    // Use the isIdle flag to determine which texture to use
-    if (isIdle) { // Use idle animation
-        if (idleTextureID == 0) return;
-        texID = idleTextureID;
-        texWidth = idleTextureWidth;
-        texHeight = idleTextureHeight;
-        frameW = idleFrameWidth;
-        frameH = idleFrameHeight;
-        currentF = idleCurrentFrame;
-        totalF = idleTotalFrames;
-    } else { // Use walking animation
-        if (textureID == 0) return;
-        texID = textureID;
-        texWidth = textureWidth;
-        texHeight = textureHeight;
-        frameW = frameWidth;
-        frameH = frameHeight;
-        currentF = currentFrame;
-        totalF = totalFrames;
-    }
+    unsigned int texID = isIdle ? idleTextureID : textureID;
+    int texWidth = isIdle ? idleTextureWidth : textureWidth;
+    int texHeight = isIdle ? idleTextureHeight : textureHeight;
+    int frameW = isIdle ? idleFrameWidth : frameWidth;
+    int frameH = isIdle ? idleFrameHeight : frameHeight;
+    int currentF = isIdle ? idleCurrentFrame : currentFrame;
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texID);
 
-    // Calculate frame position based on current frame index
+    // Calculate texture coordinates
     int framesPerRow = texWidth / frameW;
-    int row = static_cast<int>(direction);
+
+    // Correct the row mapping for directions
+    int row = 0;
+    switch (direction) {
+        case Direction::Down:
+            row = 3; // Assuming Down is the first row
+            break;
+        case Direction::Left:
+            row = 1; // Assuming Left is the second row
+            break;
+        case Direction::Right:
+            row = 0; // Assuming Right is the third row
+            break;
+        case Direction::Up:
+            row = 2; // Assuming Up is the fourth row
+            break;
+    }
+
     int col = currentF % framesPerRow;
 
-    // Calculate texture coordinates
     float u1 = static_cast<float>(col * frameW) / texWidth;
     float v1 = static_cast<float>(row * frameH) / texHeight;
     float u2 = static_cast<float>((col + 1) * frameW) / texWidth;
     float v2 = static_cast<float>((row + 1) * frameH) / texHeight;
 
-    float scale = 2.0f;
-    float spriteWidth = static_cast<float>(frameW)* scale;
-    float spriteHeight = static_cast<float>(frameH)*scale;
-    
+    // Draw player centered on tile
+    float drawX = x - frameW / 2.0f;
+    float drawY = y - frameH / 2.0f;
 
     glBegin(GL_QUADS);
-    glTexCoord2f(u1, v2); glVertex2f(x - spriteWidth, y - spriteHeight);
-    glTexCoord2f(u2, v2); glVertex2f(x + spriteWidth, y - spriteHeight);
-    glTexCoord2f(u2, v1); glVertex2f(x + spriteWidth, y + spriteHeight);
-    glTexCoord2f(u1, v1); glVertex2f(x - spriteWidth, y + spriteHeight);
+    glTexCoord2f(u1, v2); glVertex2f(drawX, drawY);
+    glTexCoord2f(u2, v2); glVertex2f(drawX + frameW, drawY);
+    glTexCoord2f(u2, v1); glVertex2f(drawX + frameW, drawY + frameH);
+    glTexCoord2f(u1, v1); glVertex2f(drawX, drawY + frameH);
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
 }
+
+// Rest of the Player class methods remain the same...
 
 void Player::loadTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames) {
     this->frameWidth = frameWidth;
