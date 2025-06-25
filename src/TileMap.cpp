@@ -191,8 +191,8 @@ void Tilemap::draw(float offsetX, float offsetY) const {
         return;
     }
 
-    std::cout << "\n=== Drawing Tilemap ===" << std::endl;
-    std::cout << "Drawing " << layers.size() << " layers" << std::endl;
+    //std::cout << "\n=== Drawing Tilemap ===" << std::endl;
+    //std::cout << "Drawing " << layers.size() << " layers" << std::endl;
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureID);
@@ -201,8 +201,8 @@ void Tilemap::draw(float offsetX, float offsetY) const {
     float scaleY = static_cast<float>(1080) / (tileHeight * height);
 
     for (size_t i = 0; i < layers.size(); ++i) {
-        std::cout << "Drawing layer " << i << " with " 
-                  << width * height << " tiles" << std::endl;
+        //std::cout << "Drawing layer " << i << " with " 
+          //        << width * height << " tiles" << std::endl;
 
         const auto& layer = layers[i];
         int tilesDrawn = 0;
@@ -243,11 +243,11 @@ void Tilemap::draw(float offsetX, float offsetY) const {
             }
         }
 
-        std::cout << "Drew " << tilesDrawn << " non-empty tiles in layer " << i << std::endl;
+        //std::cout << "Drew " << tilesDrawn << " non-empty tiles in layer " << i << std::endl;
     }
 
     glDisable(GL_TEXTURE_2D);
-    std::cout << "Finished drawing tilemap" << std::endl;
+    //std::cout << "Finished drawing tilemap" << std::endl;
 }
 int Tilemap::getTileAt(int x, int y) const {
     if (x < 0 || y < 0 || x >= width || y >= height) {
