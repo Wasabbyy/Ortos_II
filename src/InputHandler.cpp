@@ -16,12 +16,14 @@ void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaT
     bool isMoving = (dx != 0.0f || dy != 0.0f);
 
     if (isMoving) {
-        // Normalize the direction vector if moving diagonally
-        float length = std::sqrt(dx * dx + (dy * dy) * (aspectRatio * aspectRatio));
+        // Normalize the direction vector
+        float length = std::sqrt(dx * dx + dy * dy);
         if (length > 0.0f) {
-            dx = (dx / length) * moveSpeed * deltaTime / aspectRatio;
-            dy = (dy / length) * moveSpeed * deltaTime * aspectRatio;
+            dx = (dx / length) * moveSpeed * deltaTime;
+            dy = (dy / length) * moveSpeed * deltaTime;
         }
+
+        // Adjust horizontal movement by the aspect ratio
 
         player.move(dx, dy);
 
@@ -31,10 +33,6 @@ void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaT
         } else {
             player.setDirection(dy > 0 ? Direction::Up : Direction::Down);
         }
-
-        // 🔧 Debug: print position after movement
-       // std::cout << "Player Position -> X: " << player.getX()
-         //         << " | Y: " << player.getY() << std::endl;
     }
 
     player.updateAnimation(deltaTime, isMoving);
