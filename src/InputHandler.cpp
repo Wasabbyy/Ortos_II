@@ -3,7 +3,7 @@
 #include <iostream>
 
 void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap) {
-    const float moveSpeed = 300.0f;
+    const float moveSpeed = 150.0f;
     float dx = 0.0f, dy = 0.0f;
 
     // Movement input
