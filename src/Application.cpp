@@ -13,12 +13,11 @@ int main() {
         return -1;
     }
 
-  // Get the primary monitor and its video mode
   GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+  
   const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-
-  // Create a fullscreen window
   GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Ortos II", primaryMonitor, nullptr);
+
   if (!window) {
       glfwTerminate();
       return -1;
@@ -26,14 +25,10 @@ int main() {
 
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
     glfwMakeContextCurrent(window);
-
-    //  Add these lines to enable alpha blending
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST); // Ensure depth testing is disabled
-    glEnable(GL_TEXTURE_2D);  // Ensure textures are enabled
+    glDisable(GL_DEPTH_TEST); 
+    glEnable(GL_TEXTURE_2D); 
 
     //  Set up viewport and orthographic projection
     int windowWidth = 1920;
@@ -49,7 +44,7 @@ int main() {
 
     Player player;
     stbi_set_flip_vertically_on_load(true);
-    player.loadTexture("../assets/graphic/Vampire_Walk.png", 64, 64, 4); // Example sprite sheet
+    player.loadTexture("../assets/graphic/Vampire_Walk.png", 64, 64, 4);
     player.loadIdleTexture("../assets/graphic/Vampire_Idle.png", 64, 64, 2); 
     stbi_set_flip_vertically_on_load(false);
     InputHandler inputHandler;
@@ -57,8 +52,8 @@ int main() {
     float lastTime = glfwGetTime();
     Tilemap level;
 
-    // Load the map (adjust paths as needed)
-    if (!level.loadFromJSON("/Users/filipstupar/Documents/OrtosII/assets/maps/maptest.json")) {
+    // Load the map
+    if (!level.loadFromJSON("../assets/maps/final.json")) {
         std::cerr << "Failed to load map from JSON." << std::endl;
         return -1;
     }
@@ -70,12 +65,10 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        inputHandler.processInput(window, player, deltaTime); // Pass deltaTime here
+        inputHandler.processInput(window, player, deltaTime); 
 
-        // Draw tilemap first (background)
+    
         level.draw();
-
-        // Then draw player and other objects
         player.draw();
 
         glfwSwapBuffers(window);

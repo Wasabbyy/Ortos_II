@@ -78,7 +78,7 @@ bool Tilemap::loadFromJSON(const std::string& jsonPath) {
     std::cout << "Number of layers: " << j["layers"].size() << std::endl;
 
     // Load tileset
-    std::string resolvedPath = "/Users/filipstupar/Documents/OrtosII/assets/maps/catacombs.tsx";
+    std::string resolvedPath = "../assets/maps/catacombs.tsx";
     std::cout << "\nLoading tileset from: " << resolvedPath << std::endl;
     
     if (!loadTilesetFromTSX(resolvedPath)) {
@@ -210,7 +210,7 @@ void Tilemap::draw(float offsetX, float offsetY) const {
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
                 int tileID = layer[y][x];
-                if (tileID == 0) continue; // Skip empty tiles
+                if (tileID == 0) continue; 
 
                 tilesDrawn++;
                 int tilesPerRow = textureWidth / tileWidth;
@@ -219,8 +219,7 @@ void Tilemap::draw(float offsetX, float offsetY) const {
                 int tileX = tileIndex % tilesPerRow;
                 int tileY = tileIndex / tilesPerRow;
 
-              // Add a small padding to avoid texture bleeding
-                 const float padding = 0.5f; // Adjust as needed
+                const float padding = 0.5f; 
 
                 float u1 = (tileX * tileWidth + padding) / textureWidth;
                 float v1 = (tileY * tileHeight + padding) / textureHeight;
@@ -234,7 +233,7 @@ void Tilemap::draw(float offsetX, float offsetY) const {
                 float scaledTileHeight = tileHeight * scaleY;
 
                 std::swap(v1, v2);
-                
+
                 glBegin(GL_QUADS);
                     glTexCoord2f(u1, v2); glVertex2f(worldX, worldY);
                     glTexCoord2f(u2, v2); glVertex2f(worldX + scaledTileWidth, worldY);
@@ -252,7 +251,7 @@ void Tilemap::draw(float offsetX, float offsetY) const {
 }
 int Tilemap::getTileAt(int x, int y) const {
     if (x < 0 || y < 0 || x >= width || y >= height) {
-        return -1; // Out of bounds
+        return -1;
     }
     return tiles[y][x];
 }
