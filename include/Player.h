@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 enum class Direction {
     Down = 2,
@@ -7,6 +8,8 @@ enum class Direction {
     Right = 0,
     Up = 3
 };
+
+class Projectile;  // Forward declaration
 
 class Player {
 public:
@@ -18,6 +21,9 @@ public:
     void loadTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames);
     void updateAnimation(float deltaTime, bool isMoving);
     void setDirection(Direction newDirection);
+    void shootProjectile(float targetX, float targetY, std::vector<Projectile>& projectiles);
+    void takeDamage(int damage);
+    void heal(int amount);
     float getX() const;
     float getY() const;
     void loadIdleTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames);
@@ -31,6 +37,11 @@ public:
     float getBottom() const { return y - boundingBoxOffsetY + boundingBoxHeight; }
     float getBoundingBoxWidth() const { return boundingBoxWidth; }
     float getBoundingBoxHeight() const { return boundingBoxHeight; }
+    
+    // Health system
+    int getMaxHealth() const { return maxHealth; }
+    int getCurrentHealth() const { return currentHealth; }
+    bool isAlive() const { return currentHealth > 0; }
 
 private:
     float x, y;
@@ -57,4 +68,12 @@ private:
     int idleCurrentFrame = 0;
     bool isMoving;
     bool isIdle; // ✅ NEW: Track if the player is moving
+    
+    // Shooting
+    float shootCooldown = 0.0f;
+    float shootInterval = 0.5f;  // Shoot every 0.5 seconds
+    
+    // Health system
+    int maxHealth = 100;
+    int currentHealth = 100;
 };

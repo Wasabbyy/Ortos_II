@@ -17,6 +17,9 @@ include_directories(
 set(SOURCES
     src/Application.cpp
     src/Player.cpp
+    src/Enemy.cpp
+    src/Projectile.cpp
+    src/UI.cpp
     src/InputHandler.cpp
     src/glad.c
     src/stb_image.cpp

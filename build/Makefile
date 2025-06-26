@@ -153,6 +153,30 @@ src/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.s
 .PHONY : src/Application.cpp.s
 
+src/Enemy.o: src/Enemy.cpp.o
+.PHONY : src/Enemy.o
+
+# target to build an object file
+src/Enemy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o
+.PHONY : src/Enemy.cpp.o
+
+src/Enemy.i: src/Enemy.cpp.i
+.PHONY : src/Enemy.i
+
+# target to preprocess a source file
+src/Enemy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Enemy.cpp.i
+.PHONY : src/Enemy.cpp.i
+
+src/Enemy.s: src/Enemy.cpp.s
+.PHONY : src/Enemy.s
+
+# target to generate assembly for a file
+src/Enemy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Enemy.cpp.s
+.PHONY : src/Enemy.cpp.s
+
 src/InputHandler.o: src/InputHandler.cpp.o
 .PHONY : src/InputHandler.o
 
@@ -201,6 +225,30 @@ src/Player.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Player.cpp.s
 .PHONY : src/Player.cpp.s
 
+src/Projectile.o: src/Projectile.cpp.o
+.PHONY : src/Projectile.o
+
+# target to build an object file
+src/Projectile.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o
+.PHONY : src/Projectile.cpp.o
+
+src/Projectile.i: src/Projectile.cpp.i
+.PHONY : src/Projectile.i
+
+# target to preprocess a source file
+src/Projectile.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Projectile.cpp.i
+.PHONY : src/Projectile.cpp.i
+
+src/Projectile.s: src/Projectile.cpp.s
+.PHONY : src/Projectile.s
+
+# target to generate assembly for a file
+src/Projectile.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Projectile.cpp.s
+.PHONY : src/Projectile.cpp.s
+
 src/TileMap.o: src/TileMap.cpp.o
 .PHONY : src/TileMap.o
 
@@ -224,6 +272,30 @@ src/TileMap.s: src/TileMap.cpp.s
 src/TileMap.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TileMap.cpp.s
 .PHONY : src/TileMap.cpp.s
+
+src/UI.o: src/UI.cpp.o
+.PHONY : src/UI.o
+
+# target to build an object file
+src/UI.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UI.cpp.o
+.PHONY : src/UI.cpp.o
+
+src/UI.i: src/UI.cpp.i
+.PHONY : src/UI.i
+
+# target to preprocess a source file
+src/UI.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UI.cpp.i
+.PHONY : src/UI.cpp.i
+
+src/UI.s: src/UI.cpp.s
+.PHONY : src/UI.s
+
+# target to generate assembly for a file
+src/UI.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UI.cpp.s
+.PHONY : src/UI.cpp.s
 
 src/glad.o: src/glad.c.o
 .PHONY : src/glad.o
@@ -309,15 +381,24 @@ help:
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"
+	@echo "... src/Enemy.o"
+	@echo "... src/Enemy.i"
+	@echo "... src/Enemy.s"
 	@echo "... src/InputHandler.o"
 	@echo "... src/InputHandler.i"
 	@echo "... src/InputHandler.s"
 	@echo "... src/Player.o"
 	@echo "... src/Player.i"
 	@echo "... src/Player.s"
+	@echo "... src/Projectile.o"
+	@echo "... src/Projectile.i"
+	@echo "... src/Projectile.s"
 	@echo "... src/TileMap.o"
 	@echo "... src/TileMap.i"
 	@echo "... src/TileMap.s"
+	@echo "... src/UI.o"
+	@echo "... src/UI.i"
+	@echo "... src/UI.s"
 	@echo "... src/glad.o"
 	@echo "... src/glad.i"
 	@echo "... src/glad.s"

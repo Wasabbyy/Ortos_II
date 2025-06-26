@@ -1,13 +1,12 @@
-#ifndef INPUT_HANDLER_H
-#define INPUT_HANDLER_H
-
+#pragma once
 #include <GLFW/glfw3.h>
-#include "Player.h"
-#include "TileMap.h"
+#include <vector>
+
+class Player;
+class Tilemap;
+class Projectile;
 
 class InputHandler {
 public:
-    void processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap);
+    void processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap, std::vector<Projectile>& projectiles);
 };
-
-#endif

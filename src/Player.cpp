@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Projectile.h"
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 #include <iostream>
@@ -130,6 +131,11 @@ void Player::loadTexture(const std::string& filePath, int frameWidth, int frameH
 
 void Player::updateAnimation(float deltaTime, bool isMoving) {
     this->isIdle = !isMoving; // Update idle state
+    
+    // Update shooting cooldown
+    if (shootCooldown > 0) {
+        shootCooldown -= deltaTime;
+    }
 
     if (isMoving) {
         // Update walking animation
@@ -211,4 +217,29 @@ void Player::move(float dx, float dy) {
     else if (dx < 0) direction = Direction::Left;
     else if (dy > 0) direction = Direction::Up;
     else if (dy < 0) direction = Direction::Down;
+}
+
+void Player::shootProjectile(float targetX, float targetY, std::vector<Projectile>& projectiles) {
+    if (shootCooldown > 0) return;
+    
+    float dx = targetX - x;
+    float dy = targetY - y;
+    
+    projectiles.emplace_back(x, y, dx, dy, ProjectileType::PlayerBullet);
+    shootCooldown = shootInterval;
+    spdlog::debug("Player shot projectile at ({}, {})", targetX, targetY);
+}
+
+void Player::takeDamage(int damage) {
+    currentHealth = std::max(0, currentHealth - damage);
+    spdlog::info("Player took {} damage. Health: {}/{}", damage, currentHealth, maxHealth);
+    
+    if (currentHealth <= 0) {
+        spdlog::warn("Player has died!");
+    }
+}
+
+void Player::heal(int amount) {
+    currentHealth = std::min(maxHealth, currentHealth + amount);
+    spdlog::info("Player healed {} HP. Health: {}/{}", amount, currentHealth, maxHealth);
 }
