@@ -151,7 +151,7 @@ int main() {
             enemyProjectiles.end()
         );
         
-        // Draw UI (player health hearts)
+        // Draw UI (player health bar) LAST so it's always on top
         UI::drawPlayerHealth(player.getCurrentHealth(), player.getMaxHealth(), windowWidth, windowHeight);
 
         glfwSwapBuffers(window);

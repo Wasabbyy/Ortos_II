@@ -1,46 +1,68 @@
 #include "UI.h"
 #include <cmath>
+#include <spdlog/spdlog.h>
 
 void UI::drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight) {
-    // Calculate how many hearts to show (assuming 20 HP per heart)
-    int heartsPerRow = 10;
-    int heartSize = 20;
-    int spacing = 5;
+    spdlog::info("Drawing health bar: HP {}/{}", currentHealth, maxHealth);
     
-    // Calculate total hearts needed
-    int totalHearts = (maxHealth + 19) / 20;  // Round up
-    int fullHearts = currentHealth / 20;
-    int partialHeart = currentHealth % 20;
+    // Save current matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
     
-    // Draw hearts in top left corner
-    for (int i = 0; i < totalHearts; i++) {
-        int row = i / heartsPerRow;
-        int col = i % heartsPerRow;
-        
-        float x = 20 + col * (heartSize + spacing);
-        float y = 20 + row * (heartSize + spacing);
-        
-        if (i < fullHearts) {
-            // Full heart
-            drawHeart(x, y, true, heartSize);
-        } else if (i == fullHearts && partialHeart > 0) {
-            // Partial heart
-            drawHeart(x, y, false, heartSize);
-            // Draw partial fill
-            float fillRatio = static_cast<float>(partialHeart) / 20.0f;
-            glColor3f(1.0f, 0.0f, 0.0f);
-            glBegin(GL_QUADS);
-            glVertex2f(x, y + heartSize * (1.0f - fillRatio));
-            glVertex2f(x + heartSize, y + heartSize * (1.0f - fillRatio));
-            glVertex2f(x + heartSize, y + heartSize);
-            glVertex2f(x, y + heartSize);
-            glEnd();
-            glColor3f(1.0f, 1.0f, 1.0f);
-        } else {
-            // Empty heart
-            drawHeart(x, y, false, heartSize);
-        }
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    // Disable textures for UI drawing
+    glDisable(GL_TEXTURE_2D);
+    
+    float barWidth = 280.0f;
+    float barHeight = 22.0f;
+    float x = 20.0f + barWidth / 2.0f;
+    float y = 40.0f;
+    float healthRatio = (maxHealth > 0) ? static_cast<float>(currentHealth) / maxHealth : 0.0f;
+
+    // Draw background (darker red)
+    glColor3f(0.6f, 0.0f, 0.0f);
+    glBegin(GL_QUADS);
+    glVertex2f(x - barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y + barHeight/2);
+    glVertex2f(x - barWidth/2, y + barHeight/2);
+    glEnd();
+
+    // Draw health (brighter green)
+    if (healthRatio > 0) {
+        glColor3f(0.2f, 1.0f, 0.2f);
+        glBegin(GL_QUADS);
+        glVertex2f(x - barWidth/2, y - barHeight/2);
+        glVertex2f(x - barWidth/2 + barWidth * healthRatio, y - barHeight/2);
+        glVertex2f(x - barWidth/2 + barWidth * healthRatio, y + barHeight/2);
+        glVertex2f(x - barWidth/2, y + barHeight/2);
+        glEnd();
     }
+
+    // Draw border (darker)
+    glColor3f(0.3f, 0.3f, 0.3f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(x - barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y + barHeight/2);
+    glVertex2f(x - barWidth/2, y + barHeight/2);
+    glEnd();
+
+    glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
+    
+    // Restore matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    
+    // Re-enable textures
+    glEnable(GL_TEXTURE_2D);
 }
 
 void UI::drawEnemyHealthBar(float x, float y, int currentHealth, int maxHealth) {
