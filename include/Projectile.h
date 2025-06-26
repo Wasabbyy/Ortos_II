@@ -23,6 +23,7 @@ public:
     
     // Collision detection
     bool checkCollision(float targetX, float targetY, float targetRadius) const;
+    bool checkWallCollision(const class Tilemap& tilemap) const;
     
     // Projectile properties
     ProjectileType getType() const { return type; }

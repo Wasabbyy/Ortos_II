@@ -1,4 +1,5 @@
 #include "Projectile.h"
+#include "TileMap.h"
 #include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
 #include <cmath>
@@ -88,4 +89,20 @@ bool Projectile::checkCollision(float targetX, float targetY, float targetRadius
     float distance = std::sqrt(dx * dx + dy * dy);
     
     return distance <= (radius + targetRadius);
+}
+
+bool Projectile::checkWallCollision(const Tilemap& tilemap) const {
+    if (!active) return false;
+    
+    // Convert projectile position to tile coordinates
+    int tileX = static_cast<int>(x / tilemap.getTileWidth());
+    int tileY = static_cast<int>(y / tilemap.getTileHeight());
+    
+    // Check if the tile at projectile position is solid
+    if (tilemap.isTileSolid(tileX, tileY)) {
+        spdlog::debug("Projectile hit wall at tile ({}, {})", tileX, tileY);
+        return true;
+    }
+    
+    return false;
 } 

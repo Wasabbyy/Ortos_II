@@ -105,11 +105,25 @@ int main() {
         // Update and draw projectiles
         for (auto& projectile : playerProjectiles) {
             projectile.update(deltaTime);
+            
+            // Check for wall collision
+            if (projectile.checkWallCollision(tilemap)) {
+                projectile.setActive(false);
+                spdlog::info("Player projectile destroyed by wall collision");
+            }
+            
             projectile.draw();
         }
         
         for (auto& projectile : enemyProjectiles) {
             projectile.update(deltaTime);
+            
+            // Check for wall collision
+            if (projectile.checkWallCollision(tilemap)) {
+                projectile.setActive(false);
+                spdlog::info("Enemy projectile destroyed by wall collision");
+            }
+            
             projectile.draw();
         }
         
