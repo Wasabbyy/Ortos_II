@@ -5,7 +5,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include "tinyxml2.h"
-#include "spdlog.h"
+#include <spdlog/spdlog.h>
 using json = nlohmann::json;
 
 Tilemap::Tilemap() : textureID(0), tileWidth(0), tileHeight(0), 

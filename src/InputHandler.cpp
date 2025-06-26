@@ -1,7 +1,7 @@
 #include "InputHandler.h"
 #include <cmath>
 #include <iostream>
-#include "spdlog.h"
+#include <spdlog/spdlog.h>
 
 void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap) {
     const float moveSpeed = 150.0f;
@@ -75,7 +75,13 @@ void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaT
         spdlog::debug("Player collision detected, no movement");
     }
 
-    spdlog::info("Player Position: ({}, {})", player.getX(), player.getY());
+    // Throttle player position logging to once every 0.5 seconds
+    static float lastLogTime = 0.0f;
+    float currentLogTime = glfwGetTime();
+    if (currentLogTime - lastLogTime > 0.5f) {
+       // spdlog::info("Player Position: ({}, {})", player.getX(), player.getY());
+        lastLogTime = currentLogTime;
+    }
 
     // Direction update
     if (isMoving) {

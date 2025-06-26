@@ -5,7 +5,7 @@
 #include <iostream>
 #include "nlohmann/json.hpp"
 #include <stb_image.h>
-#include "spdlog.h"
+#include <spdlog/spdlog.h>
 using json = nlohmann::json;
 
 int main() {
@@ -43,15 +43,15 @@ int main() {
     Player player;
     stbi_set_flip_vertically_on_load(true);
     player.loadTexture("../assets/graphic/Vampire_Walk.png", 64, 64, 4);
-    player.loadIdleTexture("../assets/graphic/Vampire_Idle.png", 64, 64, 2); 
+    player.loadIdleTexture("../assets/graphic/Vampire_Idle.png", 64, 64, 2);
     stbi_set_flip_vertically_on_load(false);
     InputHandler inputHandler;
-
-    float lastTime = glfwGetTime();
-    Tilemap level;
-
-    // Load the map
-    if (!level.loadFromJSON("../assets/maps/test.json")) {
+    Tilemap tilemap;
+    if (!tilemap.loadTilesetTexture("../assets/maps/catacombs.png", 16, 16)) {
+        spdlog::error("Failed to load tileset texture");
+        return -1;
+    }
+    if (!tilemap.loadFromJSON("../assets/maps/test.json")) {
         spdlog::error("Failed to load map from JSON.");
         return -1;
     }
@@ -59,11 +59,13 @@ int main() {
     // Set up projection to match tilemap size
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    float mapWidth = level.getWidthInTiles() * level.getTileWidth();
-    float mapHeight = level.getHeightInTiles() * level.getTileHeight();
+    float mapWidth = tilemap.getWidthInTiles() * tilemap.getTileWidth();
+    float mapHeight = tilemap.getHeightInTiles() * tilemap.getTileHeight();
     glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+    float lastTime = glfwGetTime();
 
     while (!glfwWindowShouldClose(window)) {
         float currentTime = glfwGetTime();
@@ -72,9 +74,9 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        inputHandler.processInput(window, player, deltaTime, level);
+        inputHandler.processInput(window, player, deltaTime, tilemap);
     
-        level.draw();
+        tilemap.draw();
         player.draw();
 
         glfwSwapBuffers(window);

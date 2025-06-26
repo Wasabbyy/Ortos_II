@@ -1,6 +1,6 @@
 CMakeFiles/Ortos_II.dir/src/Player.cpp.o: \
-  /Users/filipstupar/Documents/OrtosII/src/Player.cpp \
-  /Users/filipstupar/Documents/OrtosII/include/Player.h \
+  /Users/filipstupar/Ortos_II/src/Player.cpp \
+  /Users/filipstupar/Ortos_II/include/Player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/max.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -648,7 +648,7 @@ CMakeFiles/Ortos_II.dir/src/Player.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gltypes.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/OpenGL.framework/Headers/OpenGLAvailability.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/os/availability.h \
-  /Users/filipstupar/Documents/OrtosII/include/stb_image.h \
+  /Users/filipstupar/Ortos_II/include/stb_image.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/ios \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__locale \
@@ -799,4 +799,79 @@ CMakeFiles/Ortos_II.dir/src/Player.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/stack \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__fwd/stack.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/print \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/unistd.h
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/unistd.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/spdlog.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/common.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/null_mutex.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/tweakme.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/chrono \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__chrono/file_clock.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/forward_list \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/fmt.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/format.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/base.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/format-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/common-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/registry.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/periodic_worker.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/condition_variable \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_callback.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/intrusive_shared_ptr.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_state.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/atomic_unique_lock.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/intrusive_list_view.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_token.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/thread \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/formatter.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/jthread.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_source.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/thread.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/sstream \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/this_thread.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/periodic_worker-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/registry-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/logger.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/backtracer.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/circular_q.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/cassert \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/assert.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_assert.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_static_assert.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg_buffer.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/os.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/os-inl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/stat.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_s_ifmt.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_filesec_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/fcntl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/fcntl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_o_sync.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_o_dsync.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/unistd.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_posix_vdisable.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/select.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_select.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_uuid_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/gethostuuid.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityMacros.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/TargetConditionals.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg_buffer-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/backtracer-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/logger-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/pattern_formatter.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/formatter.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/pattern_formatter-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/fmt_helper.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/mdc.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/sink.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/sink-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/ansicolor_sink.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/console_globals.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/ansicolor_sink-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/synchronous_factory.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/version.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/spdlog-inl.h

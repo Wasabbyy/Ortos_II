@@ -34,10 +34,10 @@ public:
 
 private:
     float x, y;
-    float boundingBoxWidth = 40.0f;  // Rectangle width for collision
-    float boundingBoxHeight = 40.0f; // Rectangle height for collision
-    float boundingBoxOffsetX = 12.0f; // Offset from player center to rectangle (tweak as needed)
-    float boundingBoxOffsetY = 24.0f; // Offset from player center to rectangle (tweak as needed)
+    float boundingBoxWidth = 16.0f;   // Much smaller rectangle width for collision
+    float boundingBoxHeight = 16.0f;  // Much smaller rectangle height for collision
+    float boundingBoxOffsetX = 8.0f;  // Center the rectangle horizontally (16/2 = 8)
+    float boundingBoxOffsetY = 8.0f;  // Center the rectangle vertically (16/2 = 8)
     unsigned int textureID;
     int frameWidth, frameHeight;
     int textureWidth, textureHeight;   // ✅ NEW

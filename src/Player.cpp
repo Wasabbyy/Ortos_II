@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 #include <iostream>
-#include "spdlog.h"
+#include <spdlog/spdlog.h>
 
 Player::Player()
     : x(12 * 16.0f), // Start position in world coordinates

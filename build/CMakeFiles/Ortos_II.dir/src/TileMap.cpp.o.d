@@ -1,6 +1,6 @@
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: \
-  /Users/filipstupar/Documents/OrtosII/src/TileMap.cpp \
-  /Users/filipstupar/Documents/OrtosII/include/TileMap.h \
+  /Users/filipstupar/Ortos_II/src/TileMap.cpp \
+  /Users/filipstupar/Ortos_II/include/TileMap.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/copy.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/copy_move_common.h \
@@ -820,44 +820,44 @@ CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__filesystem/recursive_directory_iterator.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__filesystem/u8path.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/sstream \
-  /Users/filipstupar/Documents/OrtosII/include/stb_image.h \
+  /Users/filipstupar/Ortos_II/include/stb_image.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/iostream \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/json.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/adl_serializer.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/abi_macros.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/conversions/from_json.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/json.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/adl_serializer.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/abi_macros.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/conversions/from_json.hpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/forward_list \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/valarray \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/exceptions.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/value_t.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/macro_scope.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/detected.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/void_t.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/exceptions.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/value_t.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/macro_scope.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/detected.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/void_t.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/thirdparty/hedley/hedley.hpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/cassert \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/assert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_assert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_static_assert.h \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/string_escape.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/input/position_t.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/cpp_future.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/type_traits.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/iterators/iterator_traits.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/call_std/begin.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/call_std/end.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/json_fwd.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/string_concat.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/identity_tag.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/std_fs.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/conversions/to_json.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/iterators/iteration_proxy.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/string_utils.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/byte_container_with_subtype.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/hash.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/input/binary_reader.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/input/input_adapters.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/string_escape.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/input/position_t.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/cpp_future.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/type_traits.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/iterators/iterator_traits.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/call_std/begin.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/call_std/end.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/json_fwd.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/string_concat.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/identity_tag.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/std_fs.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/conversions/to_json.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/iterators/iteration_proxy.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/string_utils.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/byte_container_with_subtype.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/hash.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/input/binary_reader.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/input/input_adapters.hpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/numeric \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__numeric/accumulate.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__numeric/adjacent_difference.h \
@@ -874,24 +874,89 @@ CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__numeric/transform_reduce.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/execution \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__type_traits/is_execution_policy.h \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/input/json_sax.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/input/lexer.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/meta/is_sax.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/input/parser.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/iterators/internal_iterator.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/iterators/primitive_iterator.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/iterators/iter_impl.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/iterators/json_reverse_iterator.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/json_custom_base_class.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/json_pointer.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/json_ref.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/output/binary_writer.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/output/output_adapters.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/output/serializer.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/conversions/to_chars.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/ordered_map.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/input/json_sax.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/input/lexer.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/is_sax.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/input/parser.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/iterators/internal_iterator.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/iterators/primitive_iterator.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/iterators/iter_impl.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/iterators/json_reverse_iterator.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/json_custom_base_class.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/json_pointer.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/json_ref.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/output/binary_writer.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/output/output_adapters.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/output/serializer.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/conversions/to_chars.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/ordered_map.hpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/any \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/chrono \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/detail/macro_unscope.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
-  /Users/filipstupar/Documents/OrtosII/include/tinyxml2.h
+  /Users/filipstupar/Ortos_II/include/nlohmann/detail/macro_unscope.hpp \
+  /Users/filipstupar/Ortos_II/include/nlohmann/thirdparty/hedley/hedley_undef.hpp \
+  /Users/filipstupar/Ortos_II/include/tinyxml2.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/spdlog.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/common.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/null_mutex.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/tweakme.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/fmt.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/format.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/base.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/format-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/common-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/registry.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/periodic_worker.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/condition_variable \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_callback.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/intrusive_shared_ptr.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_state.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/atomic_unique_lock.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/intrusive_list_view.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_token.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/thread \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/formatter.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/jthread.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_source.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/thread.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/this_thread.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/periodic_worker-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/registry-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/logger.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/backtracer.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/circular_q.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg_buffer.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/os.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/os-inl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/stat.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_s_ifmt.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_filesec_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/fcntl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/fcntl.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_o_sync.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_o_dsync.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/unistd.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_posix_vdisable.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/select.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_select.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_uuid_t.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/gethostuuid.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityMacros.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/TargetConditionals.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg_buffer-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/backtracer-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/logger-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/pattern_formatter.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/formatter.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/pattern_formatter-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/fmt_helper.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/mdc.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/sink.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/sink-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/ansicolor_sink.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/console_globals.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/sinks/ansicolor_sink-inl.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/details/synchronous_factory.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/version.h \
+  /Users/filipstupar/Ortos_II/include/spdlog/spdlog-inl.h
