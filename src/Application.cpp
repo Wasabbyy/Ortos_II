@@ -5,10 +5,15 @@
 #include <iostream>
 #include "nlohmann/json.hpp"
 #include <stb_image.h>
+#include "spdlog.h"
 using json = nlohmann::json;
 
 int main() {
+    // Initialize logger
+    spdlog::set_level(spdlog::level::debug); // Set global log level to debug
+    spdlog::info("Starting Ortos II application");
     if (!glfwInit()) {
+        spdlog::error("Failed to initialize GLFW");
         return -1;
     }
 
@@ -17,6 +22,7 @@ int main() {
     GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Ortos II", primaryMonitor, nullptr);
 
     if (!window) {
+        spdlog::error("Failed to create GLFW window");
         glfwTerminate();
         return -1;
     }
@@ -46,7 +52,7 @@ int main() {
 
     // Load the map
     if (!level.loadFromJSON("../assets/maps/test.json")) {
-        std::cerr << "Failed to load map from JSON." << std::endl;
+        spdlog::error("Failed to load map from JSON.");
         return -1;
     }
 
@@ -75,6 +81,7 @@ int main() {
         glfwPollEvents();
     }
 
+    spdlog::info("Shutting down Ortos II application");
     glfwTerminate();
     return 0;
 }

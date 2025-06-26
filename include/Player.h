@@ -24,9 +24,20 @@ public:
     void updateIdleAnimation(float deltaTime);
     int getFrameWidth() const { return isIdle ? idleFrameWidth : frameWidth; }
     int getFrameHeight() const { return isIdle ? idleFrameHeight : frameHeight; }
+    // Rectangle collision accessors
+    float getLeft() const { return x - boundingBoxOffsetX; }
+    float getRight() const { return x - boundingBoxOffsetX + boundingBoxWidth; }
+    float getTop() const { return y - boundingBoxOffsetY; }
+    float getBottom() const { return y - boundingBoxOffsetY + boundingBoxHeight; }
+    float getBoundingBoxWidth() const { return boundingBoxWidth; }
+    float getBoundingBoxHeight() const { return boundingBoxHeight; }
 
 private:
     float x, y;
+    float boundingBoxWidth = 40.0f;  // Rectangle width for collision
+    float boundingBoxHeight = 40.0f; // Rectangle height for collision
+    float boundingBoxOffsetX = 12.0f; // Offset from player center to rectangle (tweak as needed)
+    float boundingBoxOffsetY = 24.0f; // Offset from player center to rectangle (tweak as needed)
     unsigned int textureID;
     int frameWidth, frameHeight;
     int textureWidth, textureHeight;   // ✅ NEW

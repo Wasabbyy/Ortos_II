@@ -5,6 +5,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include "tinyxml2.h"
+#include "spdlog.h"
 using json = nlohmann::json;
 
 Tilemap::Tilemap() : textureID(0), tileWidth(0), tileHeight(0), 
@@ -23,9 +24,10 @@ bool Tilemap::loadTilesetTexture(const std::string& imagePath, int tileW, int ti
     int width, height, channels;
     unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &channels, 0);
     if (!data) {
-        std::cerr << "Failed to load tileset texture: " << imagePath << std::endl;
+        spdlog::error("Failed to load tileset texture: {}", imagePath);
         return false;
     }
+    spdlog::info("Loaded tileset texture: {} ({}x{})", imagePath, width, height);
 
     textureWidth = width;
     textureHeight = height;
@@ -51,9 +53,10 @@ bool Tilemap::loadTilesetTexture(const std::string& imagePath, int tileW, int ti
 bool Tilemap::loadFromJSON(const std::string& jsonPath) {
     std::ifstream file(jsonPath);
     if (!file.is_open()) {
-        std::cerr << "ERROR: Failed to open JSON file!" << std::endl;
+        spdlog::error("ERROR: Failed to open JSON file: {}", jsonPath);
         return false;
     }
+    spdlog::info("Loading map from JSON: {}", jsonPath);
 
     json j;
     try {
@@ -66,7 +69,7 @@ bool Tilemap::loadFromJSON(const std::string& jsonPath) {
     // Load tileset
     std::string resolvedPath = "../assets/maps/catacombs.tsx";
     if (!loadTilesetFromTSX(resolvedPath)) {
-        std::cerr << "ERROR: Failed to load tileset!" << std::endl;
+        spdlog::error("ERROR: Failed to load tileset: {}", resolvedPath);
         return false;
     }
 
@@ -124,6 +127,7 @@ bool Tilemap::loadFromJSON(const std::string& jsonPath) {
         }
     }
 
+    spdlog::info("Map loaded: {}x{} tiles, tile size: {}x{}", width, height, tileWidth, tileHeight);
     return true;
 }
 
@@ -182,34 +186,34 @@ int Tilemap::getHeightInTiles() const { return height; }
 int Tilemap::getTileWidth() const { return tileWidth; }
 int Tilemap::getTileHeight() const { return tileHeight; }
 bool Tilemap::loadTilesetFromTSX(const std::string& tsxPath) {
-    std::cout << "Attempting to load TSX file: " << tsxPath << std::endl;
+    spdlog::info("Attempting to load TSX file: {}", tsxPath);
     
 
     tinyxml2::XMLDocument doc;
     if (doc.LoadFile(tsxPath.c_str()) != tinyxml2::XML_SUCCESS) {
-        std::cerr << "Failed to load TSX file: " << tsxPath << std::endl;
-        std::cerr << "Error: " << doc.ErrorStr() << std::endl;
+        spdlog::error("Failed to load TSX file: {}", tsxPath);
+        spdlog::error("Error: {}", doc.ErrorStr());
         return false;
     }
 
     auto* tileset = doc.FirstChildElement("tileset");
     if (!tileset) {
-        std::cerr << "No <tileset> element in TSX" << std::endl;
+        spdlog::error("No <tileset> element in TSX: {}", tsxPath);
         return false;
     }
 
     tileWidth = tileset->IntAttribute("tilewidth");
     tileHeight = tileset->IntAttribute("tileheight");
-    std::cout << "Tileset dimensions: " << tileWidth << "x" << tileHeight << std::endl;
+    spdlog::info("Tileset dimensions: {}x{}", tileWidth, tileHeight);
 
     auto* image = tileset->FirstChildElement("image");
     if (!image) {
-        std::cerr << "No <image> in TSX" << std::endl;
+        spdlog::error("No <image> in TSX: {}", tsxPath);
         return false;
     }
 
     std::string imagePath = image->Attribute("source");
-    std::cout << "Found tileset image source: " << imagePath << std::endl;
+    spdlog::info("Found tileset image source: {}", imagePath);
 
     // You could optionally normalize path here (TSX may use relative path)
     return loadTilesetTexture(imagePath, tileWidth, tileHeight);

@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 #include <iostream>
+#include "spdlog.h"
 
 Player::Player()
     : x(12 * 16.0f), // Start position in world coordinates
@@ -12,7 +13,9 @@ Player::Player()
       totalFrames(1), 
       animationSpeed(0.4f), elapsedTime(0.0f),
       currentFrame(0), direction(Direction::Down),
-      isMoving(false), isIdle(true) {}
+      isMoving(false), isIdle(true) {
+    spdlog::debug("Player created at position ({}, {})", x, y);
+}
 
 Player::~Player() {
     // Add cleanup logic if needed
@@ -70,6 +73,20 @@ void Player::draw() const {
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
+
+    // Draw collision rectangle (bounding box) in red, thick and always visible
+    glLineWidth(3.0f); // Thicker line
+    glDisable(GL_BLEND); // Disable blending for solid color
+    glColor3f(1.0f, 0.0f, 0.0f); // Red
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(getLeft(), getTop());
+    glVertex2f(getRight(), getTop());
+    glVertex2f(getRight(), getBottom());
+    glVertex2f(getLeft(), getBottom());
+    glEnd();
+    glEnable(GL_BLEND); // Restore blending
+    glLineWidth(1.0f); // Restore line width
+    glColor3f(1.0f, 1.0f, 1.0f); // Reset color to white
 }
 
 // Rest of the Player class methods remain the same...
@@ -82,11 +99,11 @@ void Player::loadTexture(const std::string& filePath, int frameWidth, int frameH
     int width, height, channels;
     unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
     if (!data) {
-        std::cerr << "Failed to load texture: " << filePath << std::endl;
+        spdlog::error("Failed to load texture: {}", filePath);
         return;
     }
 
-    std::cout << "Loaded texture: " << filePath << " (" << width << "x" << height << ")" << std::endl;
+    spdlog::info("Loaded texture: {} ({}x{})", filePath, width, height);
 
     textureWidth = width;
     textureHeight = height;
@@ -108,7 +125,7 @@ void Player::loadTexture(const std::string& filePath, int frameWidth, int frameH
     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     stbi_image_free(data);
 
-    std::cout << "Texture loaded successfully with ID: " << textureID << std::endl;
+    spdlog::debug("Texture loaded successfully with ID: {}", textureID);
 }
 
 void Player::updateAnimation(float deltaTime, bool isMoving) {
@@ -186,9 +203,10 @@ void Player::updateIdleAnimation(float deltaTime) {
 }
 // In Player.cpp
 void Player::move(float dx, float dy) {
+    float oldX = x, oldY = y;
     x += dx;
     y += dy;
-
+    spdlog::debug("Player moved from ({}, {}) to ({}, {})", oldX, oldY, x, y);
     if (dx > 0) direction = Direction::Right;
     else if (dx < 0) direction = Direction::Left;
     else if (dy > 0) direction = Direction::Up;

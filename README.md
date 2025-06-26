@@ -83,3 +83,23 @@ Thesis Objectives
     Optimize for performance while keeping codebase modular and maintainable.
 
     Reflect on the balance between game design theory and low-level implementation.
+
+## Logging
+
+This project uses [spdlog](https://github.com/gabime/spdlog) for modern, fast, and structured logging.
+
+- All major actions (startup, shutdown, errors, player movement, texture loading, map loading, collisions, etc.) are logged.
+- Log output includes timestamps, log levels, and clear messages.
+- You can control the verbosity by changing the log level in `src/Application.cpp`:
+  ```cpp
+  spdlog::set_level(spdlog::level::debug); // Options: trace, debug, info, warn, error, critical, off
+  ```
+- To add more logs, use:
+  ```cpp
+  spdlog::info("Message");
+  spdlog::debug("Debug info: {}", value);
+  spdlog::error("Error: {}", errorMsg);
+  ```
+
+**Extending logging:**
+- You can add file logging, custom formats, or more advanced features by consulting the [spdlog documentation](https://github.com/gabime/spdlog#usage-example).
