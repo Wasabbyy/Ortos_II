@@ -841,6 +841,215 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Users/filipstupar/Ortos_II/include/TileMap.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/unordered_set \
   /Users/filipstupar/Ortos_II/include/UI.h \
+  /Users/filipstupar/Ortos_II/include/TextRenderer.h \
+  /Users/filipstupar/Ortos_II/include/ft2build.h \
+  /Users/filipstupar/Ortos_II/include/freetype/config/ftheader.h \
+  /Users/filipstupar/Ortos_II/include/freetype/freetype.h \
+  /Users/filipstupar/Ortos_II/include/freetype/config/ftconfig.h \
+  /Users/filipstupar/Ortos_II/include/freetype/config/ftoption.h \
+  /Users/filipstupar/Ortos_II/include/freetype/config/ftstdlib.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/setjmp.h \
+  /Users/filipstupar/Ortos_II/include/freetype/config/integer-types.h \
+  /Users/filipstupar/Ortos_II/include/freetype/config/public-macros.h \
+  /Users/filipstupar/Ortos_II/include/freetype/config/mac-support.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityMacros.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/TargetConditionals.h \
+  /Users/filipstupar/Ortos_II/include/freetype/fttypes.h \
+  /Users/filipstupar/Ortos_II/include/freetype/ftsystem.h \
+  /Users/filipstupar/Ortos_II/include/freetype/ftimage.h \
+  /Users/filipstupar/Ortos_II/include/freetype/fterrors.h \
+  /Users/filipstupar/Ortos_II/include/freetype/ftmoderr.h \
+  /Users/filipstupar/Ortos_II/include/freetype/fterrdef.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
+  /opt/homebrew/include/glm/glm.hpp \
+  /opt/homebrew/include/glm/detail/_fixes.hpp \
+  /opt/homebrew/include/glm/detail/setup.hpp \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/cassert \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/assert.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_assert.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_static_assert.h \
+  /opt/homebrew/include/glm/detail/../simd/platform.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/cfloat \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/float.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/float.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/float.h \
+  /opt/homebrew/include/glm/fwd.hpp \
+  /opt/homebrew/include/glm/detail/qualifier.hpp \
+  /opt/homebrew/include/glm/vec2.hpp \
+  /opt/homebrew/include/glm/./ext/vector_bool2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_vec2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/qualifier.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_vec2.inl \
+  /opt/homebrew/include/glm/./ext/../detail/./compute_vector_relational.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/./setup.hpp \
+  /opt/homebrew/include/glm/./ext/vector_bool2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_float2.hpp \
+  /opt/homebrew/include/glm/./ext/vector_float2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_double2.hpp \
+  /opt/homebrew/include/glm/./ext/vector_double2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_int2.hpp \
+  /opt/homebrew/include/glm/./ext/vector_int2_sized.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/vector_int2.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/scalar_int_sized.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/../detail/setup.hpp \
+  /opt/homebrew/include/glm/./ext/vector_uint2.hpp \
+  /opt/homebrew/include/glm/./ext/vector_uint2_sized.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/vector_uint2.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/scalar_uint_sized.hpp \
+  /opt/homebrew/include/glm/vec3.hpp \
+  /opt/homebrew/include/glm/./ext/vector_bool3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_vec3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_vec3.inl \
+  /opt/homebrew/include/glm/./ext/../detail/compute_vector_relational.hpp \
+  /opt/homebrew/include/glm/./ext/vector_bool3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_float3.hpp \
+  /opt/homebrew/include/glm/./ext/vector_float3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_double3.hpp \
+  /opt/homebrew/include/glm/./ext/vector_double3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_int3.hpp \
+  /opt/homebrew/include/glm/./ext/vector_int3_sized.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/vector_int3.hpp \
+  /opt/homebrew/include/glm/./ext/vector_uint3.hpp \
+  /opt/homebrew/include/glm/./ext/vector_uint3_sized.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/vector_uint3.hpp \
+  /opt/homebrew/include/glm/vec4.hpp \
+  /opt/homebrew/include/glm/./ext/vector_bool4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_vec4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_vec4.inl \
+  /opt/homebrew/include/glm/./ext/vector_bool4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_float4.hpp \
+  /opt/homebrew/include/glm/./ext/vector_float4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/vector_double4.hpp \
+  /opt/homebrew/include/glm/./ext/vector_double4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/setup.hpp \
+  /opt/homebrew/include/glm/./ext/vector_int4.hpp \
+  /opt/homebrew/include/glm/./ext/vector_int4_sized.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/vector_int4.hpp \
+  /opt/homebrew/include/glm/./ext/vector_uint4.hpp \
+  /opt/homebrew/include/glm/./ext/vector_uint4_sized.hpp \
+  /opt/homebrew/include/glm/./ext/../ext/vector_uint4.hpp \
+  /opt/homebrew/include/glm/mat2x2.hpp \
+  /opt/homebrew/include/glm/./ext/matrix_double2x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_mat2x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/type_mat2x2.inl \
+  /opt/homebrew/include/glm/./ext/../detail/../matrix.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/qualifier.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/setup.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../vec2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../vec3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../vec4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat2x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat2x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double2x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat2x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_vec2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_vec3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat2x3.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double2x3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float2x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float2x3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat2x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double2x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat2x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_vec4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat2x4.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double2x4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float2x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float2x4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat3x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double3x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat3x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat3x2.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double3x2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float3x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float3x2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat3x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double3x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat3x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat3x3.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/../matrix.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double3x3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float3x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float3x3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat3x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double3x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat3x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat3x4.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double3x4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float3x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float3x4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat4x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double4x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat4x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat4x2.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double4x2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float4x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float4x2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat2x2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat4x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double4x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat4x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat4x3.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double4x3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float4x3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float4x3_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../mat4x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double4x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat4x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/../detail/type_mat4x4.inl \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_double4x4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float4x4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/.././ext/matrix_float4x4_precision.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/func_matrix.inl \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../geometric.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/type_vec3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/func_geometric.inl \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../exponential.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/type_vec1.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/qualifier.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/type_vec1.inl \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/./compute_vector_relational.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/type_vec2.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/type_vec3.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/type_vec4.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/func_exponential.inl \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/../vector_relational.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/../detail/qualifier.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/../detail/setup.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/../detail/func_vector_relational.inl \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/_vectorize.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../common.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/_fixes.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/func_common.inl \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/compute_common.hpp \
+  /opt/homebrew/include/glm/./ext/../detail/../detail/../detail/../detail/setup.hpp \
+  /opt/homebrew/include/glm/./ext/matrix_double2x2_precision.hpp \
+  /opt/homebrew/include/glm/./ext/matrix_float2x2.hpp \
+  /opt/homebrew/include/glm/./ext/matrix_float2x2_precision.hpp \
+  /opt/homebrew/include/glm/mat2x3.hpp \
+  /opt/homebrew/include/glm/mat2x4.hpp \
+  /opt/homebrew/include/glm/mat3x2.hpp \
+  /opt/homebrew/include/glm/mat3x3.hpp \
+  /opt/homebrew/include/glm/mat3x4.hpp \
+  /opt/homebrew/include/glm/mat4x2.hpp \
+  /opt/homebrew/include/glm/mat4x3.hpp \
+  /opt/homebrew/include/glm/mat4x4.hpp \
+  /opt/homebrew/include/glm/trigonometric.hpp \
+  /opt/homebrew/include/glm/detail/func_trigonometric.inl \
+  /opt/homebrew/include/glm/detail/_vectorize.hpp \
+  /opt/homebrew/include/glm/exponential.hpp \
+  /opt/homebrew/include/glm/common.hpp \
+  /opt/homebrew/include/glm/packing.hpp \
+  /opt/homebrew/include/glm/detail/func_packing.inl \
+  /opt/homebrew/include/glm/detail/../common.hpp \
+  /opt/homebrew/include/glm/detail/type_half.hpp \
+  /opt/homebrew/include/glm/detail/type_half.inl \
+  /opt/homebrew/include/glm/geometric.hpp \
+  /opt/homebrew/include/glm/matrix.hpp \
+  /opt/homebrew/include/glm/vector_relational.hpp \
+  /opt/homebrew/include/glm/integer.hpp \
+  /opt/homebrew/include/glm/detail/func_integer.inl \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/iostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/istream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__ostream/basic_ostream.h \
@@ -861,8 +1070,6 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/abi_macros.hpp \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/conversions/from_json.hpp \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/forward_list \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/valarray \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/exceptions.hpp \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/value_t.hpp \
@@ -870,10 +1077,6 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/detected.hpp \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/void_t.hpp \
   /Users/filipstupar/Ortos_II/include/nlohmann/thirdparty/hedley/hedley.hpp \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/cassert \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/assert.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_assert.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_static_assert.h \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/string_escape.hpp \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/input/position_t.hpp \
   /Users/filipstupar/Ortos_II/include/nlohmann/detail/meta/cpp_future.hpp \
@@ -980,8 +1183,6 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_select.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_uuid_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/gethostuuid.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityMacros.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/TargetConditionals.h \
   /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg_buffer-inl.h \
   /Users/filipstupar/Ortos_II/include/spdlog/details/backtracer-inl.h \
   /Users/filipstupar/Ortos_II/include/spdlog/logger-inl.h \

@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/filipstupar/Ortos_II/src/InputHandler.cpp" "CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o.d"
   "/Users/filipstupar/Ortos_II/src/Player.cpp" "CMakeFiles/Ortos_II.dir/src/Player.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/Player.cpp.o.d"
   "/Users/filipstupar/Ortos_II/src/Projectile.cpp" "CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o.d"
+  "/Users/filipstupar/Ortos_II/src/TextRenderer.cpp" "CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o.d"
   "/Users/filipstupar/Ortos_II/src/TileMap.cpp" "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o.d"
   "/Users/filipstupar/Ortos_II/src/UI.cpp" "CMakeFiles/Ortos_II.dir/src/UI.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/UI.cpp.o.d"
   "/Users/filipstupar/Ortos_II/src/stb_image.cpp" "CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o.d"

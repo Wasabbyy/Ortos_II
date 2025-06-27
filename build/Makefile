@@ -249,6 +249,30 @@ src/Projectile.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Projectile.cpp.s
 .PHONY : src/Projectile.cpp.s
 
+src/TextRenderer.o: src/TextRenderer.cpp.o
+.PHONY : src/TextRenderer.o
+
+# target to build an object file
+src/TextRenderer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o
+.PHONY : src/TextRenderer.cpp.o
+
+src/TextRenderer.i: src/TextRenderer.cpp.i
+.PHONY : src/TextRenderer.i
+
+# target to preprocess a source file
+src/TextRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i
+.PHONY : src/TextRenderer.cpp.i
+
+src/TextRenderer.s: src/TextRenderer.cpp.s
+.PHONY : src/TextRenderer.s
+
+# target to generate assembly for a file
+src/TextRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s
+.PHONY : src/TextRenderer.cpp.s
+
 src/TileMap.o: src/TileMap.cpp.o
 .PHONY : src/TileMap.o
 
@@ -393,6 +417,9 @@ help:
 	@echo "... src/Projectile.o"
 	@echo "... src/Projectile.i"
 	@echo "... src/Projectile.s"
+	@echo "... src/TextRenderer.o"
+	@echo "... src/TextRenderer.i"
+	@echo "... src/TextRenderer.s"
 	@echo "... src/TileMap.o"
 	@echo "... src/TileMap.i"
 	@echo "... src/TileMap.s"

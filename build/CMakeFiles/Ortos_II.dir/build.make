@@ -156,10 +156,24 @@ CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/InputHandler.cpp -o CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s
 
+CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
+CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o: /Users/filipstupar/Ortos_II/src/TextRenderer.cpp
+CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o -MF CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o -c /Users/filipstupar/Ortos_II/src/TextRenderer.cpp
+
+CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/TextRenderer.cpp > CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i
+
+CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/TextRenderer.cpp -o CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s
+
 CMakeFiles/Ortos_II.dir/src/glad.c.o: CMakeFiles/Ortos_II.dir/flags.make
 CMakeFiles/Ortos_II.dir/src/glad.c.o: /Users/filipstupar/Ortos_II/src/glad.c
 CMakeFiles/Ortos_II.dir/src/glad.c.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/Ortos_II.dir/src/glad.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/Ortos_II.dir/src/glad.c.o"
 	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/glad.c.o -MF CMakeFiles/Ortos_II.dir/src/glad.c.o.d -o CMakeFiles/Ortos_II.dir/src/glad.c.o -c /Users/filipstupar/Ortos_II/src/glad.c
 
 CMakeFiles/Ortos_II.dir/src/glad.c.i: cmake_force
@@ -173,7 +187,7 @@ CMakeFiles/Ortos_II.dir/src/glad.c.s: cmake_force
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: /Users/filipstupar/Ortos_II/src/stb_image.cpp
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o -MF CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o -c /Users/filipstupar/Ortos_II/src/stb_image.cpp
 
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.i: cmake_force
@@ -187,7 +201,7 @@ CMakeFiles/Ortos_II.dir/src/stb_image.cpp.s: cmake_force
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: /Users/filipstupar/Ortos_II/src/TileMap.cpp
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o -MF CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o -c /Users/filipstupar/Ortos_II/src/TileMap.cpp
 
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.i: cmake_force
@@ -201,7 +215,7 @@ CMakeFiles/Ortos_II.dir/src/TileMap.cpp.s: cmake_force
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: /Users/filipstupar/Ortos_II/src/tinyxml2.cpp
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o -MF CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o -c /Users/filipstupar/Ortos_II/src/tinyxml2.cpp
 
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.i: cmake_force
@@ -220,6 +234,7 @@ Ortos_II_OBJECTS = \
 "CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o" \
 "CMakeFiles/Ortos_II.dir/src/UI.cpp.o" \
 "CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o" \
+"CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o" \
 "CMakeFiles/Ortos_II.dir/src/glad.c.o" \
 "CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o" \
 "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o" \
@@ -234,14 +249,16 @@ Ortos_II: CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o
 Ortos_II: CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o
 Ortos_II: CMakeFiles/Ortos_II.dir/src/UI.cpp.o
 Ortos_II: CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o
+Ortos_II: CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o
 Ortos_II: CMakeFiles/Ortos_II.dir/src/glad.c.o
 Ortos_II: CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o
 Ortos_II: CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o
 Ortos_II: CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o
 Ortos_II: CMakeFiles/Ortos_II.dir/build.make
 Ortos_II: /opt/homebrew/lib/libglfw.3.4.dylib
+Ortos_II: /opt/homebrew/lib/libfreetype.dylib
 Ortos_II: CMakeFiles/Ortos_II.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable Ortos_II"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable Ortos_II"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Ortos_II.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

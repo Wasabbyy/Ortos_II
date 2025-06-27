@@ -19,11 +19,15 @@ TextRenderer::~TextRenderer() {
 }
 
 bool TextRenderer::init(const std::string& fontPath, unsigned int fontSize) {
+    spdlog::info("TextRenderer::init - Loading font: {} with size: {}", fontPath, fontSize);
+    
     // Load font face
     if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
         spdlog::error("ERROR::FREETYPE: Failed to load font: {}", fontPath);
         return false;
     }
+    
+    spdlog::info("Font loaded successfully");
     
     // Set font size
     FT_Set_Pixel_Sizes(face, 0, fontSize);
@@ -32,10 +36,10 @@ bool TextRenderer::init(const std::string& fontPath, unsigned int fontSize) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
     // Load first 128 characters of ASCII set
-    for (GLubyte c = 0; c < 128; c++) {
+    for (unsigned char c = 0; c < 128; c++) {
         // Load character glyph
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            spdlog::warn("ERROR::FREETYPE: Failed to load Glyph: {}", c);
+            spdlog::warn("ERROR::FREETYPE: Failed to load Glyph for character: {}", c);
             continue;
         }
         
@@ -43,16 +47,22 @@ bool TextRenderer::init(const std::string& fontPath, unsigned int fontSize) {
         GLuint texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
+        // Prepare a two-channel buffer for GL_LUMINANCE_ALPHA
+        std::vector<unsigned char> buffer(face->glyph->bitmap.width * face->glyph->bitmap.rows * 2);
+        for (int i = 0; i < face->glyph->bitmap.width * face->glyph->bitmap.rows; ++i) {
+            buffer[2 * i] = 255; // Luminance (white)
+            buffer[2 * i + 1] = face->glyph->bitmap.buffer[i]; // Alpha
+        }
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
-            GL_RED,
+            GL_LUMINANCE_ALPHA,
             face->glyph->bitmap.width,
             face->glyph->bitmap.rows,
             0,
-            GL_RED,
+            GL_LUMINANCE_ALPHA,
             GL_UNSIGNED_BYTE,
-            face->glyph->bitmap.buffer
+            buffer.data()
         );
         
         // Set texture options
@@ -68,17 +78,16 @@ bool TextRenderer::init(const std::string& fontPath, unsigned int fontSize) {
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
             static_cast<GLuint>(face->glyph->advance.x)
         };
-        characters.insert(std::pair<GLchar, Character>(c, character));
+        characters.insert(std::pair<char, Character>(c, character));
     }
     
-    // Setup shaders and buffers
-    if (!compileShaders()) {
-        return false;
-    }
-    setupBuffers();
+    glBindTexture(GL_TEXTURE_2D, 0);
     
+    // Destroy FreeType once we're finished
+    FT_Done_Face(face);
+    
+    spdlog::info("TextRenderer initialized successfully with {} characters", characters.size());
     initialized = true;
-    spdlog::info("TextRenderer initialized successfully with font: {}", fontPath);
     return true;
 }
 
@@ -99,19 +108,24 @@ void TextRenderer::renderText(const std::string& text, float x, float y, float s
         return;
     }
     
-    // Enable blending for text transparency
+    spdlog::debug("Rendering text: '{}' at ({}, {}) scale={}", text, x, y, scale);
+    
+    // Activate corresponding render state
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    // Enable texturing
-    glEnable(GL_TEXTURE_2D);
-    
-    // Set color
+    // Set text color
     glColor3f(r, g, b);
     
     // Iterate through all characters
     std::string::const_iterator c;
     for (c = text.begin(); c != text.end(); c++) {
+        if (characters.find(*c) == characters.end()) {
+            spdlog::warn("Character '{}' not found in font", *c);
+            continue;
+        }
+        
         Character ch = characters[*c];
         
         GLfloat xpos = x + ch.bearing.x * scale;
@@ -120,9 +134,10 @@ void TextRenderer::renderText(const std::string& text, float x, float y, float s
         GLfloat w = ch.size.x * scale;
         GLfloat h = ch.size.y * scale;
         
-        // Render glyph texture over quad using immediate mode
+        // Render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, ch.textureID);
         
+        // Draw the character
         glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f); glVertex2f(xpos, ypos + h);
         glTexCoord2f(0.0f, 1.0f); glVertex2f(xpos, ypos);
@@ -134,9 +149,9 @@ void TextRenderer::renderText(const std::string& text, float x, float y, float s
         x += (ch.advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
     }
     
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_BLEND);
     glColor3f(1.0f, 1.0f, 1.0f); // Reset color
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_TEXTURE_2D);
 }
 
 float TextRenderer::getTextWidth(const std::string& text, float scale) {

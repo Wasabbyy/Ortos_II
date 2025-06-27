@@ -9,6 +9,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Ortos_II.dir/src/Player.cpp.o.d"
   "CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o"
   "CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o.d"
+  "CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o"
+  "CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o.d"
   "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o"
   "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o.d"
   "CMakeFiles/Ortos_II.dir/src/UI.cpp.o"
