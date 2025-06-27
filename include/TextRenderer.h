@@ -1,7 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#include "ft2build.h"
+#include "freetype/freetype.h"
 #include <map>
 #include <string>
 #include <glm/glm.hpp>
