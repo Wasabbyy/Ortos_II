@@ -242,13 +242,13 @@ void UI::drawPixelText(const std::string&, float, float, float, float, float, fl
 
 void UI::drawMenuButton(const std::string& text, float x, float y, float width, float height, bool isHovered, bool isSelected) {
     glDisable(GL_TEXTURE_2D);
-    // Draw button background
+    // Button background colors for dark theme
     if (isSelected) {
-        glColor3f(1.0f, 1.0f, 0.0f); // Yellow for selected
+        glColor3f(0.4f, 0.35f, 0.5f); // Dusty muted purple-gray for selected
     } else if (isHovered) {
-        glColor3f(0.7f, 0.7f, 0.7f); // Light gray for hover
+        glColor3f(0.35f, 0.35f, 0.4f); // Slightly lighter gray for hover
     } else {
-        glColor3f(0.5f, 0.5f, 0.5f); // Gray for normal
+        glColor3f(0.25f, 0.25f, 0.3f); // Dark gray for normal
     }
     glBegin(GL_QUADS);
     glVertex2f(x, y);
@@ -257,7 +257,7 @@ void UI::drawMenuButton(const std::string& text, float x, float y, float width, 
     glVertex2f(x, y + height);
     glEnd();
     // Draw button border
-    glColor3f(0.3f, 0.3f, 0.3f);
+    glColor3f(0.15f, 0.15f, 0.18f); // Even darker border
     glBegin(GL_LINE_LOOP);
     glVertex2f(x, y);
     glVertex2f(x + width, y);
@@ -268,10 +268,10 @@ void UI::drawMenuButton(const std::string& text, float x, float y, float width, 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Draw text using FreeType (red for all buttons)
+    // Draw text using FreeType (darker, muted red)
     float textX = x + width / 2.0f;
     float textY = y + height / 2.0f - 5.0f;
-    drawCenteredText(text, textX, textY, 0.8f, 1.0f, 0.0f, 0.0f);
+    drawCenteredText(text, textX, textY, 0.8f, 0.7f, 0.2f, 0.2f);
 }
 
 void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
@@ -293,9 +293,9 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
     glEnd();
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
-    // Draw title using FreeType (red)
+    // Draw title using FreeType (darker red)
     float titleY = windowHeight * 0.8f;
-    drawCenteredText("Ortos II", windowWidth / 2.0f, titleY, 3.0f, 1.0f, 0.0f, 0.0f);  // Red color
+    drawCenteredText("Ortos II", windowWidth / 2.0f, titleY, 3.0f, 0.7f, 0.2f, 0.2f);  // Muted red
     // Draw buttons
     float buttonWidth = 200.0f;
     float buttonHeight = 60.0f;
@@ -317,7 +317,7 @@ bool UI::isMouseOverButton(float mouseX, float mouseY, float buttonX, float butt
            mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
 }
 
-void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHovered) {
+void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHovered, bool exitButtonHovered, int selectedButton) {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -336,15 +336,17 @@ void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHo
     glEnd();
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
-    // Draw "YOU DIED" text using FreeType (red)
+    // Draw "YOU DIED" text using FreeType (darker red)
     float titleY = windowHeight * 0.8f;
-    drawCenteredText("YOU DIED", windowWidth / 2.0f, titleY, 3.0f, 1.0f, 0.0f, 0.0f);  // Red color
-    // Draw respawn button
+    drawCenteredText("YOU DIED", windowWidth / 2.0f, titleY, 3.0f, 0.7f, 0.2f, 0.2f);  // Muted red
+    // Draw respawn and exit buttons
     float buttonWidth = 200.0f;
     float buttonHeight = 60.0f;
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
-    float buttonY = windowHeight * 0.4f;
-    drawMenuButton("RESPAWN", buttonX, buttonY, buttonWidth, buttonHeight, respawnButtonHovered, false);
+    float respawnButtonY = windowHeight * 0.5f;
+    float exitButtonY = windowHeight * 0.35f;
+    drawMenuButton("RESPAWN", buttonX, respawnButtonY, buttonWidth, buttonHeight, respawnButtonHovered, selectedButton == 0);
+    drawMenuButton("EXIT GAME", buttonX, exitButtonY, buttonWidth, buttonHeight, exitButtonHovered, selectedButton == 1);
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);

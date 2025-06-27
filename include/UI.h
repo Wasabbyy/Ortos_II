@@ -24,7 +24,7 @@ public:
     static bool isMouseOverButton(float mouseX, float mouseY, float buttonX, float buttonY, float buttonWidth, float buttonHeight);
     
     // Death screen function
-    static void drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHovered);
+    static void drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHovered, bool exitButtonHovered, int selectedButton);
 
 private:
     static TextRenderer* textRenderer;
