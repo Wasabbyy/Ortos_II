@@ -14,7 +14,8 @@ using json = nlohmann::json;
 
 enum class GameState {
     MENU,
-    PLAYING
+    PLAYING,
+    DEATH
 };
 
 int main() {
@@ -58,6 +59,11 @@ int main() {
     bool keyUpPressed = false;
     bool keyDownPressed = false;
     bool keyEnterPressed = false;
+    
+    // Mouse input for death screen
+    double mouseX = 0.0, mouseY = 0.0;
+    bool mouseLeftPressed = false;
+    bool respawnButtonHovered = false;
 
     // Game objects (will be initialized when starting game)
     Player* player = nullptr;
@@ -228,6 +234,78 @@ int main() {
                 currentState = GameState::MENU;
                 spdlog::info("Returning to menu");
             }
+            
+            // Check if player has died
+            if (!player->isAlive()) {
+                currentState = GameState::DEATH;
+                spdlog::info("Player has died, showing death screen");
+            }
+        }
+        else if (currentState == GameState::DEATH) {
+            // Handle mouse input for death screen
+            glfwGetCursorPos(window, &mouseX, &mouseY);
+            
+            // Check if mouse is over respawn button
+            float buttonWidth = 200.0f;
+            float buttonHeight = 60.0f;
+            float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
+            float buttonY = windowHeight * 0.6f;
+            
+            respawnButtonHovered = UI::isMouseOverButton(mouseX, mouseY, buttonX, buttonY, buttonWidth, buttonHeight);
+            
+            // Handle mouse click
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouseLeftPressed) {
+                if (respawnButtonHovered) {
+                    // Reset game state
+                    spdlog::info("Respawn button clicked, restarting game");
+                    
+                    // Clean up current game objects
+                    if (gameInitialized) {
+                        delete player;
+                        delete enemy;
+                        delete inputHandler;
+                        delete tilemap;
+                        gameInitialized = false;
+                    }
+                    
+                    // Clear projectiles
+                    playerProjectiles.clear();
+                    enemyProjectiles.clear();
+                    
+                    // Restart game directly
+                    currentState = GameState::PLAYING;
+                }
+                mouseLeftPressed = true;
+            } else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+                mouseLeftPressed = false;
+            }
+            
+            // Handle keyboard input (Enter key to respawn)
+            if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
+                spdlog::info("Enter key pressed, restarting game");
+                
+                // Clean up current game objects
+                if (gameInitialized) {
+                    delete player;
+                    delete enemy;
+                    delete inputHandler;
+                    delete tilemap;
+                    gameInitialized = false;
+                }
+                
+                // Clear projectiles
+                playerProjectiles.clear();
+                enemyProjectiles.clear();
+                
+                // Restart game directly
+                currentState = GameState::PLAYING;
+                keyEnterPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
+                keyEnterPressed = false;
+            }
+            
+            // Draw death screen
+            UI::drawDeathScreen(windowWidth, windowHeight, respawnButtonHovered);
         }
 
         glfwSwapBuffers(window);

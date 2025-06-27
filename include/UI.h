@@ -13,4 +13,7 @@ public:
     static void drawMenuButton(const std::string& text, float x, float y, float width, float height, bool isHovered, bool isSelected);
     static void drawMainMenu(int windowWidth, int windowHeight, int selectedOption);
     static bool isMouseOverButton(float mouseX, float mouseY, float buttonX, float buttonY, float buttonWidth, float buttonHeight);
+    
+    // Death screen function
+    static void drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHovered);
 }; 

@@ -175,22 +175,18 @@ void UI::drawHeart(float x, float y, bool filled, float size) {
 void UI::drawPixelText(const std::string& text, float x, float y, float scale, float r, float g, float b) {
     glDisable(GL_TEXTURE_2D);
     glColor3f(r, g, b);
-    float charWidth = 16.0f * scale;
-    float charHeight = 16.0f * scale;
-    for (size_t i = 0; i < text.length(); i++) {
-        if (text[i] == ' ') {
-            x += charWidth;
-            continue;
-        }
-        float charX = x + i * charWidth;
-        float charY = y;
-        glBegin(GL_QUADS);
-        glVertex2f(charX, charY);
-        glVertex2f(charX + charWidth, charY);
-        glVertex2f(charX + charWidth, charY + charHeight);
-        glVertex2f(charX, charY + charHeight);
-        glEnd();
-    }
+    
+    // For simple text, just draw a colored rectangle representing the text
+    float textWidth = text.length() * 10.0f * scale;
+    float textHeight = 15.0f * scale;
+    
+    glBegin(GL_QUADS);
+    glVertex2f(x, y);
+    glVertex2f(x + textWidth, y);
+    glVertex2f(x + textWidth, y + textHeight);
+    glVertex2f(x, y + textHeight);
+    glEnd();
+    
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
 }
@@ -239,10 +235,9 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
     glEnable(GL_TEXTURE_2D);
     
     // Draw title
-    std::string title = "OrtosII";
-    float titleX = windowWidth / 2.0f - (title.length() * 16.0f * 2.0f) / 2.0f;
+    float titleX = windowWidth / 2.0f - 100.0f;
     float titleY = windowHeight * 0.2f;
-    drawPixelText(title, titleX, titleY, 2.0f, 1.0f, 1.0f, 0.0f);  // Golden color
+    drawPixelText("OrtosII", titleX, titleY, 2.0f, 1.0f, 1.0f, 0.0f);  // Golden color
     
     // Draw buttons
     float buttonWidth = 200.0f;
@@ -267,4 +262,46 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
 bool UI::isMouseOverButton(float mouseX, float mouseY, float buttonX, float buttonY, float buttonWidth, float buttonHeight) {
     return mouseX >= buttonX && mouseX <= buttonX + buttonWidth &&
            mouseY >= buttonY && mouseY <= buttonY + buttonHeight;
+}
+
+void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHovered) {
+    // Save current matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    // Draw black background
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(0.0f, 0.0f, 0.0f);  // Black background
+    glBegin(GL_QUADS);
+    glVertex2f(0, 0);
+    glVertex2f(windowWidth, 0);
+    glVertex2f(windowWidth, windowHeight);
+    glVertex2f(0, windowHeight);
+    glEnd();
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glEnable(GL_TEXTURE_2D);
+    
+    // Draw "YOU DIED" text (red rectangle)
+    float titleX = windowWidth / 2.0f - 100.0f;
+    float titleY = windowHeight * 0.4f;
+    drawPixelText("YOU DIED", titleX, titleY, 2.0f, 1.0f, 0.0f, 0.0f);  // Red color
+    
+    // Draw respawn button
+    float buttonWidth = 200.0f;
+    float buttonHeight = 60.0f;
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
+    float buttonY = windowHeight * 0.6f;
+    drawMenuButton("RESPAWN", buttonX, buttonY, buttonWidth, buttonHeight, respawnButtonHovered, false);
+    
+    // Restore matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 } 
