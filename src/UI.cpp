@@ -4,6 +4,77 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+// Static member initialization
+TextRenderer* UI::textRenderer = nullptr;
+bool UI::initialized = false;
+
+bool UI::init(const std::string& fontPath) {
+    if (initialized) {
+        spdlog::warn("UI already initialized!");
+        return true;
+    }
+    
+    textRenderer = new TextRenderer();
+    if (!textRenderer->init(fontPath)) {
+        spdlog::error("Failed to initialize TextRenderer with font: {}", fontPath);
+        delete textRenderer;
+        textRenderer = nullptr;
+        return false;
+    }
+    
+    initialized = true;
+    spdlog::info("UI system initialized successfully");
+    return true;
+}
+
+void UI::cleanup() {
+    if (textRenderer) {
+        textRenderer->cleanup();
+        delete textRenderer;
+        textRenderer = nullptr;
+    }
+    initialized = false;
+}
+
+void UI::drawText(const std::string& text, float x, float y, float scale, float r, float g, float b) {
+    if (!initialized || !textRenderer) {
+        spdlog::warn("UI not initialized, falling back to pixel text");
+        drawPixelText(text, x, y, scale, r, g, b);
+        return;
+    }
+    
+    // Save current matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, 800, 600, 0, -1, 1); // Assuming 800x600, adjust as needed
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    textRenderer->renderText(text, x, y, scale, r, g, b);
+    
+    // Restore matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+void UI::drawCenteredText(const std::string& text, float x, float y, float scale, float r, float g, float b) {
+    if (!initialized || !textRenderer) {
+        spdlog::warn("UI not initialized, falling back to pixel text");
+        drawPixelText(text, x, y, scale, r, g, b);
+        return;
+    }
+    
+    float textWidth = textRenderer->getTextWidth(text, scale);
+    float centeredX = x - textWidth / 2.0f;
+    
+    drawText(text, centeredX, y, scale, r, g, b);
+}
+
 void UI::drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight) {
     spdlog::info("Drawing health bar: HP {}/{}", currentHealth, maxHealth);
     
@@ -207,8 +278,10 @@ void UI::drawMenuButton(const std::string& text, float x, float y, float width, 
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
     
-    // Draw text using simple rectangles
-    drawPixelText(text, x + 10, y + 10, 1.0f, 0.0f, 0.0f, 0.0f);
+    // Draw text using FreeType
+    float textX = x + width / 2.0f;
+    float textY = y + height / 2.0f + 10.0f; // Offset to center vertically
+    drawCenteredText(text, textX, textY, 1.0f, 0.0f, 0.0f, 0.0f); // Black text
 }
 
 void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
@@ -234,10 +307,9 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
     
-    // Draw title
-    float titleX = windowWidth / 2.0f - 100.0f;
+    // Draw title using FreeType
     float titleY = windowHeight * 0.2f;
-    drawPixelText("OrtosII", titleX, titleY, 2.0f, 1.0f, 1.0f, 0.0f);  // Golden color
+    drawCenteredText("Ortos II", windowWidth / 2.0f, titleY, 3.0f, 1.0f, 1.0f, 0.0f);  // Golden color
     
     // Draw buttons
     float buttonWidth = 200.0f;
@@ -287,10 +359,9 @@ void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHo
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
     
-    // Draw "YOU DIED" text (red rectangle)
-    float titleX = windowWidth / 2.0f - 100.0f;
+    // Draw "YOU DIED" text using FreeType
     float titleY = windowHeight * 0.4f;
-    drawPixelText("YOU DIED", titleX, titleY, 2.0f, 1.0f, 0.0f, 0.0f);  // Red color
+    drawCenteredText("YOU DIED", windowWidth / 2.0f, titleY, 3.0f, 1.0f, 0.0f, 0.0f);  // Red color
     
     // Draw respawn button
     float buttonWidth = 200.0f;

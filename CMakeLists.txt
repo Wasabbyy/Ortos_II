@@ -6,10 +6,18 @@ set(CMAKE_CXX_STANDARD 17)
 # Find GLFW package
 find_package(glfw3 REQUIRED)
 
+# Find FreeType package
+find_package(Freetype REQUIRED)
+
+# Find GLM package
+find_package(GLM REQUIRED)
+
 # Include directories
 include_directories(
     include
     ${GLFW_INCLUDE_DIRS}
+    ${FREETYPE_INCLUDE_DIRS}
+    ${GLM_INCLUDE_DIRS}
     # Add other include paths if needed
 )
 
@@ -21,6 +29,7 @@ set(SOURCES
     src/Projectile.cpp
     src/UI.cpp
     src/InputHandler.cpp
+    src/TextRenderer.cpp
     src/glad.c
     src/stb_image.cpp
     src/TileMap.cpp
@@ -35,6 +44,8 @@ add_executable(Ortos_II ${SOURCES})
 if(APPLE)
     target_link_libraries(Ortos_II
         glfw
+        ${FREETYPE_LIBRARIES}
+        ${GLM_LIBRARIES}
         "-framework OpenGL"
         "-framework Cocoa"
         "-framework IOKit"
@@ -43,11 +54,15 @@ if(APPLE)
 elseif(UNIX AND NOT APPLE)  # Linux
     target_link_libraries(Ortos_II
         glfw
+        ${FREETYPE_LIBRARIES}
+        ${GLM_LIBRARIES}
         GL
     )
 elseif(WIN32)  # Windows
     target_link_libraries(Ortos_II
         glfw
+        ${FREETYPE_LIBRARIES}
+        ${GLM_LIBRARIES}
         opengl32
     )
 endif()

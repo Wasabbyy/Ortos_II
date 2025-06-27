@@ -44,6 +44,13 @@ int main() {
     glDisable(GL_DEPTH_TEST); 
     glEnable(GL_TEXTURE_2D); 
 
+    // Initialize UI system with FreeType
+    if (!UI::init("../assets/fonts/Arial.ttc")) {
+        spdlog::error("Failed to initialize UI system");
+        glfwTerminate();
+        return -1;
+    }
+
     // Set up viewport and orthographic projection
     int windowWidth = 1920;
     int windowHeight = 1080;
@@ -319,6 +326,9 @@ int main() {
         delete inputHandler;
         delete tilemap;
     }
+
+    // Cleanup UI system
+    UI::cleanup();
 
     spdlog::info("Shutting down Ortos II application");
     glfwTerminate();
