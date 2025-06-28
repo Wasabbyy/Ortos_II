@@ -153,6 +153,30 @@ src/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.s
 .PHONY : src/Application.cpp.s
 
+src/AudioManager.o: src/AudioManager.cpp.o
+.PHONY : src/AudioManager.o
+
+# target to build an object file
+src/AudioManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.o
+.PHONY : src/AudioManager.cpp.o
+
+src/AudioManager.i: src/AudioManager.cpp.i
+.PHONY : src/AudioManager.i
+
+# target to preprocess a source file
+src/AudioManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.i
+.PHONY : src/AudioManager.cpp.i
+
+src/AudioManager.s: src/AudioManager.cpp.s
+.PHONY : src/AudioManager.s
+
+# target to generate assembly for a file
+src/AudioManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.s
+.PHONY : src/AudioManager.cpp.s
+
 src/BloodEffect.o: src/BloodEffect.cpp.o
 .PHONY : src/BloodEffect.o
 
@@ -429,6 +453,9 @@ help:
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"
+	@echo "... src/AudioManager.o"
+	@echo "... src/AudioManager.i"
+	@echo "... src/AudioManager.s"
 	@echo "... src/BloodEffect.o"
 	@echo "... src/BloodEffect.i"
 	@echo "... src/BloodEffect.s"

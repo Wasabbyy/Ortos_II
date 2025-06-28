@@ -26,6 +26,7 @@ public:
     void stopMusic();
     void pauseMusic();
     void resumeMusic();
+    ALuint getMusicSource() const { return musicSource; }
     
     // Audio settings
     void setMasterVolume(float volume);

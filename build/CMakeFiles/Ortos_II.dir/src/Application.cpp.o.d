@@ -49,6 +49,7 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityInternal.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityVersions.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityInternalLegacy.h \
+  /Users/filipstupar/Documents/OrtosII/include/AL/al.h \
   /Users/filipstupar/Documents/OrtosII/include/Player.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/max.h \
@@ -838,6 +839,10 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__random/weibull_distribution.h \
   /Users/filipstupar/Documents/OrtosII/include/Projectile.h \
   /Users/filipstupar/Documents/OrtosII/include/BloodEffect.h \
+  /Users/filipstupar/Documents/OrtosII/include/AudioManager.h \
+  /Users/filipstupar/Documents/OrtosII/include/AL/alc.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
   /Users/filipstupar/Documents/OrtosII/include/InputHandler.h \
   /Users/filipstupar/Documents/OrtosII/include/TileMap.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/unordered_set \
@@ -861,8 +866,6 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Users/filipstupar/Documents/OrtosII/include/freetype/fterrors.h \
   /Users/filipstupar/Documents/OrtosII/include/freetype/ftmoderr.h \
   /Users/filipstupar/Documents/OrtosII/include/freetype/fterrdef.h \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
-  /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
   /opt/homebrew/include/glm/glm.hpp \
   /opt/homebrew/include/glm/detail/_fixes.hpp \
   /opt/homebrew/include/glm/detail/setup.hpp \

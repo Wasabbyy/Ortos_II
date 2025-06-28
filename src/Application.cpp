@@ -1,4 +1,5 @@
 #include <GLFW/glfw3.h>
+#include <AL/al.h>
 #include "Player.h"
 #include "Enemy.h"
 #include "Projectile.h"
@@ -205,13 +206,6 @@ int main() {
                 if (!audioManager.loadSound("intro", "../assets/sounds/intro.wav")) {
                     spdlog::warn("Failed to load intro sound");
                 }
-                
-                // Load and start background music (use intro as background for now)
-                if (!audioManager.loadMusic("background", "../assets/sounds/intro.wav")) {
-                    spdlog::warn("Failed to load background music");
-                } else {
-                    audioManager.playMusic("background", true);
-                }
             }
 
             // Game logic
@@ -318,7 +312,7 @@ int main() {
 
             // Check for ESC key to return to menu
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-                // Stop background music and restart intro music
+                // Stop background music and reset introMusicStarted flag
                 audioManager.stopMusic();
                 introMusicStarted = false;
                 currentState = GameState::MENU;

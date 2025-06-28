@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/filipstupar/Documents/OrtosII/src/glad.c" "CMakeFiles/Ortos_II.dir/src/glad.c.o" "gcc" "CMakeFiles/Ortos_II.dir/src/glad.c.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/Application.cpp" "CMakeFiles/Ortos_II.dir/src/Application.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/Application.cpp.o.d"
+  "/Users/filipstupar/Documents/OrtosII/src/AudioManager.cpp" "CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/BloodEffect.cpp" "CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/Enemy.cpp" "CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/InputHandler.cpp" "CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o.d"
