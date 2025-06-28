@@ -27,6 +27,7 @@ set(SOURCES
     src/Player.cpp
     src/Enemy.cpp
     src/Projectile.cpp
+    src/BloodEffect.cpp
     src/UI.cpp
     src/InputHandler.cpp
     src/TextRenderer.cpp

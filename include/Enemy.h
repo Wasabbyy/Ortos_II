@@ -17,6 +17,7 @@ enum class EnemyState {
 };
 
 class Projectile;  // Forward declaration
+class BloodEffect;  // Forward declaration
 
 class Enemy {
 public:
@@ -53,6 +54,10 @@ public:
     int getCurrentHealth() const { return currentHealth; }
     void takeDamage(int damage);
     void heal(int amount);
+    
+    // Blood effect
+    bool shouldCreateBloodEffect() const { return !alive && !bloodEffectCreated; }
+    void markBloodEffectCreated() { bloodEffectCreated = true; }
 
 private:
     float x, y;
@@ -71,6 +76,7 @@ private:
     EnemyType type;
     EnemyState state;
     bool alive;
+    bool bloodEffectCreated;  // Track if blood effect has been created
     
     // Movement and AI
     float moveSpeed = 50.0f;  // Slower than player

@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Projectile.h"
+#include "BloodEffect.h"
 #include "InputHandler.h"
 #include "TileMap.h"
 #include "UI.h"
@@ -87,6 +88,7 @@ int main() {
     Enemy* enemy = nullptr;
     std::vector<Projectile> playerProjectiles;
     std::vector<Projectile> enemyProjectiles;
+    std::vector<BloodEffect*> bloodEffects;
     InputHandler* inputHandler = nullptr;
     Tilemap* tilemap = nullptr;
 
@@ -174,6 +176,13 @@ int main() {
             inputHandler->processInput(window, *player, deltaTime, *tilemap, playerProjectiles);
         
             tilemap->draw();
+            
+            // Update and draw blood effects (ground layer)
+            for (auto& bloodEffect : bloodEffects) {
+                bloodEffect->update(deltaTime);
+                bloodEffect->draw();
+            }
+            
             player->draw();
             
             // Update and draw enemy
@@ -232,6 +241,13 @@ int main() {
                                     player->getCurrentHealth(), player->getMaxHealth());
                     }
                 }
+            }
+            
+            // Blood effect creation when enemy dies
+            if (enemy->shouldCreateBloodEffect()) {
+                bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY()));
+                enemy->markBloodEffectCreated();
+                spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
             }
             
             // Clean up inactive projectiles
@@ -313,6 +329,11 @@ int main() {
                     }
                     playerProjectiles.clear();
                     enemyProjectiles.clear();
+                    // Clean up blood effects
+                    for (auto& bloodEffect : bloodEffects) {
+                        delete bloodEffect;
+                    }
+                    bloodEffects.clear();
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     currentState = GameState::PLAYING;
                 } else if (exitButtonHovered) {
@@ -338,6 +359,11 @@ int main() {
                     }
                     playerProjectiles.clear();
                     enemyProjectiles.clear();
+                    // Clean up blood effects
+                    for (auto& bloodEffect : bloodEffects) {
+                        delete bloodEffect;
+                    }
+                    bloodEffects.clear();
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     currentState = GameState::PLAYING;
                 } else if (selectedDeathButton == 1) {
@@ -365,6 +391,12 @@ int main() {
         delete inputHandler;
         delete tilemap;
     }
+    
+    // Clean up blood effects
+    for (auto& bloodEffect : bloodEffects) {
+        delete bloodEffect;
+    }
+    bloodEffects.clear();
 
     // Cleanup UI system
     UI::cleanup();

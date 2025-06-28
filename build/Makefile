@@ -153,6 +153,30 @@ src/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.s
 .PHONY : src/Application.cpp.s
 
+src/BloodEffect.o: src/BloodEffect.cpp.o
+.PHONY : src/BloodEffect.o
+
+# target to build an object file
+src/BloodEffect.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.o
+.PHONY : src/BloodEffect.cpp.o
+
+src/BloodEffect.i: src/BloodEffect.cpp.i
+.PHONY : src/BloodEffect.i
+
+# target to preprocess a source file
+src/BloodEffect.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.i
+.PHONY : src/BloodEffect.cpp.i
+
+src/BloodEffect.s: src/BloodEffect.cpp.s
+.PHONY : src/BloodEffect.s
+
+# target to generate assembly for a file
+src/BloodEffect.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.s
+.PHONY : src/BloodEffect.cpp.s
+
 src/Enemy.o: src/Enemy.cpp.o
 .PHONY : src/Enemy.o
 
@@ -405,6 +429,9 @@ help:
 	@echo "... src/Application.o"
 	@echo "... src/Application.i"
 	@echo "... src/Application.s"
+	@echo "... src/BloodEffect.o"
+	@echo "... src/BloodEffect.i"
+	@echo "... src/BloodEffect.s"
 	@echo "... src/Enemy.o"
 	@echo "... src/Enemy.i"
 	@echo "... src/Enemy.s"

@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Ortos_II.dir/src/Application.cpp.o"
   "CMakeFiles/Ortos_II.dir/src/Application.cpp.o.d"
+  "CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.o"
+  "CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.o.d"
   "CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o"
   "CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o.d"
   "CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o"

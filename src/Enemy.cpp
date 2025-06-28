@@ -17,7 +17,8 @@ Enemy::Enemy(float x, float y, EnemyType type)
       animationSpeed(0.8f), elapsedTime(0.0f),
       currentFrame(0), alive(true), state(EnemyState::Idle),
       startX(x), startY(y),
-      gen(rd()), randomDir(-1.0f, 1.0f) {
+      gen(rd()), randomDir(-1.0f, 1.0f),
+      bloodEffectCreated(false) {
     spdlog::debug("Enemy created at position ({}, {}) with type {}", x, y, static_cast<int>(type));
 }
 
