@@ -92,6 +92,10 @@ int main() {
 
     float lastTime = glfwGetTime();
 
+    // --- Add these at the top of main, after other variables ---
+    int selectedDeathButton = 0;
+    bool deathScreenInitialized = false;
+
     while (!glfwWindowShouldClose(window)) {
         float currentTime = glfwGetTime();
         float deltaTime = currentTime - lastTime;
@@ -254,6 +258,11 @@ int main() {
             
             // Check if player has died
             if (!player->isAlive()) {
+                selectedDeathButton = 0;
+                deathScreenInitialized = false;
+                keyUpPressed = false;
+                keyDownPressed = false;
+                keyEnterPressed = false;
                 currentState = GameState::DEATH;
                 spdlog::info("Player has died, showing death screen");
             }
@@ -267,20 +276,10 @@ int main() {
             float respawnButtonY = windowHeight * 0.5f;
             float exitButtonY = windowHeight * 0.35f;
 
-            // Track which button is selected (0 = respawn, 1 = exit)
-            static int selectedDeathButton = 0;
-            static bool deathScreenInitialized = false;
-            
-            // Initialize death screen selection when first entering
-            if (!deathScreenInitialized) {
-                selectedDeathButton = 0;
-                deathScreenInitialized = true;
-            }
-            
             bool respawnButtonHovered = UI::isMouseOverButton(mouseX, mouseY, buttonX, respawnButtonY, buttonWidth, buttonHeight);
             bool exitButtonHovered = UI::isMouseOverButton(mouseX, mouseY, buttonX, exitButtonY, buttonWidth, buttonHeight);
 
-            // Keyboard navigation
+            // Keyboard navigation (identical to main menu)
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
                 selectedDeathButton = (selectedDeathButton - 1 + 2) % 2;
                 keyUpPressed = true;
@@ -296,11 +295,11 @@ int main() {
                 keyDownPressed = false;
             }
 
-            // Mouse hover overrides selection
-            if (respawnButtonHovered) selectedDeathButton = 0;
-            if (exitButtonHovered) selectedDeathButton = 1;
+            // Mouse hover does NOT affect selection anymore
+            // if (respawnButtonHovered) selectedDeathButton = 0;
+            // if (exitButtonHovered) selectedDeathButton = 1;
 
-            // Mouse click
+            // Mouse click (still works for clicking)
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouseLeftPressed) {
                 if (respawnButtonHovered) {
                     // Reset game state
@@ -314,9 +313,11 @@ int main() {
                     }
                     playerProjectiles.clear();
                     enemyProjectiles.clear();
+                    deathScreenInitialized = false; // <-- FIX: reset on respawn
                     currentState = GameState::PLAYING;
                 } else if (exitButtonHovered) {
                     spdlog::info("Exit button clicked, exiting game");
+                    deathScreenInitialized = false; // <-- FIX: reset on exit
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
                 }
                 mouseLeftPressed = true;
@@ -337,9 +338,11 @@ int main() {
                     }
                     playerProjectiles.clear();
                     enemyProjectiles.clear();
+                    deathScreenInitialized = false; // <-- FIX: reset on respawn
                     currentState = GameState::PLAYING;
                 } else if (selectedDeathButton == 1) {
                     spdlog::info("Enter pressed on Exit, exiting game");
+                    deathScreenInitialized = false; // <-- FIX: reset on exit
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
                 }
                 keyEnterPressed = true;
