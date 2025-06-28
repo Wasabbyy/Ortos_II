@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Projectile.h"
 #include "BloodEffect.h"
+#include "AudioManager.h"
 #include "InputHandler.h"
 #include "TileMap.h"
 #include "UI.h"
@@ -62,6 +63,24 @@ int main() {
         spdlog::warn("Failed to load death screen texture, will use black background");
     }
 
+    // Initialize AudioManager
+    AudioManager audioManager;
+    spdlog::info("Attempting to initialize AudioManager...");
+    if (!audioManager.init()) {
+        spdlog::error("Failed to initialize AudioManager");
+        glfwTerminate();
+        return -1;
+    }
+    spdlog::info("AudioManager initialized successfully");
+
+    // Load intro music for title screen
+    spdlog::info("Attempting to load intro music...");
+    if (!audioManager.loadMusic("intro", "../assets/sounds/intro.wav")) {
+        spdlog::warn("Failed to load intro music");
+    } else {
+        spdlog::info("Successfully loaded intro music");
+    }
+
     // Set up viewport and orthographic projection
     int windowWidth = 1920;
     int windowHeight = 1080;
@@ -72,6 +91,7 @@ int main() {
     GameState currentState = GameState::MENU;
     int selectedMenuOption = 0;
     bool gameInitialized = false;
+    bool introMusicStarted = false;
     
     // Input debouncing
     bool keyUpPressed = false;
@@ -106,6 +126,13 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (currentState == GameState::MENU) {
+            // Start intro music if not already started
+            if (!introMusicStarted) {
+                audioManager.playMusic("intro", true); // Loop the intro music
+                introMusicStarted = true;
+                spdlog::info("Started intro music");
+            }
+            
             // Handle menu input
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
                 selectedMenuOption = (selectedMenuOption - 1 + 2) % 2;
@@ -121,6 +148,9 @@ int main() {
             }
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
                 if (selectedMenuOption == 0) {
+                    // Stop intro music when starting game
+                    audioManager.stopMusic();
+                    introMusicStarted = false;
                     currentState = GameState::PLAYING;
                 } else if (selectedMenuOption == 1) {
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -170,10 +200,27 @@ int main() {
 
                 gameInitialized = true;
                 spdlog::info("Game initialized successfully");
+                
+                // Load sound effects (only load what's available)
+                if (!audioManager.loadSound("intro", "../assets/sounds/intro.wav")) {
+                    spdlog::warn("Failed to load intro sound");
+                }
+                
+                // Load and start background music (use intro as background for now)
+                if (!audioManager.loadMusic("background", "../assets/sounds/intro.wav")) {
+                    spdlog::warn("Failed to load background music");
+                } else {
+                    audioManager.playMusic("background", true);
+                }
             }
 
             // Game logic
             inputHandler->processInput(window, *player, deltaTime, *tilemap, playerProjectiles);
+            
+            // Play shoot sound if player shot
+            if (playerProjectiles.size() > 0 && playerProjectiles.back().isActive()) {
+                // audioManager.playSound("shoot", 0.7f); // Commented out - no shoot sound available
+            }
         
             tilemap->draw();
             
@@ -225,6 +272,7 @@ int main() {
                     if (projectile.checkCollision(enemy->getX(), enemy->getY(), 8.0f)) {
                         projectile.setActive(false);
                         enemy->takeDamage(25);  // Deal 25 damage
+                        // audioManager.playSound("enemy_hit", 0.8f);
                         spdlog::info("Enemy hit by player projectile! Enemy HP: {}/{}", 
                                     enemy->getCurrentHealth(), enemy->getMaxHealth());
                     }
@@ -237,6 +285,7 @@ int main() {
                     if (projectile.checkCollision(player->getX(), player->getY(), 8.0f)) {
                         projectile.setActive(false);
                         player->takeDamage(15);  // Deal 15 damage
+                        // audioManager.playSound("player_hit", 0.6f);
                         spdlog::info("Player hit by enemy projectile! Player HP: {}/{}", 
                                     player->getCurrentHealth(), player->getMaxHealth());
                     }
@@ -247,6 +296,7 @@ int main() {
             if (enemy->shouldCreateBloodEffect()) {
                 bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY()));
                 enemy->markBloodEffectCreated();
+                // audioManager.playSound("enemy_death", 1.0f);
                 spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
             }
             
@@ -268,12 +318,16 @@ int main() {
 
             // Check for ESC key to return to menu
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+                // Stop background music and restart intro music
+                audioManager.stopMusic();
+                introMusicStarted = false;
                 currentState = GameState::MENU;
                 spdlog::info("Returning to menu");
             }
             
             // Check if player has died
             if (!player->isAlive()) {
+                // audioManager.playSound("player_death", 1.0f);
                 selectedDeathButton = 0;
                 deathScreenInitialized = false;
                 keyUpPressed = false;
