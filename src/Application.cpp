@@ -263,12 +263,20 @@ int main() {
             glfwGetCursorPos(window, &mouseX, &mouseY);
             float buttonWidth = 200.0f;
             float buttonHeight = 60.0f;
-            float buttonX = windowWidth * 0.3f - buttonWidth / 2.0f;  // Match UI position (30% from left)
+            float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Match UI position (45px left offset)
             float respawnButtonY = windowHeight * 0.5f;
             float exitButtonY = windowHeight * 0.35f;
 
             // Track which button is selected (0 = respawn, 1 = exit)
             static int selectedDeathButton = 0;
+            static bool deathScreenInitialized = false;
+            
+            // Initialize death screen selection when first entering
+            if (!deathScreenInitialized) {
+                selectedDeathButton = 0;
+                deathScreenInitialized = true;
+            }
+            
             bool respawnButtonHovered = UI::isMouseOverButton(mouseX, mouseY, buttonX, respawnButtonY, buttonWidth, buttonHeight);
             bool exitButtonHovered = UI::isMouseOverButton(mouseX, mouseY, buttonX, exitButtonY, buttonWidth, buttonHeight);
 
@@ -276,12 +284,14 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
                 selectedDeathButton = (selectedDeathButton - 1 + 2) % 2;
                 keyUpPressed = true;
+                spdlog::debug("Death screen: Up arrow pressed, selected button: {}", selectedDeathButton);
             } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
                 keyUpPressed = false;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
                 selectedDeathButton = (selectedDeathButton + 1) % 2;
                 keyDownPressed = true;
+                spdlog::debug("Death screen: Down arrow pressed, selected button: {}", selectedDeathButton);
             } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
                 keyDownPressed = false;
             }

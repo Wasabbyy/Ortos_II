@@ -405,10 +405,10 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
     
-    // Draw buttons (moved lower and to the left)
+    // Draw buttons (slightly offset to the left)
     float buttonWidth = 200.0f;
     float buttonHeight = 60.0f;
-    float buttonX = windowWidth * 0.01f - buttonWidth / 2.0f;  // Move to 30% from left instead of center
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Move 45 pixels to the left
     
     // Start Game button (moved lower)
     float startButtonY = windowHeight * 0.5f;
@@ -440,14 +440,29 @@ void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHo
     
     // Draw background texture if available, otherwise fall back to black
     if (deathScreenTextureID != 0) {
+        // First fill the entire screen with black
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(0.0f, 0.0f, 0.0f);  // Black background
+        glBegin(GL_QUADS);
+        glVertex2f(0, 0);
+        glVertex2f(windowWidth, 0);
+        glVertex2f(windowWidth, windowHeight);
+        glVertex2f(0, windowHeight);
+        glEnd();
+        
+        // Then draw the texture on the right side (offset to the right)
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, deathScreenTextureID);
         glColor3f(1.0f, 1.0f, 1.0f);  // White color to show texture as-is
+        
+        float textureOffset = 100.0f;  // Move texture 100 pixels to the right
+        float textureWidth = windowWidth - textureOffset;  // Adjust texture width
+        
         glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(0, 0);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(textureOffset, 0);
         glTexCoord2f(1.0f, 1.0f); glVertex2f(windowWidth, 0);
         glTexCoord2f(1.0f, 0.0f); glVertex2f(windowWidth, windowHeight);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(0, windowHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(textureOffset, windowHeight);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
     } else {
@@ -465,10 +480,10 @@ void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHo
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
     
-    // Draw respawn and exit buttons (moved to the left like main menu)
+    // Draw respawn and exit buttons (same position as main menu)
     float buttonWidth = 200.0f;
     float buttonHeight = 60.0f;
-    float buttonX = windowWidth * 0.3f - buttonWidth / 2.0f;  // Move to 30% from left instead of center
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Same offset as main menu
     float respawnButtonY = windowHeight * 0.5f;
     float exitButtonY = windowHeight * 0.35f;
     
