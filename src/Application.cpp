@@ -48,7 +48,7 @@ int main() {
     glEnable(GL_TEXTURE_2D); 
 
     // Initialize UI system with FreeType
-    if (!UI::init("../assets/fonts/Arial.ttf")) {
+    if (!UI::init("../assets/fonts/pixel.ttf")) {
         spdlog::error("Failed to initialize UI system");
         glfwTerminate();
         return -1;
