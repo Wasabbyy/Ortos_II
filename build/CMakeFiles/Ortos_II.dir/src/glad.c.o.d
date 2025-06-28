@@ -1,5 +1,5 @@
 CMakeFiles/Ortos_II.dir/src/glad.c.o: \
-  /Users/filipstupar/Ortos_II/src/glad.c \
+  /Users/filipstupar/Documents/OrtosII/src/glad.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_bounds.h \
@@ -92,7 +92,7 @@ CMakeFiles/Ortos_II.dir/src/glad.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/secure/_string.h \
-  /Users/filipstupar/Ortos_II/include/glad/glad.h \
-  /Users/filipstupar/Ortos_II/include/KHR/khrplatform.h \
+  /Users/filipstupar/Documents/OrtosII/include/glad/glad.h \
+  /Users/filipstupar/Documents/OrtosII/include/KHR/khrplatform.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/dlfcn.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdbool.h

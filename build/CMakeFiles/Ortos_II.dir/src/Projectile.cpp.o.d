@@ -1,6 +1,6 @@
 CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: \
-  /Users/filipstupar/Ortos_II/src/Projectile.cpp \
-  /Users/filipstupar/Ortos_II/include/Projectile.h \
+  /Users/filipstupar/Documents/OrtosII/src/Projectile.cpp \
+  /Users/filipstupar/Documents/OrtosII/include/Projectile.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/max.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/comp.h \
@@ -643,7 +643,7 @@ CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/pstl.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/sample.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/bit \
-  /Users/filipstupar/Ortos_II/include/TileMap.h \
+  /Users/filipstupar/Documents/OrtosII/include/TileMap.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/vector \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/lexicographical_compare_three_way.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__algorithm/three_way_comp_ref_type.h \
@@ -786,20 +786,20 @@ CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gltypes.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/System/Library/Frameworks/OpenGL.framework/Headers/OpenGLAvailability.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/os/availability.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/spdlog.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/common.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/null_mutex.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/tweakme.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/spdlog.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/common.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/null_mutex.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/tweakme.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/chrono \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__chrono/file_clock.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/forward_list \
-  /Users/filipstupar/Ortos_II/include/spdlog/fmt/fmt.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/format.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/base.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/fmt/bundled/format-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/common-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/registry.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/periodic_worker.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/fmt/fmt.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/fmt/bundled/format.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/fmt/bundled/base.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/fmt/bundled/format-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/common-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/registry.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/periodic_worker.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/condition_variable \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/stop_callback.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__stop_token/intrusive_shared_ptr.h \
@@ -828,20 +828,20 @@ CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/print \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/unistd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__thread/this_thread.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/periodic_worker-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/registry-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/logger.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/backtracer.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/circular_q.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/periodic_worker-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/registry-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/logger.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/backtracer.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/circular_q.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/cassert \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/assert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_assert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/_static_assert.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg_buffer.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/os.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/os-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/log_msg_buffer.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/log_msg.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/log_msg-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/os.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/os-inl.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/stat.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_s_ifmt.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/sys/_types/_filesec_t.h \
@@ -857,21 +857,21 @@ CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/gethostuuid.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/AvailabilityMacros.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/TargetConditionals.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/log_msg_buffer-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/backtracer-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/logger-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/pattern_formatter.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/formatter.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/pattern_formatter-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/fmt_helper.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/mdc.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/log_msg_buffer-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/backtracer-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/logger-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/pattern_formatter.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/formatter.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/pattern_formatter-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/fmt_helper.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/mdc.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
-  /Users/filipstupar/Ortos_II/include/spdlog/sinks/sink.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/sinks/sink-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/sinks/ansicolor_sink.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/console_globals.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/sinks/ansicolor_sink-inl.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/details/synchronous_factory.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/version.h \
-  /Users/filipstupar/Ortos_II/include/spdlog/spdlog-inl.h
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/sinks/sink.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/sinks/sink-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/sinks/ansicolor_sink.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/console_globals.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/sinks/ansicolor_sink-inl.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/details/synchronous_factory.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/version.h \
+  /Users/filipstupar/Documents/OrtosII/include/spdlog/spdlog-inl.h

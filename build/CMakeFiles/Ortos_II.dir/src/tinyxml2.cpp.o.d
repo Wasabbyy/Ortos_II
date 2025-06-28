@@ -1,6 +1,6 @@
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: \
-  /Users/filipstupar/Ortos_II/src/tinyxml2.cpp \
-  /Users/filipstupar/Ortos_II/include/tinyxml2.h \
+  /Users/filipstupar/Documents/OrtosII/src/tinyxml2.cpp \
+  /Users/filipstupar/Documents/OrtosII/include/tinyxml2.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/cctype \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__config \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__config_site \

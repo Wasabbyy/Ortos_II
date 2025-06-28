@@ -1,6 +1,6 @@
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: \
-  /Users/filipstupar/Ortos_II/src/stb_image.cpp \
-  /Users/filipstupar/Ortos_II/include/stb_image.h \
+  /Users/filipstupar/Documents/OrtosII/src/stb_image.cpp \
+  /Users/filipstupar/Documents/OrtosII/include/stb_image.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__config \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__config_site \

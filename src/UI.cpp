@@ -3,10 +3,13 @@
 #include <spdlog/spdlog.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <stb_image.h>
 
 // Static member initialization
 TextRenderer* UI::textRenderer = nullptr;
 bool UI::initialized = false;
+GLuint UI::titleScreenTextureID = 0;
+GLuint UI::deathScreenTextureID = 0;
 
 bool UI::init(const std::string& fontPath) {
     if (initialized) {
@@ -28,12 +31,85 @@ bool UI::init(const std::string& fontPath) {
     return true;
 }
 
+bool UI::loadTitleScreenTexture(const std::string& imagePath) {
+    int width, height, channels;
+    unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &channels, 0);
+    if (!data) {
+        spdlog::error("Failed to load title screen texture: {}", imagePath);
+        return false;
+    }
+    
+    spdlog::info("Loaded title screen texture: {} ({}x{})", imagePath, width, height);
+    
+    glGenTextures(1, &titleScreenTextureID);
+    glBindTexture(GL_TEXTURE_2D, titleScreenTextureID);
+    
+    // Use LINEAR filtering for smooth scaling
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    GLenum format = GL_RGB;
+    if (channels == 4) format = GL_RGBA;
+    else if (channels == 3) format = GL_RGB;
+    else if (channels == 1) format = GL_RED;
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    stbi_image_free(data);
+    
+    spdlog::debug("Title screen texture loaded successfully with ID: {}", titleScreenTextureID);
+    return true;
+}
+
+bool UI::loadDeathScreenTexture(const std::string& imagePath) {
+    int width, height, channels;
+    unsigned char* data = stbi_load(imagePath.c_str(), &width, &height, &channels, 0);
+    if (!data) {
+        spdlog::error("Failed to load death screen texture: {}", imagePath);
+        return false;
+    }
+    
+    spdlog::info("Loaded death screen texture: {} ({}x{})", imagePath, width, height);
+    
+    glGenTextures(1, &deathScreenTextureID);
+    glBindTexture(GL_TEXTURE_2D, deathScreenTextureID);
+    
+    // Use LINEAR filtering for smooth scaling
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    GLenum format = GL_RGB;
+    if (channels == 4) format = GL_RGBA;
+    else if (channels == 3) format = GL_RGB;
+    else if (channels == 1) format = GL_RED;
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    stbi_image_free(data);
+    
+    spdlog::debug("Death screen texture loaded successfully with ID: {}", deathScreenTextureID);
+    return true;
+}
+
 void UI::cleanup() {
     if (textRenderer) {
         textRenderer->cleanup();
         delete textRenderer;
         textRenderer = nullptr;
     }
+    
+    if (titleScreenTextureID != 0) {
+        glDeleteTextures(1, &titleScreenTextureID);
+        titleScreenTextureID = 0;
+    }
+    
+    if (deathScreenTextureID != 0) {
+        glDeleteTextures(1, &deathScreenTextureID);
+        deathScreenTextureID = 0;
+    }
+    
     initialized = false;
 }
 
@@ -242,36 +318,55 @@ void UI::drawPixelText(const std::string&, float, float, float, float, float, fl
 
 void UI::drawMenuButton(const std::string& text, float x, float y, float width, float height, bool isHovered, bool isSelected) {
     glDisable(GL_TEXTURE_2D);
-    // Button background colors for dark theme
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // Draw glow effect if selected
     if (isSelected) {
-        glColor3f(0.4f, 0.35f, 0.5f); // Dusty muted purple-gray for selected
-    } else if (isHovered) {
-        glColor3f(0.35f, 0.35f, 0.4f); // Slightly lighter gray for hover
-    } else {
-        glColor3f(0.25f, 0.25f, 0.3f); // Dark gray for normal
+        // Outer glow (larger, more transparent)
+        glColor4f(205.0f/255.0f, 133.0f/255.0f, 63.0f/255.0f, 0.3f); // RGB(205, 133, 63) with 30% alpha
+        glBegin(GL_QUADS);
+        glVertex2f(x - 8, y - 8);
+        glVertex2f(x + width + 8, y - 8);
+        glVertex2f(x + width + 8, y + height + 8);
+        glVertex2f(x - 8, y + height + 8);
+        glEnd();
+        
+        // Inner glow (smaller, more opaque)
+        glColor4f(205.0f/255.0f, 133.0f/255.0f, 63.0f/255.0f, 0.6f); // RGB(205, 133, 63) with 60% alpha
+        glBegin(GL_QUADS);
+        glVertex2f(x - 4, y - 4);
+        glVertex2f(x + width + 4, y - 4);
+        glVertex2f(x + width + 4, y + height + 4);
+        glVertex2f(x - 4, y + height + 4);
+        glEnd();
     }
+    
+    // Button background - semi-transparent black
+    glColor4f(0.0f, 0.0f, 0.0f, 0.7f); // Black background with 70% alpha
     glBegin(GL_QUADS);
     glVertex2f(x, y);
     glVertex2f(x + width, y);
     glVertex2f(x + width, y + height);
     glVertex2f(x, y + height);
     glEnd();
-    // Draw button border
-    glColor3f(0.15f, 0.15f, 0.18f); // Even darker border
+    
+    // Draw button border in RGB(205, 133, 63) with transparency
+    glColor4f(205.0f/255.0f, 133.0f/255.0f, 63.0f/255.0f, 0.8f); // RGB(205, 133, 63) with 80% alpha
     glBegin(GL_LINE_LOOP);
     glVertex2f(x, y);
     glVertex2f(x + width, y);
     glVertex2f(x + width, y + height);
     glVertex2f(x, y + height);
     glEnd();
-    glColor3f(1.0f, 1.0f, 1.0f); // Reset color
+    
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
     glEnable(GL_TEXTURE_2D);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // Draw text using FreeType (darker, muted red)
+    
+    // Draw text using FreeType in RGB(205, 133, 63)
     float textX = x + width / 2.0f;
     float textY = y + height / 2.0f - 5.0f;
-    drawCenteredText(text, textX, textY, 0.8f, 0.7f, 0.2f, 0.2f);
+    drawCenteredText(text, textX, textY, 0.8f, 205.0f/255.0f, 133.0f/255.0f, 63.0f/255.0f);
 }
 
 void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
@@ -282,30 +377,47 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
-    // Draw background (black)
-    glDisable(GL_TEXTURE_2D);
-    glColor3f(0.0f, 0.0f, 0.0f);  // Black background
-    glBegin(GL_QUADS);
-    glVertex2f(0, 0);
-    glVertex2f(windowWidth, 0);
-    glVertex2f(windowWidth, windowHeight);
-    glVertex2f(0, windowHeight);
-    glEnd();
+    
+    // Draw background texture if available, otherwise fall back to black
+    if (titleScreenTextureID != 0) {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, titleScreenTextureID);
+        glColor3f(1.0f, 1.0f, 1.0f);  // White color to show texture as-is
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(0, 0);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(windowWidth, 0);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(windowWidth, windowHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(0, windowHeight);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+    } else {
+        // Fallback to black background if texture not loaded
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(0.0f, 0.0f, 0.0f);  // Black background
+        glBegin(GL_QUADS);
+        glVertex2f(0, 0);
+        glVertex2f(windowWidth, 0);
+        glVertex2f(windowWidth, windowHeight);
+        glVertex2f(0, windowHeight);
+        glEnd();
+    }
+    
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
-    // Draw title using FreeType (darker red)
-    float titleY = windowHeight * 0.8f;
-    drawCenteredText("Ortos II", windowWidth / 2.0f, titleY, 3.0f, 0.7f, 0.2f, 0.2f);  // Muted red
-    // Draw buttons
+    
+    // Draw buttons (moved lower and to the left)
     float buttonWidth = 200.0f;
     float buttonHeight = 60.0f;
-    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
-    // Start Game button
-    float startButtonY = windowHeight * 0.6f;
+    float buttonX = windowWidth * 0.01f - buttonWidth / 2.0f;  // Move to 30% from left instead of center
+    
+    // Start Game button (moved lower)
+    float startButtonY = windowHeight * 0.5f;
     drawMenuButton("Start Game", buttonX, startButtonY, buttonWidth, buttonHeight, false, selectedOption == 0);
-    // Exit Game button
-    float exitButtonY = windowHeight * 0.4f;
+    
+    // Exit Game button (moved lower)
+    float exitButtonY = windowHeight * 0.35f;
     drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
+    
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
@@ -325,28 +437,44 @@ void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHo
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
-    // Draw black background
-    glDisable(GL_TEXTURE_2D);
-    glColor3f(0.0f, 0.0f, 0.0f);  // Black background
-    glBegin(GL_QUADS);
-    glVertex2f(0, 0);
-    glVertex2f(windowWidth, 0);
-    glVertex2f(windowWidth, windowHeight);
-    glVertex2f(0, windowHeight);
-    glEnd();
+    
+    // Draw background texture if available, otherwise fall back to black
+    if (deathScreenTextureID != 0) {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, deathScreenTextureID);
+        glColor3f(1.0f, 1.0f, 1.0f);  // White color to show texture as-is
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(0, 0);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(windowWidth, 0);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(windowWidth, windowHeight);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(0, windowHeight);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+    } else {
+        // Fallback to black background if texture not loaded
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(0.0f, 0.0f, 0.0f);  // Black background
+        glBegin(GL_QUADS);
+        glVertex2f(0, 0);
+        glVertex2f(windowWidth, 0);
+        glVertex2f(windowWidth, windowHeight);
+        glVertex2f(0, windowHeight);
+        glEnd();
+    }
+    
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnable(GL_TEXTURE_2D);
-    // Draw "YOU DIED" text using FreeType (darker red)
-    float titleY = windowHeight * 0.8f;
-    drawCenteredText("YOU DIED", windowWidth / 2.0f, titleY, 3.0f, 0.7f, 0.2f, 0.2f);  // Muted red
-    // Draw respawn and exit buttons
+    
+    // Draw respawn and exit buttons (moved to the left like main menu)
     float buttonWidth = 200.0f;
     float buttonHeight = 60.0f;
-    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
+    float buttonX = windowWidth * 0.3f - buttonWidth / 2.0f;  // Move to 30% from left instead of center
     float respawnButtonY = windowHeight * 0.5f;
     float exitButtonY = windowHeight * 0.35f;
+    
     drawMenuButton("RESPAWN", buttonX, respawnButtonY, buttonWidth, buttonHeight, respawnButtonHovered, selectedButton == 0);
     drawMenuButton("EXIT GAME", buttonX, exitButtonY, buttonWidth, buttonHeight, exitButtonHovered, selectedButton == 1);
+    
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);

@@ -53,10 +53,10 @@ RM = /opt/homebrew/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/filipstupar/Ortos_II
+CMAKE_SOURCE_DIR = /Users/filipstupar/Documents/OrtosII
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/filipstupar/Ortos_II/build
+CMAKE_BINARY_DIR = /Users/filipstupar/Documents/OrtosII/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Ortos_II.dir/depend.make
@@ -73,158 +73,158 @@ CMakeFiles/Ortos_II.dir/codegen:
 .PHONY : CMakeFiles/Ortos_II.dir/codegen
 
 CMakeFiles/Ortos_II.dir/src/Application.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/Application.cpp.o: /Users/filipstupar/Ortos_II/src/Application.cpp
+CMakeFiles/Ortos_II.dir/src/Application.cpp.o: /Users/filipstupar/Documents/OrtosII/src/Application.cpp
 CMakeFiles/Ortos_II.dir/src/Application.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Ortos_II.dir/src/Application.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Application.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Application.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Application.cpp.o -c /Users/filipstupar/Ortos_II/src/Application.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Ortos_II.dir/src/Application.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Application.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Application.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Application.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/Application.cpp
 
 CMakeFiles/Ortos_II.dir/src/Application.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/Application.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/Application.cpp > CMakeFiles/Ortos_II.dir/src/Application.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/Application.cpp > CMakeFiles/Ortos_II.dir/src/Application.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/Application.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/Application.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/Application.cpp -o CMakeFiles/Ortos_II.dir/src/Application.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/Application.cpp -o CMakeFiles/Ortos_II.dir/src/Application.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/Player.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/Player.cpp.o: /Users/filipstupar/Ortos_II/src/Player.cpp
+CMakeFiles/Ortos_II.dir/src/Player.cpp.o: /Users/filipstupar/Documents/OrtosII/src/Player.cpp
 CMakeFiles/Ortos_II.dir/src/Player.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Ortos_II.dir/src/Player.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Player.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Player.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Player.cpp.o -c /Users/filipstupar/Ortos_II/src/Player.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Ortos_II.dir/src/Player.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Player.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Player.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Player.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/Player.cpp
 
 CMakeFiles/Ortos_II.dir/src/Player.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/Player.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/Player.cpp > CMakeFiles/Ortos_II.dir/src/Player.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/Player.cpp > CMakeFiles/Ortos_II.dir/src/Player.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/Player.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/Player.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/Player.cpp -o CMakeFiles/Ortos_II.dir/src/Player.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/Player.cpp -o CMakeFiles/Ortos_II.dir/src/Player.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o: /Users/filipstupar/Ortos_II/src/Enemy.cpp
+CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o: /Users/filipstupar/Documents/OrtosII/src/Enemy.cpp
 CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o -c /Users/filipstupar/Ortos_II/src/Enemy.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/Enemy.cpp
 
 CMakeFiles/Ortos_II.dir/src/Enemy.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/Enemy.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/Enemy.cpp > CMakeFiles/Ortos_II.dir/src/Enemy.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/Enemy.cpp > CMakeFiles/Ortos_II.dir/src/Enemy.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/Enemy.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/Enemy.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/Enemy.cpp -o CMakeFiles/Ortos_II.dir/src/Enemy.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/Enemy.cpp -o CMakeFiles/Ortos_II.dir/src/Enemy.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: /Users/filipstupar/Ortos_II/src/Projectile.cpp
+CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: /Users/filipstupar/Documents/OrtosII/src/Projectile.cpp
 CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o -c /Users/filipstupar/Ortos_II/src/Projectile.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o -MF CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/Projectile.cpp
 
 CMakeFiles/Ortos_II.dir/src/Projectile.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/Projectile.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/Projectile.cpp > CMakeFiles/Ortos_II.dir/src/Projectile.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/Projectile.cpp > CMakeFiles/Ortos_II.dir/src/Projectile.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/Projectile.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/Projectile.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/Projectile.cpp -o CMakeFiles/Ortos_II.dir/src/Projectile.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/Projectile.cpp -o CMakeFiles/Ortos_II.dir/src/Projectile.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/UI.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/UI.cpp.o: /Users/filipstupar/Ortos_II/src/UI.cpp
+CMakeFiles/Ortos_II.dir/src/UI.cpp.o: /Users/filipstupar/Documents/OrtosII/src/UI.cpp
 CMakeFiles/Ortos_II.dir/src/UI.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Ortos_II.dir/src/UI.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/UI.cpp.o -MF CMakeFiles/Ortos_II.dir/src/UI.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/UI.cpp.o -c /Users/filipstupar/Ortos_II/src/UI.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Ortos_II.dir/src/UI.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/UI.cpp.o -MF CMakeFiles/Ortos_II.dir/src/UI.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/UI.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/UI.cpp
 
 CMakeFiles/Ortos_II.dir/src/UI.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/UI.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/UI.cpp > CMakeFiles/Ortos_II.dir/src/UI.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/UI.cpp > CMakeFiles/Ortos_II.dir/src/UI.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/UI.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/UI.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/UI.cpp -o CMakeFiles/Ortos_II.dir/src/UI.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/UI.cpp -o CMakeFiles/Ortos_II.dir/src/UI.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o: /Users/filipstupar/Ortos_II/src/InputHandler.cpp
+CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o: /Users/filipstupar/Documents/OrtosII/src/InputHandler.cpp
 CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o -MF CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o -c /Users/filipstupar/Ortos_II/src/InputHandler.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o -MF CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/InputHandler.cpp
 
 CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/InputHandler.cpp > CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/InputHandler.cpp > CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/InputHandler.cpp -o CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/InputHandler.cpp -o CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o: /Users/filipstupar/Ortos_II/src/TextRenderer.cpp
+CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o: /Users/filipstupar/Documents/OrtosII/src/TextRenderer.cpp
 CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o -MF CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o -c /Users/filipstupar/Ortos_II/src/TextRenderer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o -MF CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/TextRenderer.cpp
 
 CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/TextRenderer.cpp > CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/TextRenderer.cpp > CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/TextRenderer.cpp -o CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/TextRenderer.cpp -o CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/glad.c.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/glad.c.o: /Users/filipstupar/Ortos_II/src/glad.c
+CMakeFiles/Ortos_II.dir/src/glad.c.o: /Users/filipstupar/Documents/OrtosII/src/glad.c
 CMakeFiles/Ortos_II.dir/src/glad.c.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/Ortos_II.dir/src/glad.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/glad.c.o -MF CMakeFiles/Ortos_II.dir/src/glad.c.o.d -o CMakeFiles/Ortos_II.dir/src/glad.c.o -c /Users/filipstupar/Ortos_II/src/glad.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/Ortos_II.dir/src/glad.c.o"
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/glad.c.o -MF CMakeFiles/Ortos_II.dir/src/glad.c.o.d -o CMakeFiles/Ortos_II.dir/src/glad.c.o -c /Users/filipstupar/Documents/OrtosII/src/glad.c
 
 CMakeFiles/Ortos_II.dir/src/glad.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Ortos_II.dir/src/glad.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/filipstupar/Ortos_II/src/glad.c > CMakeFiles/Ortos_II.dir/src/glad.c.i
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/glad.c > CMakeFiles/Ortos_II.dir/src/glad.c.i
 
 CMakeFiles/Ortos_II.dir/src/glad.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Ortos_II.dir/src/glad.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/filipstupar/Ortos_II/src/glad.c -o CMakeFiles/Ortos_II.dir/src/glad.c.s
+	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/glad.c -o CMakeFiles/Ortos_II.dir/src/glad.c.s
 
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: /Users/filipstupar/Ortos_II/src/stb_image.cpp
+CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: /Users/filipstupar/Documents/OrtosII/src/stb_image.cpp
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o -MF CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o -c /Users/filipstupar/Ortos_II/src/stb_image.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o -MF CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/stb_image.cpp
 
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/stb_image.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/stb_image.cpp > CMakeFiles/Ortos_II.dir/src/stb_image.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/stb_image.cpp > CMakeFiles/Ortos_II.dir/src/stb_image.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/stb_image.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/stb_image.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/stb_image.cpp -o CMakeFiles/Ortos_II.dir/src/stb_image.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/stb_image.cpp -o CMakeFiles/Ortos_II.dir/src/stb_image.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: /Users/filipstupar/Ortos_II/src/TileMap.cpp
+CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: /Users/filipstupar/Documents/OrtosII/src/TileMap.cpp
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o -MF CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o -c /Users/filipstupar/Ortos_II/src/TileMap.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o -MF CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/TileMap.cpp
 
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/TileMap.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/TileMap.cpp > CMakeFiles/Ortos_II.dir/src/TileMap.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/TileMap.cpp > CMakeFiles/Ortos_II.dir/src/TileMap.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/TileMap.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/TileMap.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/TileMap.cpp -o CMakeFiles/Ortos_II.dir/src/TileMap.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/TileMap.cpp -o CMakeFiles/Ortos_II.dir/src/TileMap.cpp.s
 
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: CMakeFiles/Ortos_II.dir/flags.make
-CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: /Users/filipstupar/Ortos_II/src/tinyxml2.cpp
+CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: /Users/filipstupar/Documents/OrtosII/src/tinyxml2.cpp
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o: CMakeFiles/Ortos_II.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o -MF CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o -c /Users/filipstupar/Ortos_II/src/tinyxml2.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o -MF CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o.d -o CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o -c /Users/filipstupar/Documents/OrtosII/src/tinyxml2.cpp
 
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Ortos_II/src/tinyxml2.cpp > CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.i
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/filipstupar/Documents/OrtosII/src/tinyxml2.cpp > CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.i
 
 CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Ortos_II/src/tinyxml2.cpp -o CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.s
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/filipstupar/Documents/OrtosII/src/tinyxml2.cpp -o CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.s
 
 # Object files for target Ortos_II
 Ortos_II_OBJECTS = \
@@ -258,7 +258,7 @@ Ortos_II: CMakeFiles/Ortos_II.dir/build.make
 Ortos_II: /opt/homebrew/lib/libglfw.3.4.dylib
 Ortos_II: /opt/homebrew/lib/libfreetype.dylib
 Ortos_II: CMakeFiles/Ortos_II.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/filipstupar/Ortos_II/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable Ortos_II"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/filipstupar/Documents/OrtosII/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable Ortos_II"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Ortos_II.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -270,6 +270,6 @@ CMakeFiles/Ortos_II.dir/clean:
 .PHONY : CMakeFiles/Ortos_II.dir/clean
 
 CMakeFiles/Ortos_II.dir/depend:
-	cd /Users/filipstupar/Ortos_II/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/filipstupar/Ortos_II /Users/filipstupar/Ortos_II /Users/filipstupar/Ortos_II/build /Users/filipstupar/Ortos_II/build /Users/filipstupar/Ortos_II/build/CMakeFiles/Ortos_II.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /Users/filipstupar/Documents/OrtosII/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/filipstupar/Documents/OrtosII /Users/filipstupar/Documents/OrtosII /Users/filipstupar/Documents/OrtosII/build /Users/filipstupar/Documents/OrtosII/build /Users/filipstupar/Documents/OrtosII/build/CMakeFiles/Ortos_II.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/Ortos_II.dir/depend
 

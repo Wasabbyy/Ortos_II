@@ -11,6 +11,12 @@ public:
     // Cleanup
     static void cleanup();
     
+    // Load title screen background texture
+    static bool loadTitleScreenTexture(const std::string& imagePath);
+    
+    // Load death screen background texture
+    static bool loadDeathScreenTexture(const std::string& imagePath);
+    
     static void drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight);
     static void drawEnemyHealthBar(float x, float y, int currentHealth, int maxHealth);
     static void drawHeart(float x, float y, bool filled, float size = 16.0f);
@@ -29,4 +35,6 @@ public:
 private:
     static TextRenderer* textRenderer;
     static bool initialized;
+    static GLuint titleScreenTextureID;
+    static GLuint deathScreenTextureID;
 }; 

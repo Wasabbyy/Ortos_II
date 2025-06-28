@@ -51,6 +51,16 @@ int main() {
         return -1;
     }
 
+    // Load title screen background texture
+    if (!UI::loadTitleScreenTexture("../assets/screens/titlescreen.png")) {
+        spdlog::warn("Failed to load title screen texture, will use black background");
+    }
+
+    // Load death screen background texture
+    if (!UI::loadDeathScreenTexture("../assets/screens/deathscreen.png")) {
+        spdlog::warn("Failed to load death screen texture, will use black background");
+    }
+
     // Set up viewport and orthographic projection
     int windowWidth = 1920;
     int windowHeight = 1080;
@@ -253,7 +263,7 @@ int main() {
             glfwGetCursorPos(window, &mouseX, &mouseY);
             float buttonWidth = 200.0f;
             float buttonHeight = 60.0f;
-            float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
+            float buttonX = windowWidth * 0.3f - buttonWidth / 2.0f;  // Match UI position (30% from left)
             float respawnButtonY = windowHeight * 0.5f;
             float exitButtonY = windowHeight * 0.35f;
 
