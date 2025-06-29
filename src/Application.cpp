@@ -101,6 +101,14 @@ int main() {
         spdlog::info("Successfully loaded intro music");
     }
 
+    // Load background music for gameplay
+    spdlog::info("Attempting to load background music...");
+    if (!audioManager.loadMusic("background", "../assets/sounds/defaultSong.wav")) {
+        spdlog::warn("Failed to load background music");
+    } else {
+        spdlog::info("Successfully loaded background music");
+    }
+
     // Set up viewport and orthographic projection
     int windowWidth = 1920;
     int windowHeight = 1080;
@@ -112,6 +120,7 @@ int main() {
     int selectedMenuOption = 0;
     bool gameInitialized = false;
     bool introMusicStarted = false;
+    bool backgroundMusicStarted = false;
     
     // Input debouncing
     bool keyUpPressed = false;
@@ -186,6 +195,10 @@ int main() {
                     // Stop intro music when starting game
                     audioManager.stopMusic();
                     introMusicStarted = false;
+                    // Start background music for gameplay
+                    audioManager.playMusic("background", true); // Loop the background music
+                    backgroundMusicStarted = true;
+                    spdlog::info("Started background music for gameplay");
                     currentState = GameState::PLAYING;
                 } else if (selectedMenuOption == 1) {
                     // Play click sound before exiting
@@ -351,6 +364,7 @@ int main() {
                 // Stop background music and reset introMusicStarted flag
                 audioManager.stopMusic();
                 introMusicStarted = false;
+                backgroundMusicStarted = false;
                 // Reset menu hover tracking
                 previousSelectedMenuOption = -1;
                 currentState = GameState::MENU;
@@ -360,6 +374,10 @@ int main() {
             // Check if player has died
             if (!player->isAlive()) {
                 // audioManager.playSound("player_death", 1.0f);
+                // Stop background music when player dies
+                audioManager.stopMusic();
+                backgroundMusicStarted = false;
+                spdlog::info("Stopped background music due to player death");
                 selectedDeathButton = 0;
                 deathScreenInitialized = false;
                 keyUpPressed = false;
@@ -433,6 +451,10 @@ int main() {
                     }
                     bloodEffects.clear();
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
+                    // Start background music for gameplay
+                    audioManager.playMusic("background", true); // Loop the background music
+                    backgroundMusicStarted = true;
+                    spdlog::info("Started background music for respawned gameplay");
                     currentState = GameState::PLAYING;
                 } else if (exitButtonHovered) {
                     // Play click sound before exiting
@@ -467,6 +489,10 @@ int main() {
                     }
                     bloodEffects.clear();
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
+                    // Start background music for gameplay
+                    audioManager.playMusic("background", true); // Loop the background music
+                    backgroundMusicStarted = true;
+                    spdlog::info("Started background music for respawned gameplay (keyboard)");
                     currentState = GameState::PLAYING;
                 } else if (selectedDeathButton == 1) {
                     // Play click sound before exiting

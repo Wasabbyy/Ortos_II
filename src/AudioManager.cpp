@@ -4,7 +4,7 @@
 #include <iostream>
 
 AudioManager::AudioManager()
-    : device(nullptr), context(nullptr), musicBuffer(0), musicSource(0),
+    : device(nullptr), context(nullptr), musicSource(0),
       masterVolume(1.0f), soundVolume(1.0f), musicVolume(1.0f) {
 }
 
@@ -87,10 +87,11 @@ void AudioManager::cleanup() {
     }
     soundBuffers.clear();
     
-    if (musicBuffer) {
-        alDeleteBuffers(1, &musicBuffer);
-        musicBuffer = 0;
+    // Clean up music buffers
+    for (auto& pair : musicBuffers) {
+        alDeleteBuffers(1, &pair.second);
     }
+    musicBuffers.clear();
 }
 
 bool AudioManager::loadSound(const std::string& name, const std::string& filePath) {
@@ -145,18 +146,20 @@ void AudioManager::playSound3D(const std::string& name, float x, float y, float 
 }
 
 bool AudioManager::loadMusic(const std::string& name, const std::string& filePath) {
-    if (!loadWAVFile(filePath, musicBuffer)) {
+    ALuint buffer;
+    if (!loadWAVFile(filePath, buffer)) {
         spdlog::error("Failed to load music file: {}", filePath);
         return false;
     }
     
-    currentMusic = name;
+    musicBuffers[name] = buffer;
     spdlog::info("Loaded music: {} from {}", name, filePath);
     return true;
 }
 
 void AudioManager::playMusic(const std::string& name, bool loop) {
-    if (currentMusic != name) {
+    auto it = musicBuffers.find(name);
+    if (it == musicBuffers.end()) {
         spdlog::error("Music not loaded: {}", name);
         return;
     }
@@ -174,7 +177,7 @@ void AudioManager::playMusic(const std::string& name, bool loop) {
     }
     
     // Set source properties
-    alSourcei(musicSource, AL_BUFFER, musicBuffer);
+    alSourcei(musicSource, AL_BUFFER, it->second);
     alSourcei(musicSource, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
     alSourcef(musicSource, AL_GAIN, musicVolume * masterVolume);
     

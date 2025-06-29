@@ -48,7 +48,7 @@ private:
     std::vector<ALuint> soundSources;
     
     // Background music
-    ALuint musicBuffer;
+    std::map<std::string, ALuint> musicBuffers;
     ALuint musicSource;
     std::string currentMusic;
     
