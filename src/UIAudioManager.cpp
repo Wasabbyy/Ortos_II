@@ -74,6 +74,10 @@ bool UIAudioManager::init(ALCcontext* existingContext) {
         alSourcei(source, AL_LOOPING, AL_FALSE);
         alSource3f(source, AL_POSITION, 0.0f, 0.0f, 0.0f);
         alSource3f(source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+        // Pre-configure for UI sounds - disable distance attenuation
+        alSourcei(source, AL_SOURCE_RELATIVE, AL_TRUE);
+        alSourcef(source, AL_REFERENCE_DISTANCE, 1.0f);
+        alSourcef(source, AL_MAX_DISTANCE, 1.0f);
     }
     
     spdlog::info("UIAudioManager::init() - Initialization completed successfully");
@@ -135,12 +139,9 @@ void UIAudioManager::playUISound(const std::string& name, float volume) {
         return;
     }
     
-    spdlog::debug("Playing UI sound: {} with source: {}, buffer: {}, volume: {}", 
-                  name, source, it->second, volume * uiVolume);
-    
+    // Set buffer and play immediately - minimal calls for lowest latency
     alSourcei(source, AL_BUFFER, it->second);
     alSourcef(source, AL_GAIN, volume * uiVolume);
-    alSourcei(source, AL_LOOPING, AL_FALSE);
     alSourcePlay(source);
     
     // Check for errors after playing
@@ -148,8 +149,6 @@ void UIAudioManager::playUISound(const std::string& name, float volume) {
     if (error != AL_NO_ERROR) {
         spdlog::error("OpenAL error playing UI sound: {}", error);
     }
-    
-    spdlog::debug("Playing UI sound: {} with volume: {}", name, volume * uiVolume);
 }
 
 void UIAudioManager::playButtonHoverSound() {
@@ -270,22 +269,17 @@ ALuint UIAudioManager::getAvailableUISource() {
         
         // Check if source is stopped or initial state
         if (state == AL_STOPPED || state == AL_INITIAL) {
-            // Reset the source to ensure it's in a clean state
-            alSourceStop(source);
+            // Minimal reset - just clear the buffer and play
             alSourcei(source, AL_BUFFER, 0);
-            alSourcef(source, AL_GAIN, 1.0f);
-            alSourcei(source, AL_LOOPING, AL_FALSE);
             return source;
         }
     }
     
-    // If no sources are available, try to force stop the first one and reuse it
+    // If no sources are available, force stop the first one and reuse it
     if (!uiSoundSources.empty()) {
         ALuint source = uiSoundSources[0];
         alSourceStop(source);
         alSourcei(source, AL_BUFFER, 0);
-        alSourcef(source, AL_GAIN, 1.0f);
-        alSourcei(source, AL_LOOPING, AL_FALSE);
         spdlog::warn("Forcing reuse of UI sound source 0");
         return source;
     }

@@ -195,10 +195,12 @@ int main() {
                     // Stop intro music when starting game
                     audioManager.stopMusic();
                     introMusicStarted = false;
+                    // Set lower volume for background music during gameplay
+                    audioManager.setMusicVolume(0.4f); // Reduced from default 1.0 to 0.4
                     // Start background music for gameplay
                     audioManager.playMusic("background", true); // Loop the background music
                     backgroundMusicStarted = true;
-                    spdlog::info("Started background music for gameplay");
+                    spdlog::info("Started background music for gameplay at reduced volume (0.4)");
                     currentState = GameState::PLAYING;
                 } else if (selectedMenuOption == 1) {
                     // Play click sound before exiting
@@ -365,6 +367,8 @@ int main() {
                 audioManager.stopMusic();
                 introMusicStarted = false;
                 backgroundMusicStarted = false;
+                // Reset music volume to normal for intro music
+                audioManager.setMusicVolume(1.0f);
                 // Reset menu hover tracking
                 previousSelectedMenuOption = -1;
                 currentState = GameState::MENU;
@@ -377,6 +381,8 @@ int main() {
                 // Stop background music when player dies
                 audioManager.stopMusic();
                 backgroundMusicStarted = false;
+                // Reset music volume to normal for intro music
+                audioManager.setMusicVolume(1.0f);
                 spdlog::info("Stopped background music due to player death");
                 selectedDeathButton = 0;
                 deathScreenInitialized = false;
@@ -452,9 +458,10 @@ int main() {
                     bloodEffects.clear();
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
+                    audioManager.setMusicVolume(0.4f); // Set lower volume for background music
                     audioManager.playMusic("background", true); // Loop the background music
                     backgroundMusicStarted = true;
-                    spdlog::info("Started background music for respawned gameplay");
+                    spdlog::info("Started background music for gameplay at reduced volume (0.4)");
                     currentState = GameState::PLAYING;
                 } else if (exitButtonHovered) {
                     // Play click sound before exiting
@@ -490,9 +497,10 @@ int main() {
                     bloodEffects.clear();
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
+                    audioManager.setMusicVolume(0.4f); // Set lower volume for background music
                     audioManager.playMusic("background", true); // Loop the background music
                     backgroundMusicStarted = true;
-                    spdlog::info("Started background music for respawned gameplay (keyboard)");
+                    spdlog::info("Started background music for gameplay at reduced volume (0.4)");
                     currentState = GameState::PLAYING;
                 } else if (selectedDeathButton == 1) {
                     // Play click sound before exiting
