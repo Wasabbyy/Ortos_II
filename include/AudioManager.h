@@ -27,6 +27,7 @@ public:
     void pauseMusic();
     void resumeMusic();
     ALuint getMusicSource() const { return musicSource; }
+    ALCcontext* getContext() const { return context; }
     
     // Audio settings
     void setMasterVolume(float volume);

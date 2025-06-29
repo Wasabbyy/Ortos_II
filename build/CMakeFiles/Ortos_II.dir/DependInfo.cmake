@@ -19,6 +19,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/filipstupar/Documents/OrtosII/src/TextRenderer.cpp" "CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/TileMap.cpp" "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/UI.cpp" "CMakeFiles/Ortos_II.dir/src/UI.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/UI.cpp.o.d"
+  "/Users/filipstupar/Documents/OrtosII/src/UIAudioManager.cpp" "CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/stb_image.cpp" "CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o.d"
   "/Users/filipstupar/Documents/OrtosII/src/tinyxml2.cpp" "CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o" "gcc" "CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o.d"
   )

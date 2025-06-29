@@ -40,6 +40,7 @@ set(SOURCES
     src/Projectile.cpp
     src/BloodEffect.cpp
     src/AudioManager.cpp
+    src/UIAudioManager.cpp
     src/UI.cpp
     src/InputHandler.cpp
     src/TextRenderer.cpp

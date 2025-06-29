@@ -5,6 +5,7 @@
 #include "Projectile.h"
 #include "BloodEffect.h"
 #include "AudioManager.h"
+#include "UIAudioManager.h"
 #include "InputHandler.h"
 #include "TileMap.h"
 #include "UI.h"
@@ -74,6 +75,24 @@ int main() {
     }
     spdlog::info("AudioManager initialized successfully");
 
+    // Initialize UIAudioManager
+    UIAudioManager uiAudioManager;
+    spdlog::info("Attempting to initialize UIAudioManager...");
+    if (!uiAudioManager.init(audioManager.getContext())) {
+        spdlog::error("Failed to initialize UIAudioManager");
+        glfwTerminate();
+        return -1;
+    }
+    spdlog::info("UIAudioManager initialized successfully");
+
+    // Load UI sound effects
+    spdlog::info("Attempting to load UI sound effects...");
+    if (!uiAudioManager.loadUISound("button", "../assets/sounds/button.wav")) {
+        spdlog::warn("Failed to load button sound");
+    } else {
+        spdlog::info("Successfully loaded button sound");
+    }
+
     // Load intro music for title screen
     spdlog::info("Attempting to load intro music...");
     if (!audioManager.loadMusic("intro", "../assets/sounds/intro.wav")) {
@@ -103,6 +122,12 @@ int main() {
     double mouseX = 0.0, mouseY = 0.0;
     bool mouseLeftPressed = false;
     bool respawnButtonHovered = false;
+    
+    // Button hover tracking for sound effects
+    int previousSelectedMenuOption = -1;
+    int previousSelectedDeathButton = -1;
+    bool previousRespawnButtonHovered = false;
+    bool previousExitButtonHovered = false;
 
     // Game objects (will be initialized when starting game)
     Player* player = nullptr;
@@ -147,13 +172,24 @@ int main() {
             } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
                 keyDownPressed = false;
             }
+            
+            // Play hover sound when selection changes
+            if (selectedMenuOption != previousSelectedMenuOption) {
+                uiAudioManager.playButtonHoverSound();
+                previousSelectedMenuOption = selectedMenuOption;
+            }
+            
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
                 if (selectedMenuOption == 0) {
+                    // Play click sound before starting game
+                    uiAudioManager.playButtonClickSound();
                     // Stop intro music when starting game
                     audioManager.stopMusic();
                     introMusicStarted = false;
                     currentState = GameState::PLAYING;
                 } else if (selectedMenuOption == 1) {
+                    // Play click sound before exiting
+                    uiAudioManager.playButtonClickSound();
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
                 }
                 keyEnterPressed = true;
@@ -315,6 +351,8 @@ int main() {
                 // Stop background music and reset introMusicStarted flag
                 audioManager.stopMusic();
                 introMusicStarted = false;
+                // Reset menu hover tracking
+                previousSelectedMenuOption = -1;
                 currentState = GameState::MENU;
                 spdlog::info("Returning to menu");
             }
@@ -327,6 +365,10 @@ int main() {
                 keyUpPressed = false;
                 keyDownPressed = false;
                 keyEnterPressed = false;
+                // Reset hover tracking for death screen
+                previousSelectedDeathButton = -1;
+                previousRespawnButtonHovered = false;
+                previousExitButtonHovered = false;
                 currentState = GameState::DEATH;
                 spdlog::info("Player has died, showing death screen");
             }
@@ -359,6 +401,12 @@ int main() {
                 keyDownPressed = false;
             }
 
+            // Play hover sound when selection changes
+            if (selectedDeathButton != previousSelectedDeathButton) {
+                uiAudioManager.playButtonHoverSound();
+                previousSelectedDeathButton = selectedDeathButton;
+            }
+
             // Mouse hover does NOT affect selection anymore
             // if (respawnButtonHovered) selectedDeathButton = 0;
             // if (exitButtonHovered) selectedDeathButton = 1;
@@ -366,6 +414,8 @@ int main() {
             // Mouse click (still works for clicking)
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouseLeftPressed) {
                 if (respawnButtonHovered) {
+                    // Play click sound before respawning
+                    uiAudioManager.playButtonClickSound();
                     // Reset game state
                     spdlog::info("Respawn button clicked, restarting game");
                     if (gameInitialized) {
@@ -385,6 +435,8 @@ int main() {
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     currentState = GameState::PLAYING;
                 } else if (exitButtonHovered) {
+                    // Play click sound before exiting
+                    uiAudioManager.playButtonClickSound();
                     spdlog::info("Exit button clicked, exiting game");
                     deathScreenInitialized = false; // <-- FIX: reset on exit
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -397,6 +449,8 @@ int main() {
             // Keyboard Enter
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
                 if (selectedDeathButton == 0) {
+                    // Play click sound before respawning
+                    uiAudioManager.playButtonClickSound();
                     spdlog::info("Enter pressed on Respawn, restarting game");
                     if (gameInitialized) {
                         delete player;
@@ -415,6 +469,8 @@ int main() {
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     currentState = GameState::PLAYING;
                 } else if (selectedDeathButton == 1) {
+                    // Play click sound before exiting
+                    uiAudioManager.playButtonClickSound();
                     spdlog::info("Enter pressed on Exit, exiting game");
                     deathScreenInitialized = false; // <-- FIX: reset on exit
                     glfwSetWindowShouldClose(window, GLFW_TRUE);

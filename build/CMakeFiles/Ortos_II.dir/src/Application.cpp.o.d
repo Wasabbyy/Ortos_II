@@ -843,6 +843,7 @@ CMakeFiles/Ortos_II.dir/src/Application.cpp.o: \
   /Users/filipstupar/Documents/OrtosII/include/AL/alc.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/map \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/__tree \
+  /Users/filipstupar/Documents/OrtosII/include/UIAudioManager.h \
   /Users/filipstupar/Documents/OrtosII/include/InputHandler.h \
   /Users/filipstupar/Documents/OrtosII/include/TileMap.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk/usr/include/c++/v1/unordered_set \

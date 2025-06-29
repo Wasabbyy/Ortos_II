@@ -19,6 +19,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o.d"
   "CMakeFiles/Ortos_II.dir/src/UI.cpp.o"
   "CMakeFiles/Ortos_II.dir/src/UI.cpp.o.d"
+  "CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.o"
+  "CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.o.d"
   "CMakeFiles/Ortos_II.dir/src/glad.c.o"
   "CMakeFiles/Ortos_II.dir/src/glad.c.o.d"
   "CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o"

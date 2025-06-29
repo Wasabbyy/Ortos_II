@@ -369,6 +369,30 @@ src/UI.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UI.cpp.s
 .PHONY : src/UI.cpp.s
 
+src/UIAudioManager.o: src/UIAudioManager.cpp.o
+.PHONY : src/UIAudioManager.o
+
+# target to build an object file
+src/UIAudioManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.o
+.PHONY : src/UIAudioManager.cpp.o
+
+src/UIAudioManager.i: src/UIAudioManager.cpp.i
+.PHONY : src/UIAudioManager.i
+
+# target to preprocess a source file
+src/UIAudioManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.i
+.PHONY : src/UIAudioManager.cpp.i
+
+src/UIAudioManager.s: src/UIAudioManager.cpp.s
+.PHONY : src/UIAudioManager.s
+
+# target to generate assembly for a file
+src/UIAudioManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.s
+.PHONY : src/UIAudioManager.cpp.s
+
 src/glad.o: src/glad.c.o
 .PHONY : src/glad.o
 
@@ -480,6 +504,9 @@ help:
 	@echo "... src/UI.o"
 	@echo "... src/UI.i"
 	@echo "... src/UI.s"
+	@echo "... src/UIAudioManager.o"
+	@echo "... src/UIAudioManager.i"
+	@echo "... src/UIAudioManager.s"
 	@echo "... src/glad.o"
 	@echo "... src/glad.i"
 	@echo "... src/glad.s"
