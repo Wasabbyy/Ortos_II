@@ -140,7 +140,7 @@ int main() {
 
     // Game objects (will be initialized when starting game)
     Player* player = nullptr;
-    Enemy* enemy = nullptr;
+    std::vector<Enemy*> enemies;
     std::vector<Projectile> playerProjectiles;
     std::vector<Projectile> enemyProjectiles;
     std::vector<BloodEffect*> bloodEffects;
@@ -224,11 +224,27 @@ int main() {
                 player->loadIdleTexture("../assets/graphic/Vampire_Idle.png", 64, 64, 2);
                 stbi_set_flip_vertically_on_load(false);
                 
-                // Create enemy
-                enemy = new Enemy(20 * 16.0f, 15 * 16.0f, EnemyType::Skeleton);
+                // Create enemies
+                // Skeleton enemy
+                Enemy* skeleton = new Enemy(20 * 16.0f, 15 * 16.0f, EnemyType::Skeleton);
                 stbi_set_flip_vertically_on_load(true);
-                enemy->loadTexture("../assets/graphic/skeleton_enemy.png", 64, 64, 4);
+                skeleton->loadTexture("../assets/graphic/skeleton_enemy.png", 64, 64, 4);
                 stbi_set_flip_vertically_on_load(false);
+                enemies.push_back(skeleton);
+                
+                // Flying eye enemy
+                Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
+                stbi_set_flip_vertically_on_load(true);
+                flyingEye->loadTexture("../assets/graphic/flgyingeye.png", 150, 150, 8);
+                stbi_set_flip_vertically_on_load(false);
+                enemies.push_back(flyingEye);
+                
+                // Shroom enemy
+                Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
+                stbi_set_flip_vertically_on_load(true);
+                shroom->loadTexture("../assets/graphic/shroom.png", 150, 150, 8);
+                stbi_set_flip_vertically_on_load(false);
+                enemies.push_back(shroom);
                 
                 inputHandler = new InputHandler();
                 tilemap = new Tilemap();
@@ -278,12 +294,16 @@ int main() {
             player->draw();
             
             // Update and draw enemy
-            enemy->update(deltaTime, player->getX(), player->getY(), *tilemap);
-            enemy->updateAnimation(deltaTime);
-            enemy->draw();
+            for (auto& enemy : enemies) {
+                enemy->update(deltaTime, player->getX(), player->getY(), *tilemap);
+                enemy->updateAnimation(deltaTime);
+                enemy->draw();
+            }
             
             // Enemy shooting
-            enemy->shootProjectile(player->getX(), player->getY(), enemyProjectiles);
+            for (auto& enemy : enemies) {
+                enemy->shootProjectile(player->getX(), player->getY(), enemyProjectiles);
+            }
             
             // Update and draw projectiles
             for (auto& projectile : playerProjectiles) {
@@ -313,13 +333,15 @@ int main() {
             // Collision detection
             // Player projectiles vs Enemy
             for (auto& projectile : playerProjectiles) {
-                if (projectile.isActive() && enemy->isAlive()) {
-                    if (projectile.checkCollision(enemy->getX(), enemy->getY(), 8.0f)) {
-                        projectile.setActive(false);
-                        enemy->takeDamage(25);  // Deal 25 damage
-                        // audioManager.playSound("enemy_hit", 0.8f);
-                        spdlog::info("Enemy hit by player projectile! Enemy HP: {}/{}", 
-                                    enemy->getCurrentHealth(), enemy->getMaxHealth());
+                for (auto& enemy : enemies) {
+                    if (projectile.isActive() && enemy->isAlive()) {
+                        if (projectile.checkCollision(enemy->getX(), enemy->getY(), 8.0f)) {
+                            projectile.setActive(false);
+                            enemy->takeDamage(25);  // Deal 25 damage
+                            // audioManager.playSound("enemy_hit", 0.8f);
+                            spdlog::info("Enemy hit by player projectile! Enemy HP: {}/{}", 
+                                        enemy->getCurrentHealth(), enemy->getMaxHealth());
+                        }
                     }
                 }
             }
@@ -338,11 +360,13 @@ int main() {
             }
             
             // Blood effect creation when enemy dies
-            if (enemy->shouldCreateBloodEffect()) {
-                bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY()));
-                enemy->markBloodEffectCreated();
-                // audioManager.playSound("enemy_death", 1.0f);
-                spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
+            for (auto& enemy : enemies) {
+                if (enemy->shouldCreateBloodEffect()) {
+                    bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY()));
+                    enemy->markBloodEffectCreated();
+                    // audioManager.playSound("enemy_death", 1.0f);
+                    spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
+                }
             }
             
             // Clean up inactive projectiles
@@ -444,7 +468,10 @@ int main() {
                     spdlog::info("Respawn button clicked, restarting game");
                     if (gameInitialized) {
                         delete player;
-                        delete enemy;
+                        for (auto& enemy : enemies) {
+                            delete enemy;
+                        }
+                        enemies.clear();
                         delete inputHandler;
                         delete tilemap;
                         gameInitialized = false;
@@ -483,7 +510,10 @@ int main() {
                     spdlog::info("Enter pressed on Respawn, restarting game");
                     if (gameInitialized) {
                         delete player;
-                        delete enemy;
+                        for (auto& enemy : enemies) {
+                            delete enemy;
+                        }
+                        enemies.clear();
                         delete inputHandler;
                         delete tilemap;
                         gameInitialized = false;
@@ -525,7 +555,10 @@ int main() {
     // Cleanup
     if (gameInitialized) {
         delete player;
-        delete enemy;
+        for (auto& enemy : enemies) {
+            delete enemy;
+        }
+        enemies.clear();
         delete inputHandler;
         delete tilemap;
     }

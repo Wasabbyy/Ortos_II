@@ -6,7 +6,9 @@
 enum class EnemyType {
     Skeleton,
     Zombie,
-    Ghost
+    Ghost,
+    FlyingEye,
+    Shroom
 };
 
 enum class EnemyState {
@@ -106,4 +108,8 @@ private:
     // Health system
     int maxHealth = 100;
     int currentHealth = 100;
+    
+    // Direction tracking for sprite flipping
+    bool facingRight = true;
+    float lastMoveX = 0.0f;
 }; 

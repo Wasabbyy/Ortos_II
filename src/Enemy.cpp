@@ -19,6 +19,45 @@ Enemy::Enemy(float x, float y, EnemyType type)
       startX(x), startY(y),
       gen(rd()), randomDir(-1.0f, 1.0f),
       bloodEffectCreated(false) {
+    
+    // Set different properties based on enemy type
+    switch (type) {
+        case EnemyType::FlyingEye:
+            moveSpeed = 80.0f;  // Faster than skeleton
+            patrolRadius = 120.0f;
+            chaseRadius = 180.0f;
+            shootInterval = 1.5f;  // Shoot more frequently
+            shootRange = 250.0f;   // Longer range
+            maxHealth = 75;        // Less health but faster
+            currentHealth = 75;
+            animationSpeed = 0.2f; // Very fast animation
+            break;
+        case EnemyType::Shroom:
+            moveSpeed = 40.0f;     // Slower than flying eye
+            patrolRadius = 80.0f;
+            chaseRadius = 140.0f;
+            shootInterval = 2.5f;  // Shoot less frequently
+            shootRange = 180.0f;   // Medium range
+            maxHealth = 120;       // More health but slower
+            currentHealth = 120;
+            animationSpeed = 0.25f; // Very fast animation speed
+            break;
+        case EnemyType::Skeleton:
+        case EnemyType::Zombie:
+        case EnemyType::Ghost:
+        default:
+            // Default properties (same as before)
+            moveSpeed = 50.0f;
+            patrolRadius = 100.0f;
+            chaseRadius = 150.0f;
+            shootInterval = 2.0f;
+            shootRange = 200.0f;
+            maxHealth = 100;
+            currentHealth = 100;
+            animationSpeed = 0.3f; // Very fast default animation
+            break;
+    }
+    
     spdlog::debug("Enemy created at position ({}, {}) with type {}", x, y, static_cast<int>(type));
 }
 
@@ -44,9 +83,48 @@ void Enemy::draw() const {
     float u2 = static_cast<float>((col + 1) * frameWidth) / textureWidth;
     float v2 = static_cast<float>((row + 1) * frameHeight) / textureHeight;
 
+    // Flip texture coordinates if facing left
+    if (!facingRight) {
+        float temp = u1;
+        u1 = u2;
+        u2 = temp;
+    }
+
     // Draw enemy centered on tile
     float drawX = x - frameWidth / 2.0f;
     float drawY = y - frameHeight / 2.0f;
+
+    // Special effect for flying eye
+    if (type == EnemyType::FlyingEye) {
+        // Add a subtle glow effect
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glColor4f(0.8f, 0.4f, 1.0f, 0.3f); // Purple glow
+        glBegin(GL_QUADS);
+        glTexCoord2f(u1, v2); glVertex2f(drawX - 2, drawY - 2);
+        glTexCoord2f(u2, v2); glVertex2f(drawX + frameWidth + 2, drawY - 2);
+        glTexCoord2f(u2, v1); glVertex2f(drawX + frameWidth + 2, drawY + frameHeight + 2);
+        glTexCoord2f(u1, v1); glVertex2f(drawX - 2, drawY + frameHeight + 2);
+        glEnd();
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
+    }
+    
+    // Special effect for shroom
+    if (type == EnemyType::Shroom) {
+        // Add a green glow effect
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glColor4f(0.2f, 0.8f, 0.3f, 0.4f); // Green glow
+        glBegin(GL_QUADS);
+        glTexCoord2f(u1, v2); glVertex2f(drawX - 3, drawY - 3);
+        glTexCoord2f(u2, v2); glVertex2f(drawX + frameWidth + 3, drawY - 3);
+        glTexCoord2f(u2, v1); glVertex2f(drawX + frameWidth + 3, drawY + frameHeight + 3);
+        glTexCoord2f(u1, v1); glVertex2f(drawX - 3, drawY + frameHeight + 3);
+        glEnd();
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
+    }
 
     glBegin(GL_QUADS);
     glTexCoord2f(u1, v2); glVertex2f(drawX, drawY);
@@ -60,10 +138,16 @@ void Enemy::draw() const {
     // Draw health bar above enemy
     UI::drawEnemyHealthBar(x, y - frameHeight / 2.0f - 10.0f, currentHealth, maxHealth);
 
-    // Draw collision rectangle (bounding box) in blue for enemies
+    // Draw collision rectangle (bounding box) in different colors for different enemy types
     glLineWidth(2.0f);
     glDisable(GL_BLEND);
-    glColor3f(0.0f, 0.0f, 1.0f); // Blue
+    if (type == EnemyType::FlyingEye) {
+        glColor3f(1.0f, 0.0f, 1.0f); // Magenta for flying eye
+    } else if (type == EnemyType::Shroom) {
+        glColor3f(0.0f, 1.0f, 0.0f); // Green for shroom
+    } else {
+        glColor3f(0.0f, 0.0f, 1.0f); // Blue for other enemies
+    }
     glBegin(GL_LINE_LOOP);
     glVertex2f(getLeft(), getTop());
     glVertex2f(getRight(), getTop());
@@ -131,6 +215,12 @@ void Enemy::move(float dx, float dy) {
     x += dx;
     y += dy;
     
+    // Update facing direction based on horizontal movement
+    if (dx != 0) {
+        lastMoveX = dx;
+        facingRight = (dx > 0);
+    }
+    
     spdlog::debug("Enemy moved from ({}, {}) to ({}, {})", oldX, oldY, x, y);
 }
 
@@ -180,6 +270,15 @@ void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap&
             if (distanceToPlayer > 0) {
                 moveX = (dx / distanceToPlayer) * moveSpeed * deltaTime;
                 moveY = (dy / distanceToPlayer) * moveSpeed * deltaTime;
+                
+                // Flying eye has more erratic movement
+                if (type == EnemyType::FlyingEye) {
+                    // Add some random movement to make it more unpredictable
+                    float randomOffsetX = randomDir(gen) * 0.3f;
+                    float randomOffsetY = randomDir(gen) * 0.3f;
+                    moveX += randomOffsetX * moveSpeed * deltaTime;
+                    moveY += randomOffsetY * moveSpeed * deltaTime;
+                }
             }
             break;
         }
@@ -193,6 +292,12 @@ void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap&
             
             // Patrol horizontally
             moveX = currentPatrolDirection * moveSpeed * 0.5f * deltaTime;
+            
+            // Flying eye patrols in a more complex pattern
+            if (type == EnemyType::FlyingEye) {
+                // Add vertical movement to patrol pattern
+                moveY = std::sin(patrolTimer * 2.0f) * moveSpeed * 0.3f * deltaTime;
+            }
             break;
         }
         case EnemyState::Idle:
@@ -216,6 +321,12 @@ void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap&
             
             moveX = randomMoveX * moveSpeed * 0.3f * deltaTime;
             moveY = randomMoveY * moveSpeed * 0.3f * deltaTime;
+            
+            // Flying eye has more active idle movement
+            if (type == EnemyType::FlyingEye) {
+                moveX *= 1.5f;  // Move faster when idle
+                moveY *= 1.5f;
+            }
             break;
         }
     }
