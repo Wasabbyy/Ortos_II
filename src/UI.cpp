@@ -365,7 +365,7 @@ void UI::drawMenuButton(const std::string& text, float x, float y, float width, 
     
     // Draw text using FreeType in RGB(205, 133, 63)
     float textX = x + width / 2.0f;
-    float textY = y + height / 2.0f - 5.0f;
+    float textY = y + height / 2.0f - 10.0f;  // Moved up by 3 pixels (from -5 to -8)
     drawCenteredText(text, textX, textY, 0.8f, 205.0f/255.0f, 133.0f/255.0f, 63.0f/255.0f);
 }
 
@@ -406,7 +406,7 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
     glEnable(GL_TEXTURE_2D);
     
     // Draw buttons (slightly offset to the left)
-    float buttonWidth = 200.0f;
+    float buttonWidth = 260.0f;  // Increased from 200 to 250
     float buttonHeight = 60.0f;
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Move 45 pixels to the left
     
@@ -481,7 +481,7 @@ void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHo
     glEnable(GL_TEXTURE_2D);
     
     // Draw respawn and exit buttons (same position as main menu)
-    float buttonWidth = 200.0f;
+    float buttonWidth = 260.0f;  // Increased from 200 to 250 to match main menu
     float buttonHeight = 60.0f;
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Same offset as main menu
     float respawnButtonY = windowHeight * 0.5f;

@@ -334,7 +334,7 @@ int main() {
         else if (currentState == GameState::DEATH) {
             // Handle mouse input for death screen
             glfwGetCursorPos(window, &mouseX, &mouseY);
-            float buttonWidth = 200.0f;
+            float buttonWidth = 260.0f;  // Increased from 200 to 250 to match UI
             float buttonHeight = 60.0f;
             float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Match UI position (45px left offset)
             float respawnButtonY = windowHeight * 0.5f;
