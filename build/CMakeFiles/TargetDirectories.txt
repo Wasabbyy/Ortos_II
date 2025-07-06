@@ -1,3 +1,0 @@
-/Users/filipstupar/Documents/OrtosII/build/CMakeFiles/Ortos_II.dir
-/Users/filipstupar/Documents/OrtosII/build/CMakeFiles/edit_cache.dir
-/Users/filipstupar/Documents/OrtosII/build/CMakeFiles/rebuild_cache.dir
