@@ -17,11 +17,11 @@ BloodEffect::~BloodEffect() {
 
 void BloodEffect::loadBloodTextures() {
     std::vector<std::string> bloodFiles = {
-        "../assets/graphic/blood_01.png",
-        "../assets/graphic/blood_02.png",
-        "../assets/graphic/blood_03.png",
-        "../assets/graphic/blood_04.png",
-        "../assets/graphic/blood_05.png"
+        "../assets/graphic/blood/blood_01.png",
+        "../assets/graphic/blood/blood_02.png",
+        "../assets/graphic/blood/blood_03.png",
+        "../assets/graphic/blood/blood_04.png",
+        "../assets/graphic/blood/blood_05.png"
     };
     
     bloodTextures.resize(totalFrames);

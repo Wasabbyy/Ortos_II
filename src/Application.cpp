@@ -220,32 +220,32 @@ int main() {
             if (!gameInitialized) {
                 player = new Player();
                 stbi_set_flip_vertically_on_load(true);
-                player->loadTexture("../assets/graphic/Vampire_Walk.png", 64, 64, 4);
-                player->loadIdleTexture("../assets/graphic/Vampire_Idle.png", 64, 64, 2);
+                player->loadTexture("../assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
+                player->loadIdleTexture("../assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
                 stbi_set_flip_vertically_on_load(false);
                 
                 // Create enemies
                 // Flying eye enemy
                 Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                 stbi_set_flip_vertically_on_load(true);
-                flyingEye->loadTexture("../assets/graphic/flgyingeye.png", 150, 150, 8);
-                flyingEye->loadHitTexture("../assets/graphic/Hit_eye.png", 150, 150, 4);
-                flyingEye->loadDeathTexture("../assets/graphic/Death_eye.png", 150, 150, 4); // NEW
+                flyingEye->loadTexture("../assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
+                flyingEye->loadHitTexture("../assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
+                flyingEye->loadDeathTexture("../assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(flyingEye);
                 
                 // Shroom enemy
                 Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                 stbi_set_flip_vertically_on_load(true);
-                shroom->loadTexture("../assets/graphic/shroom.png", 150, 150, 8);
-                shroom->loadHitTexture("../assets/graphic/Hit_shroom.png", 150, 150, 4);
-                shroom->loadDeathTexture("../assets/graphic/Death_shroom.png", 150, 150, 4); // NEW
+                shroom->loadTexture("../assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
+                shroom->loadHitTexture("../assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
+                shroom->loadDeathTexture("../assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(shroom);
                 
                 inputHandler = new InputHandler();
                 tilemap = new Tilemap();
-                if (!tilemap->loadTilesetTexture("../assets/maps/catacombs.png", 16, 16)) {
+                if (!tilemap->loadTilesetTexture("../assets/graphic/tileset/tileset.png", 16, 16)) {
                     spdlog::error("Failed to load tileset texture");
                     return -1;
                 }
