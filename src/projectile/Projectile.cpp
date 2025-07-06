@@ -3,9 +3,19 @@
 #include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
 #include <cmath>
+#include <stb_image.h>
+
+// Static member initialization
+unsigned int Projectile::textureID = 0;
+int Projectile::textureWidth = 0;
+int Projectile::textureHeight = 0;
+int Projectile::spriteWidth = 16;  // 16x16 pixels per sprite
+int Projectile::spriteHeight = 16;
+bool Projectile::textureLoaded = false;
 
 Projectile::Projectile(float x, float y, float dx, float dy, ProjectileType type)
-    : x(x), y(y), dx(dx), dy(dy), type(type) {
+    : x(x), y(y), dx(dx), dy(dy), type(type),
+      animationTimer(0.0f), frameDuration(0.1f), currentFrame(0), totalFrames(5) {
     
     // Normalize direction vector
     float length = std::sqrt(dx * dx + dy * dy);
@@ -14,7 +24,7 @@ Projectile::Projectile(float x, float y, float dx, float dy, ProjectileType type
         this->dy = dy / length;
     }
     
-    // Set color based on type
+    // Set color based on type (fallback for enemy projectiles)
     if (type == ProjectileType::PlayerBullet) {
         r = 0.0f; g = 1.0f; b = 0.0f;  // Green for player
     } else {
@@ -28,6 +38,56 @@ Projectile::~Projectile() {
     // Cleanup if needed
 }
 
+void Projectile::loadProjectileTexture(const std::string& filePath) {
+    if (textureLoaded) {
+        spdlog::warn("Projectile texture already loaded");
+        return;
+    }
+    
+    int width, height, channels;
+    unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+    if (!data) {
+        spdlog::error("Failed to load projectile texture: {}", filePath);
+        return;
+    }
+    
+    spdlog::info("Loaded projectile texture: {} ({}x{})", filePath, width, height);
+    spdlog::info("Projectile texture dimensions: {}x{} pixels, {} sprites per row, {} rows total", 
+                 width, height, width / spriteWidth, height / spriteHeight);
+    
+    textureWidth = width;
+    textureHeight = height;
+    
+    glGenTextures(1, &textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    
+    // Use NEAREST filtering for pixel-perfect graphics
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
+    GLenum format = GL_RGB;
+    if (channels == 4) format = GL_RGBA;
+    else if (channels == 3) format = GL_RGB;
+    else if (channels == 1) format = GL_RED;
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    stbi_image_free(data);
+    
+    textureLoaded = true;
+    spdlog::debug("Projectile texture loaded successfully with ID: {}", textureID);
+}
+
+void Projectile::cleanupProjectileTexture() {
+    if (textureLoaded && textureID != 0) {
+        glDeleteTextures(1, &textureID);
+        textureID = 0;
+        textureLoaded = false;
+        spdlog::debug("Projectile texture cleaned up");
+    }
+}
+
 void Projectile::update(float deltaTime) {
     if (!active) return;
     
@@ -37,6 +97,13 @@ void Projectile::update(float deltaTime) {
         active = false;
         spdlog::debug("Projectile expired after {} seconds", currentLifetime);
         return;
+    }
+    
+    // Update animation
+    animationTimer += deltaTime;
+    if (animationTimer >= frameDuration) {
+        animationTimer -= frameDuration;
+        currentFrame = (currentFrame + 1) % totalFrames;
     }
     
     // Move projectile
@@ -51,34 +118,73 @@ void Projectile::update(float deltaTime) {
 void Projectile::draw() const {
     if (!active) return;
     
-    // Draw projectile as a colored circle
-    glDisable(GL_TEXTURE_2D);
-    glColor3f(r, g, b);
-    
-    // Draw filled circle
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(x, y);  // Center
-    for (int i = 0; i <= 16; i++) {
-        float angle = 2.0f * M_PI * i / 16.0f;
-        float px = x + radius * std::cos(angle);
-        float py = y + radius * std::sin(angle);
-        glVertex2f(px, py);
+    // For player projectiles, use sprite if texture is loaded
+    if (type == ProjectileType::PlayerBullet && textureLoaded) {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        
+        // Calculate texture coordinates for the 15th row (index 14) and current frame
+        int row = 14;  // 15th row (0-indexed)
+        int col = currentFrame % 5;  // 5 sprites per row
+        
+        float u1 = static_cast<float>(col * spriteWidth) / textureWidth;
+        float v1 = static_cast<float>(row * spriteHeight) / textureHeight;
+        float u2 = static_cast<float>((col + 1) * spriteWidth) / textureWidth;
+        float v2 = static_cast<float>((row + 1) * spriteHeight) / textureHeight;
+        
+        // Flip texture coordinates based on direction
+        // The sprite is designed for right-facing movement
+        bool facingRight = dx > 0;
+        
+        // For left direction: flip horizontally
+        if (!facingRight) {
+            std::swap(u1, u2);
+        }
+        
+        spdlog::debug("Drawing projectile sprite: row={}, col={}, frame={}, direction=({:.2f},{:.2f}), facingRight={}, coords=({:.3f},{:.3f}) to ({:.3f},{:.3f})", 
+                     row, col, currentFrame, dx, dy, facingRight, u1, v1, u2, v2);
+        
+        // Draw the sprite
+        glColor3f(1.0f, 1.0f, 1.0f);  // White to show texture as-is
+        glBegin(GL_QUADS);
+        glTexCoord2f(u1, v2); glVertex2f(x - spriteWidth/2, y - spriteHeight/2);
+        glTexCoord2f(u2, v2); glVertex2f(x + spriteWidth/2, y - spriteHeight/2);
+        glTexCoord2f(u2, v1); glVertex2f(x + spriteWidth/2, y + spriteHeight/2);
+        glTexCoord2f(u1, v1); glVertex2f(x - spriteWidth/2, y + spriteHeight/2);
+        glEnd();
+        
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
+    } else {
+        // Fallback to circle drawing for enemy projectiles or if texture not loaded
+        glDisable(GL_TEXTURE_2D);
+        glColor3f(r, g, b);
+        
+        // Draw filled circle
+        glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(x, y);  // Center
+        for (int i = 0; i <= 16; i++) {
+            float angle = 2.0f * M_PI * i / 16.0f;
+            float px = x + radius * std::cos(angle);
+            float py = y + radius * std::sin(angle);
+            glVertex2f(px, py);
+        }
+        glEnd();
+        
+        // Draw outline
+        glColor3f(1.0f, 1.0f, 1.0f);  // White outline
+        glBegin(GL_LINE_LOOP);
+        for (int i = 0; i < 16; i++) {
+            float angle = 2.0f * M_PI * i / 16.0f;
+            float px = x + radius * std::cos(angle);
+            float py = y + radius * std::sin(angle);
+            glVertex2f(px, py);
+        }
+        glEnd();
+        
+        glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
+        glEnable(GL_TEXTURE_2D);
     }
-    glEnd();
-    
-    // Draw outline
-    glColor3f(1.0f, 1.0f, 1.0f);  // White outline
-    glBegin(GL_LINE_LOOP);
-    for (int i = 0; i < 16; i++) {
-        float angle = 2.0f * M_PI * i / 16.0f;
-        float px = x + radius * std::cos(angle);
-        float py = y + radius * std::sin(angle);
-        glVertex2f(px, py);
-    }
-    glEnd();
-    
-    glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
-    glEnable(GL_TEXTURE_2D);
 }
 
 bool Projectile::checkCollision(float targetX, float targetY, float targetRadius) const {

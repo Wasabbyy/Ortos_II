@@ -263,6 +263,9 @@ int main() {
                 glMatrixMode(GL_MODELVIEW);
                 glLoadIdentity();
 
+                // Load projectile texture
+                Projectile::loadProjectileTexture("assets/graphic/projectiles/green_projectiles.png");
+                
                 gameInitialized = true;
                 spdlog::info("Game initialized successfully");
                 
@@ -580,6 +583,9 @@ int main() {
 
     // Cleanup UI system
     UI::cleanup();
+    
+    // Cleanup projectile texture
+    Projectile::cleanupProjectileTexture();
 
     spdlog::info("Shutting down Ortos II application");
     glfwTerminate();

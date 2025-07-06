@@ -29,6 +29,10 @@ public:
     ProjectileType getType() const { return type; }
     float getSpeed() const { return speed; }
 
+    // Static texture loading
+    static void loadProjectileTexture(const std::string& filePath);
+    static void cleanupProjectileTexture();
+
 private:
     float x, y;
     float dx, dy;  // Direction vector
@@ -40,5 +44,19 @@ private:
     ProjectileType type;
     
     // Visual properties
-    float r, g, b;  // Color
+    float r, g, b;  // Color (fallback for enemy projectiles)
+    
+    // Static texture properties
+    static unsigned int textureID;
+    static int textureWidth;
+    static int textureHeight;
+    static int spriteWidth;
+    static int spriteHeight;
+    static bool textureLoaded;
+    
+    // Animation properties
+    float animationTimer;
+    float frameDuration;
+    int currentFrame;
+    int totalFrames;
 }; 
