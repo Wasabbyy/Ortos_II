@@ -230,6 +230,7 @@ int main() {
                 stbi_set_flip_vertically_on_load(true);
                 flyingEye->loadTexture("../assets/graphic/flgyingeye.png", 150, 150, 8);
                 flyingEye->loadHitTexture("../assets/graphic/Hit_eye.png", 150, 150, 4);
+                flyingEye->loadDeathTexture("../assets/graphic/Death_eye.png", 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(flyingEye);
                 
@@ -238,6 +239,7 @@ int main() {
                 stbi_set_flip_vertically_on_load(true);
                 shroom->loadTexture("../assets/graphic/shroom.png", 150, 150, 8);
                 shroom->loadHitTexture("../assets/graphic/Hit_shroom.png", 150, 150, 4);
+                shroom->loadDeathTexture("../assets/graphic/Death_shroom.png", 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(shroom);
                 
@@ -355,14 +357,26 @@ int main() {
             }
             
             // Blood effect creation when enemy dies
+            // Play blood effect and remove enemies after death delay
             for (auto& enemy : enemies) {
                 if (enemy->shouldCreateBloodEffect()) {
-                    bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY()));
+                    bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY() + 12)); // Move blood 12px down
                     enemy->markBloodEffectCreated();
                     // audioManager.playSound("enemy_death", 1.0f);
                     spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
                 }
             }
+            // Remove enemies whose death timer has expired
+            enemies.erase(
+                std::remove_if(enemies.begin(), enemies.end(), [](Enemy* enemy) {
+                    if (enemy->shouldRemoveAfterDeath()) {
+                        delete enemy;
+                        return true;
+                    }
+                    return false;
+                }),
+                enemies.end()
+            );
             
             // Clean up inactive projectiles
             playerProjectiles.erase(

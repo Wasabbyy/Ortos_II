@@ -71,6 +71,30 @@ Enemy::~Enemy() {
 }
 
 void Enemy::draw() const {
+    // Draw death animation if dying or dead
+    if (state == EnemyState::Dying || state == EnemyState::Dead) {
+        if (deathTextureID == 0) return;
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, deathTextureID);
+        int framesPerRow = deathTextureWidth / deathFrameWidth;
+        int row = 0;
+        int col = deathCurrentFrame % framesPerRow;
+        float u1 = static_cast<float>(col * deathFrameWidth) / deathTextureWidth;
+        float v1 = static_cast<float>(row * deathFrameHeight) / deathTextureHeight;
+        float u2 = static_cast<float>((col + 1) * deathFrameWidth) / deathTextureWidth;
+        float v2 = static_cast<float>((row + 1) * deathFrameHeight) / deathTextureHeight;
+        if (!facingRight) { float temp = u1; u1 = u2; u2 = temp; }
+        float drawX = x - deathFrameWidth / 2.0f;
+        float drawY = y - deathFrameHeight / 2.0f;
+        glBegin(GL_QUADS);
+        glTexCoord2f(u1, v2); glVertex2f(drawX, drawY);
+        glTexCoord2f(u2, v2); glVertex2f(drawX + deathFrameWidth, drawY);
+        glTexCoord2f(u2, v1); glVertex2f(drawX + deathFrameWidth, drawY + deathFrameHeight);
+        glTexCoord2f(u1, v1); glVertex2f(drawX, drawY + deathFrameHeight);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
+        return;
+    }
     if (!alive) return;
     
     // Determine which texture to use
@@ -273,7 +297,64 @@ void Enemy::loadHitTexture(const std::string& filePath, int frameWidth, int fram
     spdlog::debug("Enemy hit texture loaded successfully with ID: {}", hitTextureID);
 }
 
+void Enemy::loadDeathTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames) {
+    this->deathFrameWidth = frameWidth;
+    this->deathFrameHeight = frameHeight;
+    this->deathTotalFrames = totalFrames;
+
+    int width, height, channels;
+    unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+    if (!data) {
+        spdlog::error("Failed to load enemy death texture: {}", filePath);
+        return;
+    }
+
+    spdlog::info("Loaded enemy death texture: {} ({}x{})", filePath, width, height);
+
+    deathTextureWidth = width;
+    deathTextureHeight = height;
+
+    glGenTextures(1, &deathTextureID);
+    glBindTexture(GL_TEXTURE_2D, deathTextureID);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    GLenum format = GL_RGB;
+    if (channels == 4) format = GL_RGBA;
+    else if (channels == 3) format = GL_RGB;
+    else if (channels == 1) format = GL_RED;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    stbi_image_free(data);
+
+    spdlog::debug("Enemy death texture loaded successfully with ID: {}", deathTextureID);
+}
+
 void Enemy::updateAnimation(float deltaTime) {
+    if (state == EnemyState::Dying && isDeathAnimationActive) {
+        deathAnimationTimer += deltaTime;
+        deathElapsedTime += deltaTime;
+        if (deathElapsedTime >= deathAnimationSpeed) {
+            deathElapsedTime -= deathAnimationSpeed;
+            deathCurrentFrame++;
+            if (deathCurrentFrame >= deathTotalFrames) {
+                deathCurrentFrame = deathTotalFrames - 1;
+            }
+        }
+        if (deathAnimationTimer >= deathAnimationDuration) {
+            isDeathAnimationActive = false;
+            state = EnemyState::Dead;
+            deadTimer = 0.0f; // Reset dead timer when death animation finishes
+        }
+        return;
+    }
+    if (state == EnemyState::Dead) {
+        deadTimer += deltaTime;
+        return;
+    }
     if (!alive) return;
     
     // Update hit animation if active
@@ -493,18 +574,27 @@ void Enemy::takeDamage(int damage) {
     spdlog::info("Enemy took {} damage. Health: {}/{}", damage, currentHealth, maxHealth);
     
     // Trigger hit animation for FlyingEye and Shroom enemies
-    if ((type == EnemyType::FlyingEye || type == EnemyType::Shroom) && hitTextureID != 0) {
+    if ((type == EnemyType::FlyingEye || type == EnemyType::Shroom) && hitTextureID != 0 && alive) {
         isHitAnimationActive = true;
         hitAnimationTimer = 0.0f;
         hitCurrentFrame = 0;
         hitElapsedTime = 0.0f;
         spdlog::debug("Hit animation triggered for enemy type {} at position ({}, {})", static_cast<int>(type), x, y);
-    } else if ((type == EnemyType::FlyingEye || type == EnemyType::Shroom) && hitTextureID == 0) {
+    } else if ((type == EnemyType::FlyingEye || type == EnemyType::Shroom) && hitTextureID == 0 && alive) {
         spdlog::warn("Hit animation requested but hit texture not loaded for enemy type {}", static_cast<int>(type));
     }
     
-    if (currentHealth <= 0) {
+    if (currentHealth <= 0 && alive) {
         alive = false;
+        if (type == EnemyType::FlyingEye || type == EnemyType::Shroom) {
+            state = EnemyState::Dying;
+            isDeathAnimationActive = true;
+            deathAnimationTimer = 0.0f;
+            deathCurrentFrame = 0;
+            deathElapsedTime = 0.0f;
+        } else {
+            state = EnemyState::Dead;
+        }
         spdlog::warn("Enemy has been defeated!");
     }
 }

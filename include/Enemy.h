@@ -15,7 +15,9 @@ enum class EnemyState {
     Idle,
     Patrolling,
     Chasing,
-    Attacking
+    Attacking,
+    Dying,   // New: for death animation
+    Dead     // New: after death animation
 };
 
 class Projectile;  // Forward declaration
@@ -33,6 +35,7 @@ public:
     void update(float deltaTime, float playerX, float playerY, const class Tilemap& tilemap);
     void move(float dx, float dy);
     void shootProjectile(float targetX, float targetY, std::vector<Projectile>& projectiles);
+    void loadDeathTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames); // New
     
     // Position getters
     float getX() const { return x; }
@@ -61,6 +64,9 @@ public:
     // Blood effect
     bool shouldCreateBloodEffect() const { return !alive && !bloodEffectCreated; }
     void markBloodEffectCreated() { bloodEffectCreated = true; }
+
+    bool shouldRemoveAfterDeath() const { return state == EnemyState::Dead && deadTimer >= deadRemoveDelay; }
+    bool isDeathJustFinished() const { return state == EnemyState::Dead && deadTimer == 0.0f; }
 
 private:
     float x, y;
@@ -125,4 +131,18 @@ private:
     // Direction tracking for sprite flipping
     bool facingRight = true;
     float lastMoveX = 0.0f;
+
+    // Death animation properties
+    unsigned int deathTextureID = 0;
+    int deathFrameWidth = 0, deathFrameHeight = 0;
+    int deathTextureWidth = 0, deathTextureHeight = 0;
+    int deathTotalFrames = 4; // 4 sprites in a row
+    float deathAnimationSpeed = 0.15f; // Standard speed
+    float deathElapsedTime = 0.0f;
+    int deathCurrentFrame = 0;
+    bool isDeathAnimationActive = false;
+    float deathAnimationTimer = 0.0f;
+    float deathAnimationDuration = 0.6f; // 4 frames * 0.15s
+    float deadTimer = 0.0f; // Time since death animation finished
+    float deadRemoveDelay = 3.0f; // Remove enemy after 3 seconds
 }; 
