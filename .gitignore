@@ -1,0 +1,105 @@
+# Build directories
+build/
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+Ortos_II
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# External libraries (if you have them in the project)
+# Uncomment and modify as needed:
+# external/glfw/
+# external/glm/
+# external/freetype/
+# external/openal/
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Package files
+*.zip
+*.tar.gz
+*.rar
+
+# Backup files
+*.bak
+*.backup
+
+# Profiling data
+*.prof
+
+# Coverage reports
+*.gcov
+*.gcda
+*.gcno
+
+# Valgrind output
+*.valgrind
+
+# Doxygen generated documentation
+doc/
+docs/
+
+# Asset files that might be large (uncomment if needed)
+# assets/sounds/*.wav
+# assets/sounds/*.mp3
+# assets/sounds/*.ogg 
