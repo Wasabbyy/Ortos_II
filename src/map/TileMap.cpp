@@ -4,7 +4,7 @@
 #include <stb_image.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "map/tinyxml2.h"
+#include "external/tinyxml2.h"
 #include <spdlog/spdlog.h>
 using json = nlohmann::json;
 
@@ -67,7 +67,7 @@ bool Tilemap::loadFromJSON(const std::string& jsonPath) {
     }
 
     // Load tileset
-    std::string resolvedPath = "../assets/maps/catacombs.tsx";
+    std::string resolvedPath = "assets/maps/catacombs.tsx";
     if (!loadTilesetFromTSX(resolvedPath)) {
         spdlog::error("ERROR: Failed to load tileset: {}", resolvedPath);
         return false;

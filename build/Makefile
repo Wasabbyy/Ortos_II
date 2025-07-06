@@ -129,341 +129,341 @@ Ortos_II/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/build
 .PHONY : Ortos_II/fast
 
-src/Application.o: src/Application.cpp.o
-.PHONY : src/Application.o
+src/audio/AudioManager.o: src/audio/AudioManager.cpp.o
+.PHONY : src/audio/AudioManager.o
 
 # target to build an object file
-src/Application.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.o
-.PHONY : src/Application.cpp.o
+src/audio/AudioManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/audio/AudioManager.cpp.o
+.PHONY : src/audio/AudioManager.cpp.o
 
-src/Application.i: src/Application.cpp.i
-.PHONY : src/Application.i
+src/audio/AudioManager.i: src/audio/AudioManager.cpp.i
+.PHONY : src/audio/AudioManager.i
 
 # target to preprocess a source file
-src/Application.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.i
-.PHONY : src/Application.cpp.i
+src/audio/AudioManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/audio/AudioManager.cpp.i
+.PHONY : src/audio/AudioManager.cpp.i
 
-src/Application.s: src/Application.cpp.s
-.PHONY : src/Application.s
+src/audio/AudioManager.s: src/audio/AudioManager.cpp.s
+.PHONY : src/audio/AudioManager.s
 
 # target to generate assembly for a file
-src/Application.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Application.cpp.s
-.PHONY : src/Application.cpp.s
+src/audio/AudioManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/audio/AudioManager.cpp.s
+.PHONY : src/audio/AudioManager.cpp.s
 
-src/AudioManager.o: src/AudioManager.cpp.o
-.PHONY : src/AudioManager.o
+src/audio/UIAudioManager.o: src/audio/UIAudioManager.cpp.o
+.PHONY : src/audio/UIAudioManager.o
 
 # target to build an object file
-src/AudioManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.o
-.PHONY : src/AudioManager.cpp.o
+src/audio/UIAudioManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/audio/UIAudioManager.cpp.o
+.PHONY : src/audio/UIAudioManager.cpp.o
 
-src/AudioManager.i: src/AudioManager.cpp.i
-.PHONY : src/AudioManager.i
+src/audio/UIAudioManager.i: src/audio/UIAudioManager.cpp.i
+.PHONY : src/audio/UIAudioManager.i
 
 # target to preprocess a source file
-src/AudioManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.i
-.PHONY : src/AudioManager.cpp.i
+src/audio/UIAudioManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/audio/UIAudioManager.cpp.i
+.PHONY : src/audio/UIAudioManager.cpp.i
 
-src/AudioManager.s: src/AudioManager.cpp.s
-.PHONY : src/AudioManager.s
+src/audio/UIAudioManager.s: src/audio/UIAudioManager.cpp.s
+.PHONY : src/audio/UIAudioManager.s
 
 # target to generate assembly for a file
-src/AudioManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/AudioManager.cpp.s
-.PHONY : src/AudioManager.cpp.s
+src/audio/UIAudioManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/audio/UIAudioManager.cpp.s
+.PHONY : src/audio/UIAudioManager.cpp.s
 
-src/BloodEffect.o: src/BloodEffect.cpp.o
-.PHONY : src/BloodEffect.o
+src/effects/BloodEffect.o: src/effects/BloodEffect.cpp.o
+.PHONY : src/effects/BloodEffect.o
 
 # target to build an object file
-src/BloodEffect.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.o
-.PHONY : src/BloodEffect.cpp.o
+src/effects/BloodEffect.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/effects/BloodEffect.cpp.o
+.PHONY : src/effects/BloodEffect.cpp.o
 
-src/BloodEffect.i: src/BloodEffect.cpp.i
-.PHONY : src/BloodEffect.i
+src/effects/BloodEffect.i: src/effects/BloodEffect.cpp.i
+.PHONY : src/effects/BloodEffect.i
 
 # target to preprocess a source file
-src/BloodEffect.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.i
-.PHONY : src/BloodEffect.cpp.i
+src/effects/BloodEffect.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/effects/BloodEffect.cpp.i
+.PHONY : src/effects/BloodEffect.cpp.i
 
-src/BloodEffect.s: src/BloodEffect.cpp.s
-.PHONY : src/BloodEffect.s
+src/effects/BloodEffect.s: src/effects/BloodEffect.cpp.s
+.PHONY : src/effects/BloodEffect.s
 
 # target to generate assembly for a file
-src/BloodEffect.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/BloodEffect.cpp.s
-.PHONY : src/BloodEffect.cpp.s
+src/effects/BloodEffect.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/effects/BloodEffect.cpp.s
+.PHONY : src/effects/BloodEffect.cpp.s
 
-src/Enemy.o: src/Enemy.cpp.o
-.PHONY : src/Enemy.o
+src/enemy/Enemy.o: src/enemy/Enemy.cpp.o
+.PHONY : src/enemy/Enemy.o
 
 # target to build an object file
-src/Enemy.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Enemy.cpp.o
-.PHONY : src/Enemy.cpp.o
+src/enemy/Enemy.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/enemy/Enemy.cpp.o
+.PHONY : src/enemy/Enemy.cpp.o
 
-src/Enemy.i: src/Enemy.cpp.i
-.PHONY : src/Enemy.i
+src/enemy/Enemy.i: src/enemy/Enemy.cpp.i
+.PHONY : src/enemy/Enemy.i
 
 # target to preprocess a source file
-src/Enemy.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Enemy.cpp.i
-.PHONY : src/Enemy.cpp.i
+src/enemy/Enemy.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/enemy/Enemy.cpp.i
+.PHONY : src/enemy/Enemy.cpp.i
 
-src/Enemy.s: src/Enemy.cpp.s
-.PHONY : src/Enemy.s
+src/enemy/Enemy.s: src/enemy/Enemy.cpp.s
+.PHONY : src/enemy/Enemy.s
 
 # target to generate assembly for a file
-src/Enemy.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Enemy.cpp.s
-.PHONY : src/Enemy.cpp.s
+src/enemy/Enemy.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/enemy/Enemy.cpp.s
+.PHONY : src/enemy/Enemy.cpp.s
 
-src/InputHandler.o: src/InputHandler.cpp.o
-.PHONY : src/InputHandler.o
+src/external/glad.o: src/external/glad.c.o
+.PHONY : src/external/glad.o
 
 # target to build an object file
-src/InputHandler.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.o
-.PHONY : src/InputHandler.cpp.o
+src/external/glad.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/glad.c.o
+.PHONY : src/external/glad.c.o
 
-src/InputHandler.i: src/InputHandler.cpp.i
-.PHONY : src/InputHandler.i
+src/external/glad.i: src/external/glad.c.i
+.PHONY : src/external/glad.i
 
 # target to preprocess a source file
-src/InputHandler.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.i
-.PHONY : src/InputHandler.cpp.i
+src/external/glad.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/glad.c.i
+.PHONY : src/external/glad.c.i
 
-src/InputHandler.s: src/InputHandler.cpp.s
-.PHONY : src/InputHandler.s
+src/external/glad.s: src/external/glad.c.s
+.PHONY : src/external/glad.s
 
 # target to generate assembly for a file
-src/InputHandler.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/InputHandler.cpp.s
-.PHONY : src/InputHandler.cpp.s
+src/external/glad.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/glad.c.s
+.PHONY : src/external/glad.c.s
 
-src/Player.o: src/Player.cpp.o
-.PHONY : src/Player.o
+src/external/stb_image.o: src/external/stb_image.cpp.o
+.PHONY : src/external/stb_image.o
 
 # target to build an object file
-src/Player.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Player.cpp.o
-.PHONY : src/Player.cpp.o
+src/external/stb_image.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/stb_image.cpp.o
+.PHONY : src/external/stb_image.cpp.o
 
-src/Player.i: src/Player.cpp.i
-.PHONY : src/Player.i
+src/external/stb_image.i: src/external/stb_image.cpp.i
+.PHONY : src/external/stb_image.i
 
 # target to preprocess a source file
-src/Player.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Player.cpp.i
-.PHONY : src/Player.cpp.i
+src/external/stb_image.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/stb_image.cpp.i
+.PHONY : src/external/stb_image.cpp.i
 
-src/Player.s: src/Player.cpp.s
-.PHONY : src/Player.s
+src/external/stb_image.s: src/external/stb_image.cpp.s
+.PHONY : src/external/stb_image.s
 
 # target to generate assembly for a file
-src/Player.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Player.cpp.s
-.PHONY : src/Player.cpp.s
+src/external/stb_image.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/stb_image.cpp.s
+.PHONY : src/external/stb_image.cpp.s
 
-src/Projectile.o: src/Projectile.cpp.o
-.PHONY : src/Projectile.o
+src/external/tinyxml2.o: src/external/tinyxml2.cpp.o
+.PHONY : src/external/tinyxml2.o
 
 # target to build an object file
-src/Projectile.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Projectile.cpp.o
-.PHONY : src/Projectile.cpp.o
+src/external/tinyxml2.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/tinyxml2.cpp.o
+.PHONY : src/external/tinyxml2.cpp.o
 
-src/Projectile.i: src/Projectile.cpp.i
-.PHONY : src/Projectile.i
+src/external/tinyxml2.i: src/external/tinyxml2.cpp.i
+.PHONY : src/external/tinyxml2.i
 
 # target to preprocess a source file
-src/Projectile.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Projectile.cpp.i
-.PHONY : src/Projectile.cpp.i
+src/external/tinyxml2.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/tinyxml2.cpp.i
+.PHONY : src/external/tinyxml2.cpp.i
 
-src/Projectile.s: src/Projectile.cpp.s
-.PHONY : src/Projectile.s
+src/external/tinyxml2.s: src/external/tinyxml2.cpp.s
+.PHONY : src/external/tinyxml2.s
 
 # target to generate assembly for a file
-src/Projectile.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/Projectile.cpp.s
-.PHONY : src/Projectile.cpp.s
+src/external/tinyxml2.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/external/tinyxml2.cpp.s
+.PHONY : src/external/tinyxml2.cpp.s
 
-src/TextRenderer.o: src/TextRenderer.cpp.o
-.PHONY : src/TextRenderer.o
+src/input/InputHandler.o: src/input/InputHandler.cpp.o
+.PHONY : src/input/InputHandler.o
 
 # target to build an object file
-src/TextRenderer.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.o
-.PHONY : src/TextRenderer.cpp.o
+src/input/InputHandler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/input/InputHandler.cpp.o
+.PHONY : src/input/InputHandler.cpp.o
 
-src/TextRenderer.i: src/TextRenderer.cpp.i
-.PHONY : src/TextRenderer.i
+src/input/InputHandler.i: src/input/InputHandler.cpp.i
+.PHONY : src/input/InputHandler.i
 
 # target to preprocess a source file
-src/TextRenderer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.i
-.PHONY : src/TextRenderer.cpp.i
+src/input/InputHandler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/input/InputHandler.cpp.i
+.PHONY : src/input/InputHandler.cpp.i
 
-src/TextRenderer.s: src/TextRenderer.cpp.s
-.PHONY : src/TextRenderer.s
+src/input/InputHandler.s: src/input/InputHandler.cpp.s
+.PHONY : src/input/InputHandler.s
 
 # target to generate assembly for a file
-src/TextRenderer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TextRenderer.cpp.s
-.PHONY : src/TextRenderer.cpp.s
+src/input/InputHandler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/input/InputHandler.cpp.s
+.PHONY : src/input/InputHandler.cpp.s
 
-src/TileMap.o: src/TileMap.cpp.o
-.PHONY : src/TileMap.o
+src/main.o: src/main.cpp.o
+.PHONY : src/main.o
 
 # target to build an object file
-src/TileMap.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TileMap.cpp.o
-.PHONY : src/TileMap.cpp.o
+src/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
 
-src/TileMap.i: src/TileMap.cpp.i
-.PHONY : src/TileMap.i
+src/main.i: src/main.cpp.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-src/TileMap.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TileMap.cpp.i
-.PHONY : src/TileMap.cpp.i
+src/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
 
-src/TileMap.s: src/TileMap.cpp.s
-.PHONY : src/TileMap.s
+src/main.s: src/main.cpp.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-src/TileMap.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/TileMap.cpp.s
-.PHONY : src/TileMap.cpp.s
+src/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
-src/UI.o: src/UI.cpp.o
-.PHONY : src/UI.o
+src/map/TileMap.o: src/map/TileMap.cpp.o
+.PHONY : src/map/TileMap.o
 
 # target to build an object file
-src/UI.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UI.cpp.o
-.PHONY : src/UI.cpp.o
+src/map/TileMap.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/map/TileMap.cpp.o
+.PHONY : src/map/TileMap.cpp.o
 
-src/UI.i: src/UI.cpp.i
-.PHONY : src/UI.i
+src/map/TileMap.i: src/map/TileMap.cpp.i
+.PHONY : src/map/TileMap.i
 
 # target to preprocess a source file
-src/UI.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UI.cpp.i
-.PHONY : src/UI.cpp.i
+src/map/TileMap.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/map/TileMap.cpp.i
+.PHONY : src/map/TileMap.cpp.i
 
-src/UI.s: src/UI.cpp.s
-.PHONY : src/UI.s
+src/map/TileMap.s: src/map/TileMap.cpp.s
+.PHONY : src/map/TileMap.s
 
 # target to generate assembly for a file
-src/UI.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UI.cpp.s
-.PHONY : src/UI.cpp.s
+src/map/TileMap.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/map/TileMap.cpp.s
+.PHONY : src/map/TileMap.cpp.s
 
-src/UIAudioManager.o: src/UIAudioManager.cpp.o
-.PHONY : src/UIAudioManager.o
+src/player/Player.o: src/player/Player.cpp.o
+.PHONY : src/player/Player.o
 
 # target to build an object file
-src/UIAudioManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.o
-.PHONY : src/UIAudioManager.cpp.o
+src/player/Player.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/player/Player.cpp.o
+.PHONY : src/player/Player.cpp.o
 
-src/UIAudioManager.i: src/UIAudioManager.cpp.i
-.PHONY : src/UIAudioManager.i
+src/player/Player.i: src/player/Player.cpp.i
+.PHONY : src/player/Player.i
 
 # target to preprocess a source file
-src/UIAudioManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.i
-.PHONY : src/UIAudioManager.cpp.i
+src/player/Player.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/player/Player.cpp.i
+.PHONY : src/player/Player.cpp.i
 
-src/UIAudioManager.s: src/UIAudioManager.cpp.s
-.PHONY : src/UIAudioManager.s
+src/player/Player.s: src/player/Player.cpp.s
+.PHONY : src/player/Player.s
 
 # target to generate assembly for a file
-src/UIAudioManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/UIAudioManager.cpp.s
-.PHONY : src/UIAudioManager.cpp.s
+src/player/Player.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/player/Player.cpp.s
+.PHONY : src/player/Player.cpp.s
 
-src/glad.o: src/glad.c.o
-.PHONY : src/glad.o
+src/projectile/Projectile.o: src/projectile/Projectile.cpp.o
+.PHONY : src/projectile/Projectile.o
 
 # target to build an object file
-src/glad.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/glad.c.o
-.PHONY : src/glad.c.o
+src/projectile/Projectile.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/projectile/Projectile.cpp.o
+.PHONY : src/projectile/Projectile.cpp.o
 
-src/glad.i: src/glad.c.i
-.PHONY : src/glad.i
+src/projectile/Projectile.i: src/projectile/Projectile.cpp.i
+.PHONY : src/projectile/Projectile.i
 
 # target to preprocess a source file
-src/glad.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/glad.c.i
-.PHONY : src/glad.c.i
+src/projectile/Projectile.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/projectile/Projectile.cpp.i
+.PHONY : src/projectile/Projectile.cpp.i
 
-src/glad.s: src/glad.c.s
-.PHONY : src/glad.s
+src/projectile/Projectile.s: src/projectile/Projectile.cpp.s
+.PHONY : src/projectile/Projectile.s
 
 # target to generate assembly for a file
-src/glad.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/glad.c.s
-.PHONY : src/glad.c.s
+src/projectile/Projectile.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/projectile/Projectile.cpp.s
+.PHONY : src/projectile/Projectile.cpp.s
 
-src/stb_image.o: src/stb_image.cpp.o
-.PHONY : src/stb_image.o
+src/ui/TextRenderer.o: src/ui/TextRenderer.cpp.o
+.PHONY : src/ui/TextRenderer.o
 
 # target to build an object file
-src/stb_image.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/stb_image.cpp.o
-.PHONY : src/stb_image.cpp.o
+src/ui/TextRenderer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/ui/TextRenderer.cpp.o
+.PHONY : src/ui/TextRenderer.cpp.o
 
-src/stb_image.i: src/stb_image.cpp.i
-.PHONY : src/stb_image.i
+src/ui/TextRenderer.i: src/ui/TextRenderer.cpp.i
+.PHONY : src/ui/TextRenderer.i
 
 # target to preprocess a source file
-src/stb_image.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/stb_image.cpp.i
-.PHONY : src/stb_image.cpp.i
+src/ui/TextRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/ui/TextRenderer.cpp.i
+.PHONY : src/ui/TextRenderer.cpp.i
 
-src/stb_image.s: src/stb_image.cpp.s
-.PHONY : src/stb_image.s
+src/ui/TextRenderer.s: src/ui/TextRenderer.cpp.s
+.PHONY : src/ui/TextRenderer.s
 
 # target to generate assembly for a file
-src/stb_image.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/stb_image.cpp.s
-.PHONY : src/stb_image.cpp.s
+src/ui/TextRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/ui/TextRenderer.cpp.s
+.PHONY : src/ui/TextRenderer.cpp.s
 
-src/tinyxml2.o: src/tinyxml2.cpp.o
-.PHONY : src/tinyxml2.o
+src/ui/UI.o: src/ui/UI.cpp.o
+.PHONY : src/ui/UI.o
 
 # target to build an object file
-src/tinyxml2.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.o
-.PHONY : src/tinyxml2.cpp.o
+src/ui/UI.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/ui/UI.cpp.o
+.PHONY : src/ui/UI.cpp.o
 
-src/tinyxml2.i: src/tinyxml2.cpp.i
-.PHONY : src/tinyxml2.i
+src/ui/UI.i: src/ui/UI.cpp.i
+.PHONY : src/ui/UI.i
 
 # target to preprocess a source file
-src/tinyxml2.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.i
-.PHONY : src/tinyxml2.cpp.i
+src/ui/UI.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/ui/UI.cpp.i
+.PHONY : src/ui/UI.cpp.i
 
-src/tinyxml2.s: src/tinyxml2.cpp.s
-.PHONY : src/tinyxml2.s
+src/ui/UI.s: src/ui/UI.cpp.s
+.PHONY : src/ui/UI.s
 
 # target to generate assembly for a file
-src/tinyxml2.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/tinyxml2.cpp.s
-.PHONY : src/tinyxml2.cpp.s
+src/ui/UI.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Ortos_II.dir/build.make CMakeFiles/Ortos_II.dir/src/ui/UI.cpp.s
+.PHONY : src/ui/UI.cpp.s
 
 # Help Target
 help:
@@ -474,48 +474,48 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Ortos_II"
-	@echo "... src/Application.o"
-	@echo "... src/Application.i"
-	@echo "... src/Application.s"
-	@echo "... src/AudioManager.o"
-	@echo "... src/AudioManager.i"
-	@echo "... src/AudioManager.s"
-	@echo "... src/BloodEffect.o"
-	@echo "... src/BloodEffect.i"
-	@echo "... src/BloodEffect.s"
-	@echo "... src/Enemy.o"
-	@echo "... src/Enemy.i"
-	@echo "... src/Enemy.s"
-	@echo "... src/InputHandler.o"
-	@echo "... src/InputHandler.i"
-	@echo "... src/InputHandler.s"
-	@echo "... src/Player.o"
-	@echo "... src/Player.i"
-	@echo "... src/Player.s"
-	@echo "... src/Projectile.o"
-	@echo "... src/Projectile.i"
-	@echo "... src/Projectile.s"
-	@echo "... src/TextRenderer.o"
-	@echo "... src/TextRenderer.i"
-	@echo "... src/TextRenderer.s"
-	@echo "... src/TileMap.o"
-	@echo "... src/TileMap.i"
-	@echo "... src/TileMap.s"
-	@echo "... src/UI.o"
-	@echo "... src/UI.i"
-	@echo "... src/UI.s"
-	@echo "... src/UIAudioManager.o"
-	@echo "... src/UIAudioManager.i"
-	@echo "... src/UIAudioManager.s"
-	@echo "... src/glad.o"
-	@echo "... src/glad.i"
-	@echo "... src/glad.s"
-	@echo "... src/stb_image.o"
-	@echo "... src/stb_image.i"
-	@echo "... src/stb_image.s"
-	@echo "... src/tinyxml2.o"
-	@echo "... src/tinyxml2.i"
-	@echo "... src/tinyxml2.s"
+	@echo "... src/audio/AudioManager.o"
+	@echo "... src/audio/AudioManager.i"
+	@echo "... src/audio/AudioManager.s"
+	@echo "... src/audio/UIAudioManager.o"
+	@echo "... src/audio/UIAudioManager.i"
+	@echo "... src/audio/UIAudioManager.s"
+	@echo "... src/effects/BloodEffect.o"
+	@echo "... src/effects/BloodEffect.i"
+	@echo "... src/effects/BloodEffect.s"
+	@echo "... src/enemy/Enemy.o"
+	@echo "... src/enemy/Enemy.i"
+	@echo "... src/enemy/Enemy.s"
+	@echo "... src/external/glad.o"
+	@echo "... src/external/glad.i"
+	@echo "... src/external/glad.s"
+	@echo "... src/external/stb_image.o"
+	@echo "... src/external/stb_image.i"
+	@echo "... src/external/stb_image.s"
+	@echo "... src/external/tinyxml2.o"
+	@echo "... src/external/tinyxml2.i"
+	@echo "... src/external/tinyxml2.s"
+	@echo "... src/input/InputHandler.o"
+	@echo "... src/input/InputHandler.i"
+	@echo "... src/input/InputHandler.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
+	@echo "... src/map/TileMap.o"
+	@echo "... src/map/TileMap.i"
+	@echo "... src/map/TileMap.s"
+	@echo "... src/player/Player.o"
+	@echo "... src/player/Player.i"
+	@echo "... src/player/Player.s"
+	@echo "... src/projectile/Projectile.o"
+	@echo "... src/projectile/Projectile.i"
+	@echo "... src/projectile/Projectile.s"
+	@echo "... src/ui/TextRenderer.o"
+	@echo "... src/ui/TextRenderer.i"
+	@echo "... src/ui/TextRenderer.s"
+	@echo "... src/ui/UI.o"
+	@echo "... src/ui/UI.i"
+	@echo "... src/ui/UI.s"
 .PHONY : help
 
 

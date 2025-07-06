@@ -25,6 +25,8 @@ endif()
 # Include directories
 include_directories(
     include
+    src
+    src/external
     ${GLFW_INCLUDE_DIRS}
     ${FREETYPE_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIRS}
@@ -34,20 +36,20 @@ include_directories(
 
 # Source files - explicitly list all source files
 set(SOURCES
-    src/Application.cpp
-    src/Player.cpp
-    src/Enemy.cpp
-    src/Projectile.cpp
-    src/BloodEffect.cpp
-    src/AudioManager.cpp
-    src/UIAudioManager.cpp
-    src/UI.cpp
-    src/InputHandler.cpp
-    src/TextRenderer.cpp
-    src/glad.c
-    src/stb_image.cpp
-    src/TileMap.cpp
-    src/tinyxml2.cpp
+    src/main.cpp
+    src/player/Player.cpp
+    src/enemy/Enemy.cpp
+    src/projectile/Projectile.cpp
+    src/effects/BloodEffect.cpp
+    src/audio/AudioManager.cpp
+    src/audio/UIAudioManager.cpp
+    src/ui/UI.cpp
+    src/ui/TextRenderer.cpp
+    src/input/InputHandler.cpp
+    src/map/TileMap.cpp
+    src/external/tinyxml2.cpp
+    src/external/glad.c
+    src/external/stb_image.cpp
     # Add other source files as needed
 )
 

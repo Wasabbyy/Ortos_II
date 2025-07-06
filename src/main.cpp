@@ -49,19 +49,19 @@ int main() {
     glEnable(GL_TEXTURE_2D); 
 
     // Initialize UI system with FreeType
-    if (!UI::init("../assets/fonts/pixel.ttf")) {
+    if (!UI::init("assets/fonts/pixel.ttf")) {
         spdlog::error("Failed to initialize UI system");
         glfwTerminate();
         return -1;
     }
 
     // Load title screen background texture
-    if (!UI::loadTitleScreenTexture("../assets/screens/titlescreen.png")) {
+    if (!UI::loadTitleScreenTexture("assets/screens/titlescreen.png")) {
         spdlog::warn("Failed to load title screen texture, will use black background");
     }
 
     // Load death screen background texture
-    if (!UI::loadDeathScreenTexture("../assets/screens/deathscreen.png")) {
+    if (!UI::loadDeathScreenTexture("assets/screens/deathscreen.png")) {
         spdlog::warn("Failed to load death screen texture, will use black background");
     }
 
@@ -87,7 +87,7 @@ int main() {
 
     // Load UI sound effects
     spdlog::info("Attempting to load UI sound effects...");
-    if (!uiAudioManager.loadUISound("button", "../assets/sounds/button.wav")) {
+    if (!uiAudioManager.loadUISound("button", "assets/sounds/button.wav")) {
         spdlog::warn("Failed to load button sound");
     } else {
         spdlog::info("Successfully loaded button sound");
@@ -95,7 +95,7 @@ int main() {
 
     // Load intro music for title screen
     spdlog::info("Attempting to load intro music...");
-    if (!audioManager.loadMusic("intro", "../assets/sounds/intro.wav")) {
+    if (!audioManager.loadMusic("intro", "assets/sounds/intro.wav")) {
         spdlog::warn("Failed to load intro music");
     } else {
         spdlog::info("Successfully loaded intro music");
@@ -103,7 +103,7 @@ int main() {
 
     // Load background music for gameplay
     spdlog::info("Attempting to load background music...");
-    if (!audioManager.loadMusic("background", "../assets/sounds/defaultSong.wav")) {
+    if (!audioManager.loadMusic("background", "assets/sounds/defaultSong.wav")) {
         spdlog::warn("Failed to load background music");
     } else {
         spdlog::info("Successfully loaded background music");
@@ -220,36 +220,36 @@ int main() {
             if (!gameInitialized) {
                 player = new Player();
                 stbi_set_flip_vertically_on_load(true);
-                player->loadTexture("../assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
-                player->loadIdleTexture("../assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
+                player->loadTexture("assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
+                player->loadIdleTexture("assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
                 stbi_set_flip_vertically_on_load(false);
                 
                 // Create enemies
                 // Flying eye enemy
                 Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                 stbi_set_flip_vertically_on_load(true);
-                flyingEye->loadTexture("../assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
-                flyingEye->loadHitTexture("../assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
-                flyingEye->loadDeathTexture("../assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4); // NEW
+                flyingEye->loadTexture("assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
+                flyingEye->loadHitTexture("assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
+                flyingEye->loadDeathTexture("assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(flyingEye);
                 
                 // Shroom enemy
                 Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                 stbi_set_flip_vertically_on_load(true);
-                shroom->loadTexture("../assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
-                shroom->loadHitTexture("../assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
-                shroom->loadDeathTexture("../assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4); // NEW
+                shroom->loadTexture("assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
+                shroom->loadHitTexture("assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
+                shroom->loadDeathTexture("assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(shroom);
                 
                 inputHandler = new InputHandler();
                 tilemap = new Tilemap();
-                if (!tilemap->loadTilesetTexture("../assets/graphic/tileset/tileset.png", 16, 16)) {
+                if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
                     spdlog::error("Failed to load tileset texture");
                     return -1;
                 }
-                if (!tilemap->loadFromJSON("../assets/maps/test.json")) {
+                if (!tilemap->loadFromJSON("assets/maps/test.json")) {
                     spdlog::error("Failed to load map from JSON.");
                     return -1;
                 }
@@ -267,7 +267,7 @@ int main() {
                 spdlog::info("Game initialized successfully");
                 
                 // Load sound effects (only load what's available)
-                if (!audioManager.loadSound("intro", "../assets/sounds/intro.wav")) {
+                if (!audioManager.loadSound("intro", "assets/sounds/intro.wav")) {
                     spdlog::warn("Failed to load intro sound");
                 }
             }
