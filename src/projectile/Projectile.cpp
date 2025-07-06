@@ -1,5 +1,5 @@
-#include "Projectile.h"
-#include "TileMap.h"
+#include "projectile/Projectile.h"
+#include "map/TileMap.h"
 #include <GLFW/glfw3.h>
 #include <spdlog/spdlog.h>
 #include <cmath>

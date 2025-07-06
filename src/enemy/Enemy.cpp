@@ -1,7 +1,7 @@
-#include "Enemy.h"
-#include "Projectile.h"
-#include "TileMap.h"
-#include "UI.h"
+#include "enemy/Enemy.h"
+#include "projectile/Projectile.h"
+#include "map/TileMap.h"
+#include "ui/UI.h"
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 #include <spdlog/spdlog.h>

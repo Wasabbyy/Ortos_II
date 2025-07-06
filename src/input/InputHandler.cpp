@@ -1,7 +1,7 @@
-#include "InputHandler.h"
-#include "Player.h"
-#include "Projectile.h"
-#include "TileMap.h"
+#include "input/InputHandler.h"
+#include "player/Player.h"
+#include "projectile/Projectile.h"
+#include "map/TileMap.h"
 #include <cmath>
 #include <iostream>
 #include <spdlog/spdlog.h>

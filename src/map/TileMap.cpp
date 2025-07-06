@@ -1,10 +1,10 @@
-#include "TileMap.h"
+#include "map/TileMap.h"
 #include <fstream>
 #include <sstream>
 #include <stb_image.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include "tinyxml2.h"
+#include "map/tinyxml2.h"
 #include <spdlog/spdlog.h>
 using json = nlohmann::json;
 

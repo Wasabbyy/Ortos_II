@@ -1,5 +1,5 @@
-#include "Player.h"
-#include "Projectile.h"
+#include "player/Player.h"
+#include "projectile/Projectile.h"
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 #include <iostream>

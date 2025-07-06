@@ -1,7 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <string>
-#include "TextRenderer.h"
+#include "ui/TextRenderer.h"
 
 class UI {
 public:
