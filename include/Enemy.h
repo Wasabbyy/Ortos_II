@@ -28,6 +28,7 @@ public:
 
     void draw() const;
     void loadTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames);
+    void loadHitTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames);
     void updateAnimation(float deltaTime);
     void update(float deltaTime, float playerX, float playerY, const class Tilemap& tilemap);
     void move(float dx, float dy);
@@ -74,6 +75,18 @@ private:
     int totalFrames;
     float animationSpeed, elapsedTime;
     int currentFrame;
+    
+    // Hit animation properties
+    unsigned int hitTextureID = 0;
+    int hitFrameWidth = 0, hitFrameHeight = 0;
+    int hitTextureWidth = 0, hitTextureHeight = 0;
+    int hitTotalFrames = 4;  // 4 sprites in row 1 as specified
+    float hitAnimationSpeed = 0.1f;  // Fast hit animation
+    float hitElapsedTime = 0.0f;
+    int hitCurrentFrame = 0;
+    bool isHitAnimationActive = false;
+    float hitAnimationDuration = 0.4f;  // Total duration of hit animation
+    float hitAnimationTimer = 0.0f;
     
     EnemyType type;
     EnemyState state;

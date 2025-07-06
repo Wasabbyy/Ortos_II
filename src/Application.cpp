@@ -225,17 +225,11 @@ int main() {
                 stbi_set_flip_vertically_on_load(false);
                 
                 // Create enemies
-                // Skeleton enemy
-                Enemy* skeleton = new Enemy(20 * 16.0f, 15 * 16.0f, EnemyType::Skeleton);
-                stbi_set_flip_vertically_on_load(true);
-                skeleton->loadTexture("../assets/graphic/skeleton_enemy.png", 64, 64, 4);
-                stbi_set_flip_vertically_on_load(false);
-                enemies.push_back(skeleton);
-                
                 // Flying eye enemy
                 Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                 stbi_set_flip_vertically_on_load(true);
                 flyingEye->loadTexture("../assets/graphic/flgyingeye.png", 150, 150, 8);
+                flyingEye->loadHitTexture("../assets/graphic/Hit_eye.png", 150, 150, 4);
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(flyingEye);
                 
@@ -243,6 +237,7 @@ int main() {
                 Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                 stbi_set_flip_vertically_on_load(true);
                 shroom->loadTexture("../assets/graphic/shroom.png", 150, 150, 8);
+                shroom->loadHitTexture("../assets/graphic/Hit_shroom.png", 150, 150, 4);
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(shroom);
                 

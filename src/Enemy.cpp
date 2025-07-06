@@ -28,8 +28,8 @@ Enemy::Enemy(float x, float y, EnemyType type)
             chaseRadius = 180.0f;
             shootInterval = 1.5f;  // Shoot more frequently
             shootRange = 250.0f;   // Longer range
-            maxHealth = 75;        // Less health but faster
-            currentHealth = 75;
+            maxHealth = 150;       // More health to see hit animation
+            currentHealth = 150;
             animationSpeed = 0.2f; // Very fast animation
             break;
         case EnemyType::Shroom:
@@ -38,8 +38,8 @@ Enemy::Enemy(float x, float y, EnemyType type)
             chaseRadius = 140.0f;
             shootInterval = 2.5f;  // Shoot less frequently
             shootRange = 180.0f;   // Medium range
-            maxHealth = 120;       // More health but slower
-            currentHealth = 120;
+            maxHealth = 200;       // More health to see hit animation
+            currentHealth = 200;
             animationSpeed = 0.25f; // Very fast animation speed
             break;
         case EnemyType::Skeleton:
@@ -65,23 +65,63 @@ Enemy::~Enemy() {
     if (textureID != 0) {
         glDeleteTextures(1, &textureID);
     }
+    if (hitTextureID != 0) {
+        glDeleteTextures(1, &hitTextureID);
+    }
 }
 
 void Enemy::draw() const {
-    if (textureID == 0 || !alive) return;
+    if (!alive) return;
+    
+    // Determine which texture to use
+    bool useHitTexture = isHitAnimationActive && hitTextureID != 0;
+    unsigned int currentTextureID = useHitTexture ? hitTextureID : textureID;
+    
+    // If no texture is available, don't draw
+    if (currentTextureID == 0) return;
 
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    
+    // Choose which texture properties to use
+    int currentFrameWidth = useHitTexture ? hitFrameWidth : frameWidth;
+    int currentFrameHeight = useHitTexture ? hitFrameHeight : frameHeight;
+    int currentTextureWidth = useHitTexture ? hitTextureWidth : textureWidth;
+    int currentTextureHeight = useHitTexture ? hitTextureHeight : textureHeight;
+    int currentTotalFrames = useHitTexture ? hitTotalFrames : totalFrames;
+    int currentFrameIndex = useHitTexture ? hitCurrentFrame : currentFrame;
+    
+    // Fallback to normal texture properties if hit texture properties are invalid
+    if (useHitTexture && (currentFrameWidth == 0 || currentFrameHeight == 0)) {
+        useHitTexture = false;
+        currentTextureID = textureID;
+        currentFrameWidth = frameWidth;
+        currentFrameHeight = frameHeight;
+        currentTextureWidth = textureWidth;
+        currentTextureHeight = textureHeight;
+        currentTotalFrames = totalFrames;
+        currentFrameIndex = currentFrame;
+    }
+    
+    glBindTexture(GL_TEXTURE_2D, currentTextureID);
 
     // Calculate texture coordinates for current frame
-    int framesPerRow = textureWidth / frameWidth;
-    int row = currentFrame / framesPerRow;
-    int col = currentFrame % framesPerRow;
+    int framesPerRow = currentTextureWidth / currentFrameWidth;
+    int row, col;
+    
+    if (useHitTexture) {
+        // For hit animation, use row 0 (first row) since hit textures are 600x150 with 4 frames horizontally
+        row = 0;
+        col = currentFrameIndex % framesPerRow;
+    } else {
+        // For normal animation, use the existing logic
+        row = currentFrameIndex / framesPerRow;
+        col = currentFrameIndex % framesPerRow;
+    }
 
-    float u1 = static_cast<float>(col * frameWidth) / textureWidth;
-    float v1 = static_cast<float>(row * frameHeight) / textureHeight;
-    float u2 = static_cast<float>((col + 1) * frameWidth) / textureWidth;
-    float v2 = static_cast<float>((row + 1) * frameHeight) / textureHeight;
+    float u1 = static_cast<float>(col * currentFrameWidth) / currentTextureWidth;
+    float v1 = static_cast<float>(row * currentFrameHeight) / currentTextureHeight;
+    float u2 = static_cast<float>((col + 1) * currentFrameWidth) / currentTextureWidth;
+    float v2 = static_cast<float>((row + 1) * currentFrameHeight) / currentTextureHeight;
 
     // Flip texture coordinates if facing left
     if (!facingRight) {
@@ -91,8 +131,8 @@ void Enemy::draw() const {
     }
 
     // Draw enemy centered on tile
-    float drawX = x - frameWidth / 2.0f;
-    float drawY = y - frameHeight / 2.0f;
+    float drawX = x - currentFrameWidth / 2.0f;
+    float drawY = y - currentFrameHeight / 2.0f;
 
     // Special effect for flying eye
     if (type == EnemyType::FlyingEye) {
@@ -102,9 +142,9 @@ void Enemy::draw() const {
         glColor4f(0.8f, 0.4f, 1.0f, 0.3f); // Purple glow
         glBegin(GL_QUADS);
         glTexCoord2f(u1, v2); glVertex2f(drawX - 2, drawY - 2);
-        glTexCoord2f(u2, v2); glVertex2f(drawX + frameWidth + 2, drawY - 2);
-        glTexCoord2f(u2, v1); glVertex2f(drawX + frameWidth + 2, drawY + frameHeight + 2);
-        glTexCoord2f(u1, v1); glVertex2f(drawX - 2, drawY + frameHeight + 2);
+        glTexCoord2f(u2, v2); glVertex2f(drawX + currentFrameWidth + 2, drawY - 2);
+        glTexCoord2f(u2, v1); glVertex2f(drawX + currentFrameWidth + 2, drawY + currentFrameHeight + 2);
+        glTexCoord2f(u1, v1); glVertex2f(drawX - 2, drawY + currentFrameHeight + 2);
         glEnd();
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
@@ -118,9 +158,9 @@ void Enemy::draw() const {
         glColor4f(0.2f, 0.8f, 0.3f, 0.4f); // Green glow
         glBegin(GL_QUADS);
         glTexCoord2f(u1, v2); glVertex2f(drawX - 3, drawY - 3);
-        glTexCoord2f(u2, v2); glVertex2f(drawX + frameWidth + 3, drawY - 3);
-        glTexCoord2f(u2, v1); glVertex2f(drawX + frameWidth + 3, drawY + frameHeight + 3);
-        glTexCoord2f(u1, v1); glVertex2f(drawX - 3, drawY + frameHeight + 3);
+        glTexCoord2f(u2, v2); glVertex2f(drawX + currentFrameWidth + 3, drawY - 3);
+        glTexCoord2f(u2, v1); glVertex2f(drawX + currentFrameWidth + 3, drawY + currentFrameHeight + 3);
+        glTexCoord2f(u1, v1); glVertex2f(drawX - 3, drawY + currentFrameHeight + 3);
         glEnd();
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
@@ -128,15 +168,15 @@ void Enemy::draw() const {
 
     glBegin(GL_QUADS);
     glTexCoord2f(u1, v2); glVertex2f(drawX, drawY);
-    glTexCoord2f(u2, v2); glVertex2f(drawX + frameWidth, drawY);
-    glTexCoord2f(u2, v1); glVertex2f(drawX + frameWidth, drawY + frameHeight);
-    glTexCoord2f(u1, v1); glVertex2f(drawX, drawY + frameHeight);
+    glTexCoord2f(u2, v2); glVertex2f(drawX + currentFrameWidth, drawY);
+    glTexCoord2f(u2, v1); glVertex2f(drawX + currentFrameWidth, drawY + currentFrameHeight);
+    glTexCoord2f(u1, v1); glVertex2f(drawX, drawY + currentFrameHeight);
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
 
-    // Draw health bar above enemy
-    UI::drawEnemyHealthBar(x, y - frameHeight / 2.0f - 10.0f, currentHealth, maxHealth);
+    // Draw health bar right above enemy hitbox
+    UI::drawEnemyHealthBar(x, getTop() - 3.0f, currentHealth, maxHealth);
 
     // Draw collision rectangle (bounding box) in different colors for different enemy types
     glLineWidth(2.0f);
@@ -196,9 +236,70 @@ void Enemy::loadTexture(const std::string& filePath, int frameWidth, int frameHe
     spdlog::debug("Enemy texture loaded successfully with ID: {}", textureID);
 }
 
+void Enemy::loadHitTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames) {
+    this->hitFrameWidth = frameWidth;
+    this->hitFrameHeight = frameHeight;
+    this->hitTotalFrames = totalFrames;
+
+    int width, height, channels;
+    unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+    if (!data) {
+        spdlog::error("Failed to load enemy hit texture: {}", filePath);
+        return;
+    }
+
+    spdlog::info("Loaded enemy hit texture: {} ({}x{})", filePath, width, height);
+
+    hitTextureWidth = width;
+    hitTextureHeight = height;
+
+    glGenTextures(1, &hitTextureID);
+    glBindTexture(GL_TEXTURE_2D, hitTextureID);
+
+    // Use NEAREST filtering for pixel-perfect graphics
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    GLenum format = GL_RGB;
+    if (channels == 4) format = GL_RGBA;
+    else if (channels == 3) format = GL_RGB;
+    else if (channels == 1) format = GL_RED;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    stbi_image_free(data);
+
+    spdlog::debug("Enemy hit texture loaded successfully with ID: {}", hitTextureID);
+}
+
 void Enemy::updateAnimation(float deltaTime) {
     if (!alive) return;
     
+    // Update hit animation if active
+    if (isHitAnimationActive) {
+        hitAnimationTimer += deltaTime;
+        
+        // Update hit animation frames
+        hitElapsedTime += deltaTime;
+        if (hitElapsedTime >= hitAnimationSpeed) {
+            hitElapsedTime -= hitAnimationSpeed;
+            hitCurrentFrame = (hitCurrentFrame + 1) % hitTotalFrames;
+            spdlog::debug("Hit animation frame: {}/{} for enemy type {}", hitCurrentFrame, hitTotalFrames, static_cast<int>(type));
+        }
+        
+        // Check if hit animation should end
+        if (hitAnimationTimer >= hitAnimationDuration) {
+            isHitAnimationActive = false;
+            hitAnimationTimer = 0.0f;
+            hitCurrentFrame = 0;
+            hitElapsedTime = 0.0f;
+            spdlog::debug("Hit animation finished for enemy type {}", static_cast<int>(type));
+        }
+        return; // Don't update normal animation while hit animation is active
+    }
+    
+    // Update normal animation
     elapsedTime += deltaTime;
     if (elapsedTime >= animationSpeed) {
         elapsedTime -= animationSpeed;
@@ -390,6 +491,17 @@ void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap&
 void Enemy::takeDamage(int damage) {
     currentHealth = std::max(0, currentHealth - damage);
     spdlog::info("Enemy took {} damage. Health: {}/{}", damage, currentHealth, maxHealth);
+    
+    // Trigger hit animation for FlyingEye and Shroom enemies
+    if ((type == EnemyType::FlyingEye || type == EnemyType::Shroom) && hitTextureID != 0) {
+        isHitAnimationActive = true;
+        hitAnimationTimer = 0.0f;
+        hitCurrentFrame = 0;
+        hitElapsedTime = 0.0f;
+        spdlog::debug("Hit animation triggered for enemy type {} at position ({}, {})", static_cast<int>(type), x, y);
+    } else if ((type == EnemyType::FlyingEye || type == EnemyType::Shroom) && hitTextureID == 0) {
+        spdlog::warn("Hit animation requested but hit texture not loaded for enemy type {}", static_cast<int>(type));
+    }
     
     if (currentHealth <= 0) {
         alive = false;
