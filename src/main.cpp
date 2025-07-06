@@ -109,6 +109,9 @@ int main() {
         spdlog::info("Successfully loaded background music");
     }
 
+    // Load all projectile textures (player, eye, shroom)
+    Projectile::loadAllProjectileTextures();
+
     // Set up viewport and orthographic projection
     int windowWidth = 1920;
     int windowHeight = 1080;

@@ -414,7 +414,13 @@ void Enemy::shootProjectile(float targetX, float targetY, std::vector<Projectile
     float distance = std::sqrt(dx * dx + dy * dy);
     
     if (distance <= shootRange) {
-        projectiles.emplace_back(x, y, dx, dy, ProjectileType::EnemyBullet);
+        ProjectileType projType = ProjectileType::EnemyBullet;
+        if (type == EnemyType::FlyingEye) {
+            projType = ProjectileType::EnemyEyeBullet;
+        } else if (type == EnemyType::Shroom) {
+            projType = ProjectileType::EnemyShroomBullet;
+        }
+        projectiles.emplace_back(x, y, dx, dy, projType);
         shootCooldown = shootInterval;
         spdlog::debug("Enemy shot projectile at player");
     }

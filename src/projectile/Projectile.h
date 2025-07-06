@@ -3,7 +3,9 @@
 
 enum class ProjectileType {
     PlayerBullet,
-    EnemyBullet
+    EnemyBullet,
+    EnemyEyeBullet,    // For FlyingEye
+    EnemyShroomBullet  // For Shroom
 };
 
 class Projectile {
@@ -32,6 +34,9 @@ public:
     // Static texture loading
     static void loadProjectileTexture(const std::string& filePath);
     static void cleanupProjectileTexture();
+    static void loadEyeProjectileTexture(const std::string& filePath);
+    static void loadShroomProjectileTexture(const std::string& filePath);
+    static void loadAllProjectileTextures();
 
 private:
     float x, y;
@@ -53,6 +58,21 @@ private:
     static int spriteWidth;
     static int spriteHeight;
     static bool textureLoaded;
+
+    // Additional textures for enemy projectiles
+    static unsigned int eyeTextureID;
+    static int eyeTextureWidth;
+    static int eyeTextureHeight;
+    static bool eyeTextureLoaded;
+    static unsigned int shroomTextureID;
+    static int shroomTextureWidth;
+    static int shroomTextureHeight;
+    static bool shroomTextureLoaded;
+
+    // Sprite row info for each type
+    static constexpr int PLAYER_ROW = 14; // 15th row (0-indexed)
+    static constexpr int EYE_ROW = 11;    // 12th row (0-indexed)
+    static constexpr int SHROOM_ROW = 14; // 15th row (0-indexed)
     
     // Animation properties
     float animationTimer;
