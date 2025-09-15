@@ -4,5 +4,6 @@
 cd build
 cmake .. && make
 
-# Run the executable
-./Ortos_II
+# Run the executable from project root so relative asset paths work
+cd ..
+./build/Ortos_II

@@ -103,7 +103,8 @@ bool Tilemap::loadFromJSON(const std::string& jsonPath) {
                 for (int x = 0; x < width; ++x) {
                     int index = y * width + x;
                     if (index < data.size()) {
-                        collisionLayer[y][x] = data[index];
+                        // Mask out Tiled flip flags
+                        collisionLayer[y][x] = static_cast<int>(data[index]) & 0x1FFFFFFF;
                     }
                 }
             }
@@ -120,7 +121,8 @@ bool Tilemap::loadFromJSON(const std::string& jsonPath) {
                 for (int x = 0; x < width; ++x) {
                     int index = y * width + x;
                     if (index < data.size()) {
-                        currentLayer[y][x] = data[index];
+                        // Mask out Tiled flip flags
+                        currentLayer[y][x] = static_cast<int>(data[index]) & 0x1FFFFFFF;
                     }
                 }
             }
@@ -146,7 +148,7 @@ void Tilemap::draw(float offsetX, float offsetY) const {
                 if (tileID == 0) continue;
 
                 int tilesPerRow = textureWidth / tileWidth;
-                int tileIndex = tileID - 1;
+                int tileIndex = (tileID & 0x1FFFFFFF) - 1;
 
                 int tileX = tileIndex % tilesPerRow;
                 int tileY = tileIndex / tilesPerRow;
@@ -173,6 +175,18 @@ void Tilemap::draw(float offsetX, float offsetY) const {
     }
 
     glDisable(GL_TEXTURE_2D);
+}
+
+int Tilemap::getNormalizedTileIdAt(int x, int y) const {
+    if (x < 0 || y < 0 || x >= width || y >= height) return 0;
+    // Iterate topmost to bottommost layer to find the first non-zero tile
+    for (int i = static_cast<int>(layers.size()) - 1; i >= 0; --i) {
+        int gid = layers[i][y][x];
+        if (gid != 0) {
+            return gid & 0x1FFFFFFF;
+        }
+    }
+    return 0;
 }
 
 bool Tilemap::isTileSolid(int x, int y) const {

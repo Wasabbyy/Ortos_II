@@ -19,7 +19,7 @@ public:
     ~TextRenderer();
     
     // Initialize the text renderer with a font file
-    bool init(const std::string& fontPath, unsigned int fontSize = 48);
+    bool init(const std::string& fontPath, unsigned int fontSize = 16);
     
     // Render text
     void renderText(const std::string& text, float x, float y, float scale, 

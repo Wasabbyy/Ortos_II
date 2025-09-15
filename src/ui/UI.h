@@ -6,7 +6,7 @@
 class UI {
 public:
     // Initialize the UI system with a font
-    static bool init(const std::string& fontPath = "assets/fonts/arial.ttf");
+    static bool init(const std::string& fontPath = "assets/fonts/Arial.ttc");
     
     // Cleanup
     static void cleanup();

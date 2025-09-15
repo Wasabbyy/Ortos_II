@@ -6,7 +6,7 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 
-void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap, std::vector<Projectile>& projectiles) {
+void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap, std::vector<Projectile>& projectiles, bool gateOpen) {
     const float moveSpeed = 150.0f;
     float dx = 0.0f, dy = 0.0f;
 
@@ -44,6 +44,9 @@ void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaT
     auto isSolid = [&](float px, float py) {
         int tileX = static_cast<int>(px / tilemap.getTileWidth());
         int tileY = static_cast<int>(py / tilemap.getTileHeight());
+        int gid = tilemap.getNormalizedTileIdAt(tileX, tileY);
+        bool isGate = (gid == 120 || gid == 121 || gid == 122 || gid == 123);
+        if (isGate) return !gateOpen; // solid if gate not open
         return tilemap.isTileSolid(tileX, tileY);
     };
 
@@ -61,6 +64,17 @@ void InputHandler::processInput(GLFWwindow* window, Player& player, float deltaT
         float testY = dy > 0 ? newBottom : newTop;
         if (isSolid(left, testY) || isSolid(right - 1, testY)) {
             canMoveY = false;
+        }
+
+        // Allow passing through the top edge only when gate is open
+        if (!canMoveY && dy < 0 && gateOpen) {
+            int tileW = tilemap.getTileWidth();
+            int tileH = tilemap.getTileHeight();
+            int playerTileX = static_cast<int>(player.getX() / tileW);
+            // If trying to move above the top row and within gate columns, permit movement
+            if (newTop <= 0.0f && playerTileX >= 9 && playerTileX <= 15) {
+                canMoveY = true;
+            }
         }
     }
 

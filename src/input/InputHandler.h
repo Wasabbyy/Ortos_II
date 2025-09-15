@@ -8,5 +8,5 @@ class Projectile;
 
 class InputHandler {
 public:
-    void processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap, std::vector<Projectile>& projectiles);
+    void processInput(GLFWwindow* window, Player& player, float deltaTime, const Tilemap& tilemap, std::vector<Projectile>& projectiles, bool gateOpen);
 };

@@ -15,6 +15,7 @@ public:
     bool loadFromJSON(const std::string& jsonPath);
     bool loadTilesetFromTSX(const std::string& tsxPath);
     bool isTileSolid(int x, int y) const;
+    int getNormalizedTileIdAt(int x, int y) const;
     int getTileWidth() const;
     int getTileHeight() const;
     int getWidthInTiles() const;

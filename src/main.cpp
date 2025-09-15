@@ -13,6 +13,9 @@
 #include "nlohmann/json.hpp"
 #include <stb_image.h>
 #include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <filesystem>
 #include <algorithm>
 using json = nlohmann::json;
 
@@ -23,9 +26,22 @@ enum class GameState {
 };
 
 int main() {
-    // Initialize logger
-    spdlog::set_level(spdlog::level::debug); // Set global log level to debug
-    spdlog::info("Starting Ortos II application");
+    // Initialize logger (console + file). Truncate file on each start.
+    try {
+        std::filesystem::create_directories("logs");
+        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/ortos.log", true);
+        std::vector<spdlog::sink_ptr> sinks { console_sink, file_sink };
+        auto logger = std::make_shared<spdlog::logger>("multi_sink", sinks.begin(), sinks.end());
+        spdlog::set_default_logger(logger);
+        spdlog::set_level(spdlog::level::debug);
+        spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
+        spdlog::info("Starting Ortos II application");
+    } catch (const std::exception& e) {
+        // Fallback to default logger if file sink fails
+        spdlog::set_level(spdlog::level::debug);
+        spdlog::warn("Failed to initialize file logger: {}", e.what());
+    }
     if (!glfwInit()) {
         spdlog::error("Failed to initialize GLFW");
         return -1;
@@ -124,6 +140,10 @@ int main() {
     bool gameInitialized = false;
     bool introMusicStarted = false;
     bool backgroundMusicStarted = false;
+    // Level management
+    std::string currentLevelPath = "assets/maps/test.json";
+    std::string nextLevelPath = "assets/maps/final.json";
+    float levelTransitionCooldown = 0.0f;
     
     // Input debouncing
     bool keyUpPressed = false;
@@ -252,7 +272,7 @@ int main() {
                     spdlog::error("Failed to load tileset texture");
                     return -1;
                 }
-                if (!tilemap->loadFromJSON("assets/maps/test.json")) {
+                if (!tilemap->loadFromJSON(currentLevelPath)) {
                     spdlog::error("Failed to load map from JSON.");
                     return -1;
                 }
@@ -279,7 +299,89 @@ int main() {
             }
 
             // Game logic
-            inputHandler->processInput(window, *player, deltaTime, *tilemap, playerProjectiles);
+            // Decrease level transition cooldown
+            if (levelTransitionCooldown > 0.0f) {
+                levelTransitionCooldown -= deltaTime;
+            }
+
+            // Gate open if no enemies are alive
+            bool anyEnemyAliveForMove = std::any_of(enemies.begin(), enemies.end(), [](Enemy* e){ return e && e->isAlive(); });
+            bool gateOpenForMove = !anyEnemyAliveForMove;
+            inputHandler->processInput(window, *player, deltaTime, *tilemap, playerProjectiles, gateOpenForMove);
+
+            // Gate trigger: step on tiles with IDs 120,121,122,123
+            {
+                int tileW = tilemap->getTileWidth();
+                int tileH = tilemap->getTileHeight();
+                int playerTileX = static_cast<int>(player->getX() / tileW);
+                int playerTileY = static_cast<int>(player->getY() / tileH);
+                int gid = tilemap->getNormalizedTileIdAt(playerTileX, playerTileY);
+                bool onGate = (gid == 120 || gid == 121 || gid == 122 || gid == 123);
+                bool anyEnemyAlive = std::any_of(enemies.begin(), enemies.end(), [](Enemy* e){ return e && e->isAlive(); });
+                if (levelTransitionCooldown <= 0.0f && onGate && !anyEnemyAlive) {
+                    // Simulate leaving the map through the gate: reset to center of the same map and respawn enemies
+                    spdlog::info("Gate passed on tileID {} at (x={} y={}). Resetting to center and respawning enemies on same map.", gid, playerTileX, playerTileY);
+
+                    // Update projection (same map, but keep consistent)
+                    glMatrixMode(GL_PROJECTION);
+                    glLoadIdentity();
+                    float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
+                    float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
+                    glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
+                    glMatrixMode(GL_MODELVIEW);
+                    glLoadIdentity();
+
+                    // Clear projectiles
+                    playerProjectiles.clear();
+                    enemyProjectiles.clear();
+
+                    // Clear blood effects
+                    for (auto& bloodEffect : bloodEffects) {
+                        delete bloodEffect;
+                    }
+                    bloodEffects.clear();
+
+                    // Respawn enemies: delete existing and recreate defaults
+                    for (auto& enemy : enemies) {
+                        delete enemy;
+                    }
+                    enemies.clear();
+                    {
+                        Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
+                        stbi_set_flip_vertically_on_load(true);
+                        flyingEye->loadTexture("assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
+                        flyingEye->loadHitTexture("assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
+                        flyingEye->loadDeathTexture("assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4);
+                        stbi_set_flip_vertically_on_load(false);
+                        enemies.push_back(flyingEye);
+                    }
+                    {
+                        Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
+                        stbi_set_flip_vertically_on_load(true);
+                        shroom->loadTexture("assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
+                        shroom->loadHitTexture("assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
+                        shroom->loadDeathTexture("assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4);
+                        stbi_set_flip_vertically_on_load(false);
+                        enemies.push_back(shroom);
+                    }
+
+                    // Teleport player to map center
+                    float centerX = mapWidth * 0.5f;
+                    float centerY = mapHeight * 0.5f;
+                    float dx = centerX - player->getX();
+                    float dy = centerY - player->getY();
+                    player->move(dx, dy);
+
+                    // Regenerate player's HP to full on gate entry
+                    int healAmount = player->getMaxHealth() - player->getCurrentHealth();
+                    if (healAmount > 0) {
+                        player->heal(healAmount);
+                    }
+
+                    // Prevent immediate retriggering
+                    levelTransitionCooldown = 0.5f;
+                }
+            }
             
             // Play shoot sound if player shot
             if (playerProjectiles.size() > 0 && playerProjectiles.back().isActive()) {

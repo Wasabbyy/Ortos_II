@@ -19,11 +19,27 @@ bool UI::init(const std::string& fontPath) {
     
     spdlog::info("Initializing UI system with font: {}", fontPath);
     textRenderer = new TextRenderer();
-    if (!textRenderer->init(fontPath)) {
-        spdlog::error("Failed to initialize TextRenderer with font: {}", fontPath);
-        delete textRenderer;
-        textRenderer = nullptr;
-        return false;
+    // Try provided path first (larger default pixel size for clarity)
+    if (!textRenderer->init(fontPath, 28)) {
+        spdlog::warn("Primary font path failed: {}. Trying fallbacks...", fontPath);
+        // Fallbacks: absolute project root + relative, and explicit pixel font
+        const std::string projectRoot = "/Users/filipstupar/Documents/OrtosII/";
+        const std::string relFallback = projectRoot + fontPath;
+        const std::string pixelFallback = projectRoot + "assets/fonts/pixel.ttf";
+
+        if (!textRenderer->init(relFallback, 28)) {
+            spdlog::warn("Relative-to-root font path failed: {}", relFallback);
+            if (!textRenderer->init(pixelFallback, 28)) {
+                spdlog::error("Failed to initialize TextRenderer with all font fallbacks. Last tried: {}", pixelFallback);
+                delete textRenderer;
+                textRenderer = nullptr;
+                return false;
+            } else {
+                spdlog::info("Loaded font via explicit fallback: {}", pixelFallback);
+            }
+        } else {
+            spdlog::info("Loaded font via project-root-relative path: {}", relFallback);
+        }
     }
     
     initialized = true;

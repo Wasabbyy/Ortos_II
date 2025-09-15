@@ -3,12 +3,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <spdlog/spdlog.h>
 
-TextRenderer::TextRenderer() : initialized(false), VBO(0), shaderProgram(0) {
+TextRenderer::TextRenderer() : initialized(false), VBO(0), shaderProgram(0), ft(nullptr), face(nullptr) {
     // Initialize FreeType
     if (FT_Init_FreeType(&ft)) {
         spdlog::error("ERROR::FREETYPE: Could not init FreeType Library");
         return;
     }
+    spdlog::info("FreeType library initialized successfully");
 }
 
 TextRenderer::~TextRenderer() {
@@ -20,6 +21,12 @@ TextRenderer::~TextRenderer() {
 
 bool TextRenderer::init(const std::string& fontPath, unsigned int fontSize) {
     spdlog::info("TextRenderer::init - Loading font: {} with size: {}", fontPath, fontSize);
+    
+    // Check if FreeType is initialized
+    if (!ft) {
+        spdlog::error("ERROR::FREETYPE: FreeType library not initialized");
+        return false;
+    }
     
     // Load font face
     if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
@@ -47,38 +54,69 @@ bool TextRenderer::init(const std::string& fontPath, unsigned int fontSize) {
         GLuint texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        // Prepare a two-channel buffer for GL_LUMINANCE_ALPHA
-        std::vector<unsigned char> buffer(face->glyph->bitmap.width * face->glyph->bitmap.rows * 2);
-        for (int i = 0; i < face->glyph->bitmap.width * face->glyph->bitmap.rows; ++i) {
-            buffer[2 * i] = 255; // Luminance (white)
-            buffer[2 * i + 1] = face->glyph->bitmap.buffer[i]; // Alpha
+        
+        // Check if the glyph has bitmap data
+        if (face->glyph->bitmap.width > 0 && face->glyph->bitmap.rows > 0 && face->glyph->bitmap.buffer) {
+            // Prepare a two-channel buffer for GL_LUMINANCE_ALPHA
+            std::vector<unsigned char> buffer(face->glyph->bitmap.width * face->glyph->bitmap.rows * 2);
+            for (int i = 0; i < face->glyph->bitmap.width * face->glyph->bitmap.rows; ++i) {
+                buffer[2 * i] = 255; // Luminance (white)
+                buffer[2 * i + 1] = face->glyph->bitmap.buffer[i]; // Alpha
+            }
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_LUMINANCE_ALPHA,
+                face->glyph->bitmap.width,
+                face->glyph->bitmap.rows,
+                0,
+                GL_LUMINANCE_ALPHA,
+                GL_UNSIGNED_BYTE,
+                buffer.data()
+            );
+            
+            // Set texture options - use NEAREST for pixel fonts to maintain crisp appearance
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            
+            // Now store character for later use
+            Character character = {
+                texture,
+                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                static_cast<GLuint>(face->glyph->advance.x)
+            };
+            characters.insert(std::pair<char, Character>(c, character));
+        } else {
+            // Handle characters with no bitmap data (like spaces)
+            // Create a minimal texture for spacing
+            unsigned char emptyData[4] = {255, 0, 255, 0}; // Transparent pixel
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_LUMINANCE_ALPHA,
+                1, 1,
+                0,
+                GL_LUMINANCE_ALPHA,
+                GL_UNSIGNED_BYTE,
+                emptyData
+            );
+            
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            
+            Character character = {
+                texture,
+                glm::ivec2(0, 0), // No visual size
+                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                static_cast<GLuint>(face->glyph->advance.x)
+            };
+            characters.insert(std::pair<char, Character>(c, character));
         }
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_LUMINANCE_ALPHA,
-            face->glyph->bitmap.width,
-            face->glyph->bitmap.rows,
-            0,
-            GL_LUMINANCE_ALPHA,
-            GL_UNSIGNED_BYTE,
-            buffer.data()
-        );
-        
-        // Set texture options
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        
-        // Now store character for later use
-        Character character = {
-            texture,
-            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            static_cast<GLuint>(face->glyph->advance.x)
-        };
-        characters.insert(std::pair<char, Character>(c, character));
     }
     
     glBindTexture(GL_TEXTURE_2D, 0);
