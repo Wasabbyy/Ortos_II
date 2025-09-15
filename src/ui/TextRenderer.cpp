@@ -146,7 +146,7 @@ void TextRenderer::renderText(const std::string& text, float x, float y, float s
         return;
     }
     
-    spdlog::debug("Rendering text: '{}' at ({}, {}) scale={}", text, x, y, scale);
+    spdlog::info("Rendering text: '{}' at ({}, {}) scale={}", text, x, y, scale);
     
     // Activate corresponding render state
     glEnable(GL_TEXTURE_2D);

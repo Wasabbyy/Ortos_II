@@ -34,7 +34,7 @@ int main() {
         std::vector<spdlog::sink_ptr> sinks { console_sink, file_sink };
         auto logger = std::make_shared<spdlog::logger>("multi_sink", sinks.begin(), sinks.end());
         spdlog::set_default_logger(logger);
-        spdlog::set_level(spdlog::level::debug);
+        spdlog::set_level(spdlog::level::info);
         spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
         spdlog::info("Starting Ortos II application");
     } catch (const std::exception& e) {
@@ -499,8 +499,10 @@ int main() {
                 enemyProjectiles.end()
             );
             
-            // Draw UI (player health bar) LAST so it's always on top
+            // Draw UI (player health bar, XP bar, and level indicator) LAST so it's always on top
             UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
+            UI::drawXPBar(0, 100, windowWidth, windowHeight);  // Default: 0 XP, 100 max XP
+            UI::drawLevelIndicator(1, windowWidth, windowHeight);  // Default: Level 1
 
             // Check for ESC key to return to menu
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

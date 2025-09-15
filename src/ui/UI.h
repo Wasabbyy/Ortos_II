@@ -20,6 +20,8 @@ public:
     static void drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight);
     static void drawEnemyHealthBar(float x, float y, int currentHealth, int maxHealth);
     static void drawHeart(float x, float y, bool filled, float size = 16.0f);
+    static void drawXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight);
+    static void drawLevelIndicator(int level, int windowWidth, int windowHeight);
     
     // Menu functions
     static void drawPixelText(const std::string& text, float x, float y, float scale = 1.0f, float r = 1.0f, float g = 1.0f, float b = 1.0f);

@@ -223,6 +223,138 @@ void UI::drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int
     glEnable(GL_TEXTURE_2D);
 }
 
+void UI::drawXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight) {
+    spdlog::info("Drawing XP bar: XP {}/{}", currentXP, maxXP);
+    
+    // Save current matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    // Disable textures for UI drawing
+    glDisable(GL_TEXTURE_2D);
+    
+    float barWidth = 300.0f;
+    float barHeight = 20.0f;
+    float x = 1700.0f;  // Center horizontally
+    float y = 30.0f;  // Top of screen
+    float xpRatio = (maxXP > 0) ? static_cast<float>(currentXP) / maxXP : 0.0f;
+
+    // Draw background (dark blue)
+    glColor3f(0.0f, 0.0f, 0.3f);
+    glBegin(GL_QUADS);
+    glVertex2f(x - barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y + barHeight/2);
+    glVertex2f(x - barWidth/2, y + barHeight/2);
+    glEnd();
+
+    // Draw XP (bright blue)
+    if (xpRatio > 0) {
+        glColor3f(0.0f, 0.5f, 1.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(x - barWidth/2, y - barHeight/2);
+        glVertex2f(x - barWidth/2 + barWidth * xpRatio, y - barHeight/2);
+        glVertex2f(x - barWidth/2 + barWidth * xpRatio, y + barHeight/2);
+        glVertex2f(x - barWidth/2, y + barHeight/2);
+        glEnd();
+    }
+
+    // Draw border (white)
+    glColor3f(0.8f, 0.8f, 0.8f);
+    glBegin(GL_LINE_LOOP);
+    glVertex2f(x - barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y - barHeight/2);
+    glVertex2f(x + barWidth/2, y + barHeight/2);
+    glVertex2f(x - barWidth/2, y + barHeight/2);
+    glEnd();
+
+    glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
+    
+    // Restore matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    
+    // Re-enable textures
+    glEnable(GL_TEXTURE_2D);
+}
+
+void UI::drawLevelIndicator(int level, int windowWidth, int windowHeight) {
+    spdlog::info("Drawing level indicator: Level {}", level);
+    
+    // Save current matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, windowWidth, 0, windowHeight, -1, 1);
+
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+        // Position next to health bar at the top of the screen
+        float x = 20.0f;  // Health bar width + margin
+        float y = 1000.0f;  // Top of screen, same as XP bar
+    
+    // Draw level background (dark gold)
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(0.3f, 0.2f, 0.0f);
+    glBegin(GL_QUADS);
+    glVertex2f(x, y - 11.0f);
+    glVertex2f(x + 60.0f, y - 11.0f);
+    glVertex2f(x + 60.0f, y + 11.0f);
+    glVertex2f(x, y + 11.0f);
+    glEnd();
+    
+    
+    glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
+    glEnable(GL_TEXTURE_2D);
+    
+    // Draw level text using Roman numerals
+    std::string levelText;
+    switch (level) {
+        case 1: levelText = "Level I"; break;
+        case 2: levelText = "Level II"; break;
+        case 3: levelText = "Level III"; break;
+        case 4: levelText = "Level IV"; break;
+        case 5: levelText = "Level V"; break;
+        default: levelText = "Level I"; break;  // Default to level 1 if invalid
+    }
+    if (textRenderer) {
+        // Use the same text rendering setup as the menu buttons
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        glOrtho(0, 1920, 0, 1080, -1, 1);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        textRenderer->renderText(levelText, x + 5.0f, y + 5.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glPopMatrix();
+    }
+    
+    // Restore matrix state
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
 void UI::drawEnemyHealthBar(float x, float y, int currentHealth, int maxHealth) {
     if (maxHealth <= 0) return;
     
