@@ -58,7 +58,7 @@ public:
     // Health system
     int getMaxHealth() const { return maxHealth; }
     int getCurrentHealth() const { return currentHealth; }
-    void takeDamage(int damage);
+    void takeDamage(int damage, class Player* player = nullptr);
     void heal(int amount);
     
     // Blood effect

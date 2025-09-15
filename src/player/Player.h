@@ -42,6 +42,13 @@ public:
     int getMaxHealth() const { return maxHealth; }
     int getCurrentHealth() const { return currentHealth; }
     bool isAlive() const { return currentHealth > 0; }
+    
+    // XP system
+    int getCurrentXP() const { return currentXP; }
+    int getMaxXP() const { return maxXP; }
+    int getLevel() const { return level; }
+    void gainXP(int amount);
+    void levelUp();
 
 private:
     float x, y;
@@ -76,4 +83,9 @@ private:
     // Health system
     int maxHealth = 100;
     int currentHealth = 100;
+    
+    // XP system
+    int currentXP = 0;
+    int maxXP = 100;  // XP needed for level 1 -> 2
+    int level = 1;
 };

@@ -1,4 +1,5 @@
 #include "enemy/Enemy.h"
+#include "player/Player.h"
 #include "projectile/Projectile.h"
 #include "map/TileMap.h"
 #include "ui/UI.h"
@@ -575,7 +576,7 @@ void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap&
     }
 }
 
-void Enemy::takeDamage(int damage) {
+void Enemy::takeDamage(int damage, Player* player) {
     currentHealth = std::max(0, currentHealth - damage);
     spdlog::info("Enemy took {} damage. Health: {}/{}", damage, currentHealth, maxHealth);
     
@@ -602,6 +603,13 @@ void Enemy::takeDamage(int damage) {
             state = EnemyState::Dead;
         }
         spdlog::warn("Enemy has been defeated!");
+        
+        // Award XP immediately when enemy dies
+        if (player) {
+            int xpReward = 25;  // Base XP reward
+            player->gainXP(xpReward);
+            spdlog::info("Player gained {} XP for killing enemy!", xpReward);
+        }
     }
 }
 

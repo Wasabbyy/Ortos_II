@@ -276,6 +276,30 @@ void UI::drawXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight) 
 
     glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
     
+    // Draw XP text
+    if (textRenderer) {
+        std::string xpText = std::to_string(currentXP) + "/" + std::to_string(maxXP);
+        // Use the same text rendering setup as the level indicator
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        glOrtho(0, 1920, 0, 1080, -1, 1);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor3f(1.0f, 1.0f, 1.0f);
+        float xpTextX = 1700.0f;  // X position for XP text
+        float xpTextY = 1000.0f;  // Y position for XP text
+        textRenderer->renderText(xpText, xpTextX, xpTextY, 0.6f, 1.0f, 1.0f, 1.0f);
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glPopMatrix();
+    }
+ 
     // Restore matrix state
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

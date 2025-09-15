@@ -243,3 +243,28 @@ void Player::heal(int amount) {
     currentHealth = std::min(maxHealth, currentHealth + amount);
     spdlog::info("Player healed {} HP. Health: {}/{}", amount, currentHealth, maxHealth);
 }
+
+void Player::gainXP(int amount) {
+    currentXP += amount;
+    spdlog::info("Player gained {} XP. Current XP: {}/{}", amount, currentXP, maxXP);
+    
+    // Check for level up
+    while (currentXP >= maxXP && level < 5) {
+        levelUp();
+    }
+}
+
+void Player::levelUp() {
+    if (level >= 5) {
+        spdlog::info("Player is already at maximum level (5)");
+        return;
+    }
+    
+    currentXP = 0;  // Reset XP to 0 when leveling up
+    level++;
+    
+    // Increase max XP for next level (exponential growth)
+    maxXP = static_cast<int>(maxXP * 1.5f);
+    
+    spdlog::info("Player leveled up to level {}! XP: {}/{}", level, currentXP, maxXP);
+}

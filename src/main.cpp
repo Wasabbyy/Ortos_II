@@ -442,7 +442,7 @@ int main() {
                     if (projectile.isActive() && enemy->isAlive()) {
                         if (projectile.checkCollision(enemy->getX(), enemy->getY(), 8.0f)) {
                             projectile.setActive(false);
-                            enemy->takeDamage(25);  // Deal 25 damage
+                            enemy->takeDamage(25, player);  // Deal 25 damage and pass player for XP reward
                             // audioManager.playSound("enemy_hit", 0.8f);
                             spdlog::info("Enemy hit by player projectile! Enemy HP: {}/{}", 
                                         enemy->getCurrentHealth(), enemy->getMaxHealth());
@@ -501,8 +501,8 @@ int main() {
             
             // Draw UI (player health bar, XP bar, and level indicator) LAST so it's always on top
             UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
-            UI::drawXPBar(0, 100, windowWidth, windowHeight);  // Default: 0 XP, 100 max XP
-            UI::drawLevelIndicator(1, windowWidth, windowHeight);  // Default: Level 1
+            UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
+            UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
 
             // Check for ESC key to return to menu
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
