@@ -49,6 +49,10 @@ public:
     int getLevel() const { return level; }
     void gainXP(int amount);
     void levelUp();
+    
+    // Collision state
+    void setCollidingWithEnemy(bool colliding) { m_isCollidingWithEnemy = colliding; }
+    bool isCollidingWithEnemy() const { return m_isCollidingWithEnemy; }
 
 private:
     float x, y;
@@ -75,6 +79,7 @@ private:
     int idleCurrentFrame = 0;
     bool isMoving;
     bool isIdle; // ✅ NEW: Track if the player is moving
+    bool m_isCollidingWithEnemy = false; // Track if player is colliding with an enemy
     
     // Shooting
     float shootCooldown = 0.0f;

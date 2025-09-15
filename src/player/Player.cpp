@@ -210,9 +210,13 @@ void Player::updateIdleAnimation(float deltaTime) {
 // In Player.cpp
 void Player::move(float dx, float dy) {
     float oldX = x, oldY = y;
+    
+    // No speed reduction - player moves at normal speed
+    
     x += dx;
     y += dy;
-    spdlog::debug("Player moved from ({}, {}) to ({}, {})", oldX, oldY, x, y);
+    spdlog::debug("Player moved from ({}, {}) to ({}, {})", 
+                  oldX, oldY, x, y);
     if (dx > 0) direction = Direction::Right;
     else if (dx < 0) direction = Direction::Left;
     else if (dy > 0) direction = Direction::Up;

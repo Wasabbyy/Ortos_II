@@ -405,6 +405,117 @@ int main() {
                 enemy->draw();
             }
             
+            // Player-Enemy collision detection (no pushing - just stop movement)
+            bool playerCollidingWithEnemy = false; // Track if player is colliding with any enemy
+            
+            for (auto& enemy : enemies) {
+                if (enemy->isAlive()) {
+                    // Quick distance check first to avoid expensive collision calculations
+                    float dx = player->getX() - enemy->getX();
+                    float dy = player->getY() - enemy->getY();
+                    float distanceSquared = dx * dx + dy * dy;
+                    float maxDistance = 64.0f; // Only check collision if within reasonable distance
+                    
+                    if (distanceSquared < maxDistance * maxDistance) {
+                        // Check if player and enemy bounding boxes overlap
+                        bool collision = !(player->getRight() < enemy->getLeft() || 
+                                         player->getLeft() > enemy->getRight() || 
+                                         player->getBottom() < enemy->getTop() || 
+                                         player->getTop() > enemy->getBottom());
+                        
+                        if (collision) {
+                            playerCollidingWithEnemy = true; // Mark that player is colliding
+                            
+                            // Calculate overlap amounts
+                            float overlapLeft = player->getRight() - enemy->getLeft();
+                            float overlapRight = enemy->getRight() - player->getLeft();
+                            float overlapTop = player->getBottom() - enemy->getTop();
+                            float overlapBottom = enemy->getBottom() - player->getTop();
+                            
+                            // Find the minimum overlap to determine separation direction
+                            float minOverlap = std::min({overlapLeft, overlapRight, overlapTop, overlapBottom});
+                            
+                            // Separate entities by moving them apart (no pushing, just separation)
+                            float separationAmount = minOverlap * 0.5f; // Half overlap to each entity
+                            if (minOverlap == overlapLeft) {
+                                // Separate horizontally - move player left, enemy right
+                                player->move(-separationAmount, 0);
+                                enemy->move(separationAmount, 0);
+                            } else if (minOverlap == overlapRight) {
+                                // Separate horizontally - move player right, enemy left
+                                player->move(separationAmount, 0);
+                                enemy->move(-separationAmount, 0);
+                            } else if (minOverlap == overlapTop) {
+                                // Separate vertically - move player up, enemy down
+                                player->move(0, -separationAmount);
+                                enemy->move(0, separationAmount);
+                            } else if (minOverlap == overlapBottom) {
+                                // Separate vertically - move player down, enemy up
+                                player->move(0, separationAmount);
+                                enemy->move(0, -separationAmount);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Update player collision state
+            player->setCollidingWithEnemy(playerCollidingWithEnemy);
+            
+            // Enemy-to-Enemy collision detection (no pushing - just separation)
+            for (size_t i = 0; i < enemies.size(); ++i) {
+                if (!enemies[i]->isAlive()) continue;
+                
+                for (size_t j = i + 1; j < enemies.size(); ++j) {
+                    if (!enemies[j]->isAlive()) continue;
+                    
+                    // Quick distance check first
+                    float dx = enemies[i]->getX() - enemies[j]->getX();
+                    float dy = enemies[i]->getY() - enemies[j]->getY();
+                    float distanceSquared = dx * dx + dy * dy;
+                    float maxDistance = 64.0f;
+                    
+                    if (distanceSquared < maxDistance * maxDistance) {
+                        // Check if enemy bounding boxes overlap
+                        bool collision = !(enemies[i]->getRight() < enemies[j]->getLeft() || 
+                                         enemies[i]->getLeft() > enemies[j]->getRight() || 
+                                         enemies[i]->getBottom() < enemies[j]->getTop() || 
+                                         enemies[i]->getTop() > enemies[j]->getBottom());
+                        
+                        if (collision) {
+                            // Calculate overlap amounts
+                            float overlapLeft = enemies[i]->getRight() - enemies[j]->getLeft();
+                            float overlapRight = enemies[j]->getRight() - enemies[i]->getLeft();
+                            float overlapTop = enemies[i]->getBottom() - enemies[j]->getTop();
+                            float overlapBottom = enemies[j]->getBottom() - enemies[i]->getTop();
+                            
+                            // Find the minimum overlap to determine separation direction
+                            float minOverlap = std::min({overlapLeft, overlapRight, overlapTop, overlapBottom});
+                            
+                            // Separate enemies by moving them apart (no pushing, just separation)
+                            float separationAmount = minOverlap * 0.25f; // Quarter overlap to each enemy
+                            if (minOverlap == overlapLeft) {
+                                // Separate enemies horizontally
+                                enemies[i]->move(-separationAmount, 0);
+                                enemies[j]->move(separationAmount, 0);
+                            } else if (minOverlap == overlapRight) {
+                                // Separate enemies horizontally
+                                enemies[i]->move(separationAmount, 0);
+                                enemies[j]->move(-separationAmount, 0);
+                            } else if (minOverlap == overlapTop) {
+                                // Separate enemies vertically
+                                enemies[i]->move(0, -separationAmount);
+                                enemies[j]->move(0, separationAmount);
+                            } else if (minOverlap == overlapBottom) {
+                                // Separate enemies vertically
+                                enemies[i]->move(0, separationAmount);
+                                enemies[j]->move(0, -separationAmount);
+                            }
+                        }
+                    }
+                }
+            }
+            
             // Enemy shooting
             for (auto& enemy : enemies) {
                 enemy->shootProjectile(player->getX(), player->getY(), enemyProjectiles);
