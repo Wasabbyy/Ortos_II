@@ -541,7 +541,7 @@ void UI::drawMenuButton(const std::string& text, float x, float y, float width, 
     drawCenteredText(text, textX, textY, 0.8f, 205.0f/255.0f, 133.0f/255.0f, 63.0f/255.0f);
 }
 
-void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
+void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption, bool hasSaveFile) {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -582,13 +582,30 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption) {
     float buttonHeight = 60.0f;
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Move 45 pixels to the left
     
-    // Start Game button (moved lower)
-    float startButtonY = windowHeight * 0.5f;
-    drawMenuButton("Start Game", buttonX, startButtonY, buttonWidth, buttonHeight, false, selectedOption == 0);
-    
-    // Exit Game button (moved lower)
-    float exitButtonY = windowHeight * 0.35f;
-    drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
+    if (hasSaveFile) {
+        // Menu with save file: Start Game, Continue Game, Load Game, Exit Game
+        float startButtonY = windowHeight * 0.6f;
+        float continueButtonY = windowHeight * 0.5f;
+        float loadButtonY = windowHeight * 0.4f;
+        float exitButtonY = windowHeight * 0.3f;
+        
+        drawMenuButton("Start Game", buttonX, startButtonY, buttonWidth, buttonHeight, false, selectedOption == 0);
+        drawMenuButton("Continue Game", buttonX, continueButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
+        drawMenuButton("Load Game", buttonX, loadButtonY, buttonWidth, buttonHeight, false, selectedOption == 2);
+        drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedOption == 3);
+    } else {
+        // Menu without save file: Start Game, Load Game, Exit Game
+        float startButtonY = windowHeight * 0.5f;
+        float loadButtonY = windowHeight * 0.4f;
+        float exitButtonY = windowHeight * 0.3f;
+        
+        drawMenuButton("Start Game", buttonX, startButtonY, buttonWidth, buttonHeight, false, selectedOption == 0);
+        // Draw Load Game button as disabled
+        glColor3f(0.5f, 0.5f, 0.5f); // Gray color for disabled button
+        drawMenuButton("Load Game (No Save)", buttonX, loadButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
+        glColor3f(1.0f, 1.0f, 1.0f); // Reset color
+        drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedOption == 2);
+    }
     
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
@@ -661,6 +678,61 @@ void UI::drawDeathScreen(int windowWidth, int windowHeight, bool respawnButtonHo
     
     drawMenuButton("RESPAWN", buttonX, respawnButtonY, buttonWidth, buttonHeight, respawnButtonHovered, selectedButton == 0);
     drawMenuButton("EXIT GAME", buttonX, exitButtonY, buttonWidth, buttonHeight, exitButtonHovered, selectedButton == 1);
+    
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+void UI::drawPauseScreen(int windowWidth, int windowHeight, int selectedButton) {
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, windowWidth, 0, windowHeight, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    // Draw dark overlay (semi-transparent black)
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.0f, 0.0f, 0.0f, 0.7f); // Black with 70% alpha for dark overlay
+    glBegin(GL_QUADS);
+    glVertex2f(0, 0);
+    glVertex2f(windowWidth, 0);
+    glVertex2f(windowWidth, windowHeight);
+    glVertex2f(0, windowHeight);
+    glEnd();
+    
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset color
+    glEnable(GL_TEXTURE_2D);
+    
+    // Draw pause menu buttons
+    float buttonWidth = 260.0f;
+    float buttonHeight = 60.0f;
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f; // Same offset as other menus
+    
+    // Resume button (top)
+    float resumeButtonY = windowHeight * 0.7f;
+    drawMenuButton("Resume", buttonX, resumeButtonY, buttonWidth, buttonHeight, false, selectedButton == 0);
+    
+    // Save Game button
+    float saveButtonY = windowHeight * 0.6f;
+    drawMenuButton("Save Game", buttonX, saveButtonY, buttonWidth, buttonHeight, false, selectedButton == 1);
+    
+    // Load Game button
+    float loadButtonY = windowHeight * 0.5f;
+    drawMenuButton("Load Game", buttonX, loadButtonY, buttonWidth, buttonHeight, false, selectedButton == 2);
+    
+    // Back to Menu button (middle)
+    float menuButtonY = windowHeight * 0.3f;
+    drawMenuButton("Back to Menu", buttonX, menuButtonY, buttonWidth, buttonHeight, false, selectedButton == 3);
+    
+    // Exit Game button (bottom)
+    float exitButtonY = windowHeight * 0.2f;
+    drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedButton == 4);
     
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

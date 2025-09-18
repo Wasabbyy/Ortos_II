@@ -17,13 +17,209 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <filesystem>
 #include <algorithm>
+#include <fstream>
+#include <chrono>
+#include <ctime>
 using json = nlohmann::json;
 
 enum class GameState {
     MENU,
     PLAYING,
+    PAUSED,
     DEATH
 };
+
+// Save data structure
+struct SaveData {
+    // Player data
+    float playerX;
+    float playerY;
+    int playerHealth;
+    int playerMaxHealth;
+    int playerXP;
+    int playerMaxXP;
+    int playerLevel;
+    
+    // Enemy data
+    std::vector<json> enemies;
+    
+    // Projectile data
+    std::vector<json> playerProjectiles;
+    std::vector<json> enemyProjectiles;
+    
+    // Game state
+    std::string currentLevelPath;
+    float levelTransitionCooldown;
+    
+    // Timestamp
+    std::string saveTime;
+};
+
+// Save game function
+bool saveGame(const SaveData& saveData, const std::string& filename = "savegame.json") {
+    try {
+        json saveJson;
+        saveJson["player"]["x"] = saveData.playerX;
+        saveJson["player"]["y"] = saveData.playerY;
+        saveJson["player"]["health"] = saveData.playerHealth;
+        saveJson["player"]["maxHealth"] = saveData.playerMaxHealth;
+        saveJson["player"]["xp"] = saveData.playerXP;
+        saveJson["player"]["maxXP"] = saveData.playerMaxXP;
+        saveJson["player"]["level"] = saveData.playerLevel;
+        
+        saveJson["enemies"] = saveData.enemies;
+        saveJson["playerProjectiles"] = saveData.playerProjectiles;
+        saveJson["enemyProjectiles"] = saveData.enemyProjectiles;
+        
+        saveJson["gameState"]["currentLevelPath"] = saveData.currentLevelPath;
+        saveJson["gameState"]["levelTransitionCooldown"] = saveData.levelTransitionCooldown;
+        saveJson["gameState"]["saveTime"] = saveData.saveTime;
+        
+        std::ofstream file(filename);
+        if (!file.is_open()) {
+            spdlog::error("Failed to open save file: {}", filename);
+            return false;
+        }
+        
+        file << saveJson.dump(4); // Pretty print with 4 spaces
+        file.close();
+        
+        spdlog::info("Game saved successfully to: {}", filename);
+        return true;
+    } catch (const std::exception& e) {
+        spdlog::error("Failed to save game: {}", e.what());
+        return false;
+    }
+}
+
+// Load game function
+bool loadGame(SaveData& saveData, const std::string& filename = "savegame.json") {
+    try {
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            spdlog::error("Save file not found: {}", filename);
+            return false;
+        }
+        
+        json saveJson;
+        file >> saveJson;
+        file.close();
+        
+        // Load player data
+        saveData.playerX = saveJson["player"]["x"];
+        saveData.playerY = saveJson["player"]["y"];
+        saveData.playerHealth = saveJson["player"]["health"];
+        saveData.playerMaxHealth = saveJson["player"]["maxHealth"];
+        saveData.playerXP = saveJson["player"]["xp"];
+        saveData.playerMaxXP = saveJson["player"]["maxXP"];
+        saveData.playerLevel = saveJson["player"]["level"];
+        
+        // Load enemy data
+        saveData.enemies = saveJson["enemies"];
+        saveData.playerProjectiles = saveJson["playerProjectiles"];
+        saveData.enemyProjectiles = saveJson["enemyProjectiles"];
+        
+        // Load game state
+        saveData.currentLevelPath = saveJson["gameState"]["currentLevelPath"];
+        saveData.levelTransitionCooldown = saveJson["gameState"]["levelTransitionCooldown"];
+        saveData.saveTime = saveJson["gameState"]["saveTime"];
+        
+        spdlog::info("Game loaded successfully from: {}", filename);
+        return true;
+    } catch (const std::exception& e) {
+        spdlog::error("Failed to load game: {}", e.what());
+        return false;
+    }
+}
+
+// Check if save file exists
+bool saveFileExists(const std::string& filename = "savegame.json") {
+    std::ifstream file(filename);
+    return file.good();
+}
+
+// Load game state from save data
+void loadGameState(const SaveData& saveData, Player*& player, std::vector<Enemy*>& enemies, 
+                   std::vector<Projectile>& playerProjectiles, std::vector<Projectile>& enemyProjectiles,
+                   std::string& currentLevelPath, float& levelTransitionCooldown) {
+    if (!player) return;
+    
+    // Restore player state - we need to create a new player with the saved state
+    // since the Player class doesn't have setter methods
+    delete player;
+    player = new Player();
+    
+    // Load player textures
+    stbi_set_flip_vertically_on_load(true);
+    player->loadTexture("assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
+    player->loadIdleTexture("assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
+    stbi_set_flip_vertically_on_load(false);
+    
+    // Move player to saved position
+    player->move(saveData.playerX - player->getX(), saveData.playerY - player->getY());
+    
+    // Restore health by healing/damaging as needed
+    int healthDiff = saveData.playerHealth - player->getCurrentHealth();
+    if (healthDiff > 0) {
+        player->heal(healthDiff);
+    } else if (healthDiff < 0) {
+        player->takeDamage(-healthDiff);
+    }
+    
+    // Restore XP by gaining XP
+    int xpDiff = saveData.playerXP - player->getCurrentXP();
+    if (xpDiff > 0) {
+        player->gainXP(xpDiff);
+    }
+    
+    // Restore game state
+    currentLevelPath = saveData.currentLevelPath;
+    levelTransitionCooldown = saveData.levelTransitionCooldown;
+    
+    // Clear existing projectiles
+    playerProjectiles.clear();
+    enemyProjectiles.clear();
+    
+    // Clear existing enemies
+    for (auto& enemy : enemies) {
+        delete enemy;
+    }
+    enemies.clear();
+    
+    // Restore enemies from save data
+    for (const auto& enemyData : saveData.enemies) {
+        // Create enemy based on saved data
+        EnemyType enemyType = static_cast<EnemyType>(enemyData["type"]);
+        Enemy* enemy = new Enemy(enemyData["x"], enemyData["y"], enemyType);
+        
+        // Load appropriate textures based on enemy type
+        stbi_set_flip_vertically_on_load(true);
+        if (enemyType == EnemyType::FlyingEye) {
+            enemy->loadTexture("assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
+            enemy->loadHitTexture("assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
+            enemy->loadDeathTexture("assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4);
+        } else if (enemyType == EnemyType::Shroom) {
+            enemy->loadTexture("assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
+            enemy->loadHitTexture("assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
+            enemy->loadDeathTexture("assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4);
+        }
+        stbi_set_flip_vertically_on_load(false);
+        
+        // Restore enemy state
+        enemy->setAlive(enemyData["alive"]);
+        // Restore health by taking damage if needed
+        int maxHealth = enemyData["maxHealth"].get<int>();
+        int currentHealth = enemyData["health"].get<int>();
+        int healthDiff = maxHealth - currentHealth;
+        if (healthDiff > 0) {
+            enemy->takeDamage(healthDiff);
+        }
+        
+        enemies.push_back(enemy);
+    }
+    
+    spdlog::info("Game state loaded successfully");
+}
 
 int main() {
     // Initialize logger (console + file). Truncate file on each start.
@@ -138,6 +334,7 @@ int main() {
     GameState currentState = GameState::MENU;
     int selectedMenuOption = 0;
     bool gameInitialized = false;
+    bool hasSaveFile = saveFileExists();
     bool introMusicStarted = false;
     bool backgroundMusicStarted = false;
     // Level management
@@ -149,6 +346,7 @@ int main() {
     bool keyUpPressed = false;
     bool keyDownPressed = false;
     bool keyEnterPressed = false;
+    bool keyEscPressed = false;
     
     // Mouse input for death screen
     double mouseX = 0.0, mouseY = 0.0;
@@ -175,6 +373,11 @@ int main() {
     // --- Add these at the top of main, after other variables ---
     int selectedDeathButton = 0;
     bool deathScreenInitialized = false;
+    
+    // Pause menu variables
+    int selectedPauseButton = 0;
+    bool pauseScreenInitialized = false;
+    bool previousSelectedPauseButton = -1;
 
     while (!glfwWindowShouldClose(window)) {
         float currentTime = glfwGetTime();
@@ -192,14 +395,15 @@ int main() {
             }
             
             // Handle menu input
+            int menuOptions = hasSaveFile ? 4 : 3; // Start Game, Continue Game (if save exists), Load Game, Exit Game
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
-                selectedMenuOption = (selectedMenuOption - 1 + 2) % 2;
+                selectedMenuOption = (selectedMenuOption - 1 + menuOptions) % menuOptions;
                 keyUpPressed = true;
             } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
                 keyUpPressed = false;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
-                selectedMenuOption = (selectedMenuOption + 1) % 2;
+                selectedMenuOption = (selectedMenuOption + 1) % menuOptions;
                 keyDownPressed = true;
             } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
                 keyDownPressed = false;
@@ -212,9 +416,45 @@ int main() {
             }
             
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
-                if (selectedMenuOption == 0) {
-                    // Play click sound before starting game
-                    uiAudioManager.playButtonClickSound();
+                uiAudioManager.playButtonClickSound();
+                
+                if (hasSaveFile) {
+                    // Menu with save file: Start Game, Continue Game, Load Game, Exit Game
+                    if (selectedMenuOption == 0) {
+                        // Start new game - reset game state
+                        spdlog::info("Starting new game");
+                        gameInitialized = false; // Force re-initialization
+                        currentState = GameState::PLAYING;
+                    } else if (selectedMenuOption == 1) {
+                        // Continue game (load save)
+                        spdlog::info("Continuing from save");
+                        currentState = GameState::PLAYING;
+                    } else if (selectedMenuOption == 2) {
+                        // Load game (same as continue for now)
+                        spdlog::info("Loading game");
+                        currentState = GameState::PLAYING;
+                    } else if (selectedMenuOption == 3) {
+                        // Exit game
+                        glfwSetWindowShouldClose(window, GLFW_TRUE);
+                    }
+                } else {
+                    // Menu without save file: Start Game, Load Game, Exit Game
+                    if (selectedMenuOption == 0) {
+                        // Start new game - reset game state
+                        spdlog::info("Starting new game");
+                        gameInitialized = false; // Force re-initialization
+                        currentState = GameState::PLAYING;
+                    } else if (selectedMenuOption == 1) {
+                        // Load game (disabled if no save)
+                        spdlog::warn("No save file available to load");
+                    } else if (selectedMenuOption == 2) {
+                        // Exit game
+                        glfwSetWindowShouldClose(window, GLFW_TRUE);
+                    }
+                }
+                
+                // Start background music when entering game
+                if (currentState == GameState::PLAYING) {
                     // Stop intro music when starting game
                     audioManager.stopMusic();
                     introMusicStarted = false;
@@ -224,23 +464,98 @@ int main() {
                     audioManager.playMusic("background", true); // Loop the background music
                     backgroundMusicStarted = true;
                     spdlog::info("Started background music for gameplay at reduced volume (0.4)");
-                    currentState = GameState::PLAYING;
-                } else if (selectedMenuOption == 1) {
-                    // Play click sound before exiting
-                    uiAudioManager.playButtonClickSound();
-                    glfwSetWindowShouldClose(window, GLFW_TRUE);
+                    
+                    // Load game if continuing from save
+                    if (hasSaveFile && (selectedMenuOption == 1 || selectedMenuOption == 2)) {
+                        SaveData saveData;
+                        if (loadGame(saveData)) {
+                            // Initialize game objects first if not already done
+                            if (!gameInitialized) {
+                                // Initialize all game objects properly
+                                player = new Player();
+                                stbi_set_flip_vertically_on_load(true);
+                                player->loadTexture("assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
+                                player->loadIdleTexture("assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
+                                stbi_set_flip_vertically_on_load(false);
+                                
+                                inputHandler = new InputHandler();
+                                tilemap = new Tilemap();
+                                if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                                    spdlog::error("Failed to load tileset texture");
+                                    return -1;
+                                }
+                                
+                                // Load projectile texture
+                                Projectile::loadProjectileTexture("assets/graphic/projectiles/green_projectiles.png");
+                                
+                                gameInitialized = true;
+                            }
+                            // Load the game state
+                            loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
+                            
+                            // Reload the tilemap for the saved level
+                            if (tilemap) {
+                                delete tilemap;
+                            }
+                            tilemap = new Tilemap();
+                            if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                                spdlog::error("Failed to load tileset texture");
+                                return -1;
+                            }
+                            if (!tilemap->loadFromJSON(currentLevelPath)) {
+                                spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
+                                // Fallback to default level
+                                tilemap->loadFromJSON("assets/levels/level1.json");
+                                currentLevelPath = "assets/levels/level1.json";
+                            }
+                            
+                            // Set up projection to match tilemap size
+                            glMatrixMode(GL_PROJECTION);
+                            glLoadIdentity();
+                            float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
+                            float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
+                            glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
+                            glMatrixMode(GL_MODELVIEW);
+                            glLoadIdentity();
+                            
+                            spdlog::info("Game loaded from main menu");
+                        } else {
+                            spdlog::error("Failed to load game from main menu");
+                        }
+                    }
                 }
+                
                 keyEnterPressed = true;
             } else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
                 keyEnterPressed = false;
             }
 
             // Draw menu
-            UI::drawMainMenu(windowWidth, windowHeight, selectedMenuOption);
+            UI::drawMainMenu(windowWidth, windowHeight, selectedMenuOption, hasSaveFile);
         }
         else if (currentState == GameState::PLAYING) {
             // Initialize game objects if not already done
             if (!gameInitialized) {
+                // Clean up any existing game objects first
+                if (player) {
+                    delete player;
+                    player = nullptr;
+                }
+                for (auto& enemy : enemies) {
+                    delete enemy;
+                }
+                enemies.clear();
+                if (inputHandler) {
+                    delete inputHandler;
+                    inputHandler = nullptr;
+                }
+                if (tilemap) {
+                    delete tilemap;
+                    tilemap = nullptr;
+                }
+                playerProjectiles.clear();
+                enemyProjectiles.clear();
+                
                 player = new Player();
                 stbi_set_flip_vertically_on_load(true);
                 player->loadTexture("assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
@@ -615,18 +930,20 @@ int main() {
             UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
             UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
 
-            // Check for ESC key to return to menu
-            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-                // Stop background music and reset introMusicStarted flag
-                audioManager.stopMusic();
-                introMusicStarted = false;
-                backgroundMusicStarted = false;
-                // Reset music volume to normal for intro music
-                audioManager.setMusicVolume(1.0f);
-                // Reset menu hover tracking
-                previousSelectedMenuOption = -1;
-                currentState = GameState::MENU;
-                spdlog::info("Returning to menu");
+            // Check for ESC key to pause game
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !keyEscPressed) {
+                selectedPauseButton = 0;
+                pauseScreenInitialized = false;
+                keyUpPressed = false;
+                keyDownPressed = false;
+                keyEnterPressed = false;
+                // Reset hover tracking for pause screen
+                previousSelectedPauseButton = -1;
+                currentState = GameState::PAUSED;
+                keyEscPressed = true;
+                spdlog::info("Game paused");
+            } else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
+                keyEscPressed = false;
             }
             
             // Check if player has died
@@ -650,6 +967,182 @@ int main() {
                 currentState = GameState::DEATH;
                 spdlog::info("Player has died, showing death screen");
             }
+        }
+        else if (currentState == GameState::PAUSED) {
+            // Handle pause menu input
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
+                selectedPauseButton = (selectedPauseButton - 1 + 5) % 5; // 5 options: Resume, Save Game, Load Game, Back to Menu, Exit Game
+                keyUpPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
+                keyUpPressed = false;
+            }
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
+                selectedPauseButton = (selectedPauseButton + 1) % 5;
+                keyDownPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+                keyDownPressed = false;
+            }
+            
+            // Play hover sound when selection changes
+            if (selectedPauseButton != previousSelectedPauseButton) {
+                uiAudioManager.playButtonHoverSound();
+                previousSelectedPauseButton = selectedPauseButton;
+            }
+            
+            if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
+                uiAudioManager.playButtonClickSound();
+                
+                if (selectedPauseButton == 0) {
+                    // Resume game
+                    currentState = GameState::PLAYING;
+                    spdlog::info("Resuming game");
+                } else if (selectedPauseButton == 1) {
+                    // Save game
+                    if (gameInitialized && player) {
+                        SaveData saveData;
+                        saveData.playerX = player->getX();
+                        saveData.playerY = player->getY();
+                        saveData.playerHealth = player->getCurrentHealth();
+                        saveData.playerMaxHealth = player->getMaxHealth();
+                        saveData.playerXP = player->getCurrentXP();
+                        saveData.playerMaxXP = player->getMaxXP();
+                        saveData.playerLevel = player->getLevel();
+                        saveData.currentLevelPath = currentLevelPath;
+                        saveData.levelTransitionCooldown = levelTransitionCooldown;
+                        
+                        // Save current enemies
+                        for (const auto& enemy : enemies) {
+                            json enemyData;
+                            enemyData["x"] = enemy->getX();
+                            enemyData["y"] = enemy->getY();
+                            enemyData["health"] = enemy->getCurrentHealth();
+                            enemyData["maxHealth"] = enemy->getMaxHealth();
+                            enemyData["alive"] = enemy->isAlive();
+                            enemyData["type"] = static_cast<int>(enemy->getType());
+                            enemyData["state"] = static_cast<int>(enemy->getState());
+                            saveData.enemies.push_back(enemyData);
+                        }
+                        
+                        // Note: Projectiles are not saved since they can't be properly restored
+                        // due to the Projectile class constructor requirements
+                        
+                        // Get current time
+                        auto now = std::chrono::system_clock::now();
+                        auto time_t = std::chrono::system_clock::to_time_t(now);
+                        saveData.saveTime = std::ctime(&time_t);
+                        saveData.saveTime.pop_back(); // Remove newline
+                        
+                        if (saveGame(saveData)) {
+                            hasSaveFile = true;
+                            spdlog::info("Game saved successfully");
+                        } else {
+                            spdlog::error("Failed to save game");
+                        }
+                    }
+                } else if (selectedPauseButton == 2) {
+                    // Load game
+                    if (saveFileExists()) {
+                        SaveData saveData;
+                        if (loadGame(saveData)) {
+                            // Load the game state
+                            loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
+                            
+                            // Reload the tilemap for the saved level
+                            if (tilemap) {
+                                delete tilemap;
+                            }
+                            tilemap = new Tilemap();
+                            if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                                spdlog::error("Failed to load tileset texture");
+                                return -1;
+                            }
+                            if (!tilemap->loadFromJSON(currentLevelPath)) {
+                                spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
+                                // Fallback to default level
+                                tilemap->loadFromJSON("assets/levels/level1.json");
+                                currentLevelPath = "assets/levels/level1.json";
+                            }
+                            
+                            // Set up projection to match tilemap size
+                            glMatrixMode(GL_PROJECTION);
+                            glLoadIdentity();
+                            float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
+                            float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
+                            glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
+                            glMatrixMode(GL_MODELVIEW);
+                            glLoadIdentity();
+                            
+                            spdlog::info("Game loaded successfully");
+                        } else {
+                            spdlog::error("Failed to load game");
+                        }
+                    } else {
+                        spdlog::warn("No save file available to load");
+                    }
+                } else if (selectedPauseButton == 3) {
+                    // Back to main menu
+                    // Stop background music and reset introMusicStarted flag
+                    audioManager.stopMusic();
+                    introMusicStarted = false;
+                    backgroundMusicStarted = false;
+                    // Reset music volume to normal for intro music
+                    audioManager.setMusicVolume(1.0f);
+                    // Reset menu hover tracking
+                    previousSelectedMenuOption = -1;
+                    currentState = GameState::MENU;
+                    spdlog::info("Returning to main menu from pause");
+                } else if (selectedPauseButton == 4) {
+                    // Exit game
+                    spdlog::info("Exiting game from pause menu");
+                    glfwSetWindowShouldClose(window, GLFW_TRUE);
+                }
+                keyEnterPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
+                keyEnterPressed = false;
+            }
+            
+            // Also allow ESC to resume (alternative to Resume button)
+            if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !keyEscPressed) {
+                currentState = GameState::PLAYING;
+                keyEscPressed = true;
+                spdlog::info("Resuming game with ESC key");
+            } else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
+                keyEscPressed = false;
+            }
+
+            // Draw the game in the background (paused state) - NO UPDATES, just drawing
+            if (gameInitialized) {
+                tilemap->draw();
+                
+                // Draw blood effects (ground layer) - NO UPDATE, just draw
+                for (auto& bloodEffect : bloodEffects) {
+                    bloodEffect->draw();
+                }
+                
+                player->draw();
+                
+                // Draw enemies - NO UPDATE, just draw
+                for (auto& enemy : enemies) {
+                    enemy->draw();
+                }
+                
+                // Draw projectiles - NO UPDATE, just draw
+                for (auto& projectile : playerProjectiles) {
+                    projectile.draw();
+                }
+                
+                for (auto& projectile : enemyProjectiles) {
+                    projectile.draw();
+                }
+                
+                // Draw UI (player health bar, XP bar, and level indicator)
+                UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
+                UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
+                UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
+            }
+            
+            // Draw pause menu overlay
+            UI::drawPauseScreen(windowWidth, windowHeight, selectedPauseButton);
         }
         else if (currentState == GameState::DEATH) {
             // Handle mouse input for death screen
