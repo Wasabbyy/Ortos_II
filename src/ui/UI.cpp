@@ -715,11 +715,11 @@ void UI::drawPauseScreen(int windowWidth, int windowHeight, int selectedButton) 
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f; // Same offset as other menus
     
     // Resume button (top)
-    float resumeButtonY = windowHeight * 0.7f;
+    float resumeButtonY = windowHeight * 0.6f;
     drawMenuButton("Resume", buttonX, resumeButtonY, buttonWidth, buttonHeight, false, selectedButton == 0);
     
     // Save Game button
-    float saveButtonY = windowHeight * 0.6f;
+    float saveButtonY = windowHeight * 0.5f;
     drawMenuButton("Save Game", buttonX, saveButtonY, buttonWidth, buttonHeight, false, selectedButton == 1);
     
     // Back to Menu button (middle)
@@ -727,7 +727,7 @@ void UI::drawPauseScreen(int windowWidth, int windowHeight, int selectedButton) 
     drawMenuButton("Back to Menu", buttonX, menuButtonY, buttonWidth, buttonHeight, false, selectedButton == 2);
     
     // Exit Game button (bottom)
-    float exitButtonY = windowHeight * 0.2f;
+    float exitButtonY = windowHeight * 0.3f;
     drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedButton == 3);
     
     glMatrixMode(GL_PROJECTION);
@@ -740,7 +740,7 @@ void UI::drawSaveSlotMenu(int windowWidth, int windowHeight, int selectedSlot, c
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
+    glOrtho(0, windowWidth, 0, windowHeight, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
@@ -763,28 +763,48 @@ void UI::drawSaveSlotMenu(int windowWidth, int windowHeight, int selectedSlot, c
     // Draw title
     drawCenteredText("Select Save Slot", windowWidth / 2.0f, windowHeight * 0.8f, 1.5f);
     
-    // Draw save slots
-    float buttonWidth = 300.0f;
-    float buttonHeight = 50.0f;
-    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
-    float startY = windowHeight * 0.6f;
-    float spacing = 70.0f;
+    // Draw save slots using same layout as main menu
+    float buttonWidth = 260.0f;  // Same as main menu
+    float buttonHeight = 60.0f;  // Same as main menu
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Same offset as main menu
     
-    for (int i = 0; i < 3; i++) {
-        float buttonY = startY - i * spacing;
-        std::string buttonText = "Save Slot " + std::to_string(i + 1);
-        if (i < saveSlotInfo.size() && saveSlotInfo[i] != "Empty") {
-            // Show just the date part of the timestamp (first 10 characters)
-            std::string shortTime = saveSlotInfo[i].substr(0, 10);
-            buttonText += " - " + shortTime;
-        } else {
-            buttonText += " - Empty";
-        }
-        drawMenuButton(buttonText, buttonX, buttonY, buttonWidth, buttonHeight, false, selectedSlot == i);
+    // Position buttons like main menu: 0.6f, 0.5f, 0.4f, 0.3f
+    float slot1Y = windowHeight * 0.6f;
+    float slot2Y = windowHeight * 0.5f;
+    float slot3Y = windowHeight * 0.4f;
+    float backButtonY = windowHeight * 0.3f;
+    
+    // Save Slot 1
+    std::string buttonText1 = "Save Slot 1";
+    if (0 < saveSlotInfo.size() && saveSlotInfo[0] != "Empty") {
+        std::string shortTime = saveSlotInfo[0].substr(0, 10);
+        buttonText1 += " - " + shortTime;
+    } else {
+        buttonText1 += " - Empty";
     }
+    drawMenuButton(buttonText1, buttonX, slot1Y, buttonWidth, buttonHeight, false, selectedSlot == 0);
     
-    // Draw back button
-    float backButtonY = windowHeight * 0.2f;
+    // Save Slot 2
+    std::string buttonText2 = "Save Slot 2";
+    if (1 < saveSlotInfo.size() && saveSlotInfo[1] != "Empty") {
+        std::string shortTime = saveSlotInfo[1].substr(0, 10);
+        buttonText2 += " - " + shortTime;
+    } else {
+        buttonText2 += " - Empty";
+    }
+    drawMenuButton(buttonText2, buttonX, slot2Y, buttonWidth, buttonHeight, false, selectedSlot == 1);
+    
+    // Save Slot 3
+    std::string buttonText3 = "Save Slot 3";
+    if (2 < saveSlotInfo.size() && saveSlotInfo[2] != "Empty") {
+        std::string shortTime = saveSlotInfo[2].substr(0, 10);
+        buttonText3 += " - " + shortTime;
+    } else {
+        buttonText3 += " - Empty";
+    }
+    drawMenuButton(buttonText3, buttonX, slot3Y, buttonWidth, buttonHeight, false, selectedSlot == 2);
+    
+    // Back button
     drawMenuButton("Back", buttonX, backButtonY, buttonWidth, buttonHeight, false, selectedSlot == 3);
     
     glMatrixMode(GL_PROJECTION);
@@ -797,7 +817,7 @@ void UI::drawLoadSlotMenu(int windowWidth, int windowHeight, int selectedSlot, c
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
+    glOrtho(0, windowWidth, 0, windowHeight, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
@@ -820,32 +840,60 @@ void UI::drawLoadSlotMenu(int windowWidth, int windowHeight, int selectedSlot, c
     // Draw title
     drawCenteredText("Select Load Slot", windowWidth / 2.0f, windowHeight * 0.8f, 1.5f);
     
-    // Draw save slots
-    float buttonWidth = 300.0f;
-    float buttonHeight = 50.0f;
-    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
-    float startY = windowHeight * 0.6f;
-    float spacing = 70.0f;
+    // Draw save slots using same layout as main menu
+    float buttonWidth = 260.0f;  // Same as main menu
+    float buttonHeight = 60.0f;  // Same as main menu
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Same offset as main menu
     
-    for (int i = 0; i < 3; i++) {
-        float buttonY = startY - i * spacing;
-        std::string buttonText = "Save Slot " + std::to_string(i + 1);
-        if (i < saveSlotInfo.size()) {
-            if (saveSlotInfo[i] == "Empty") {
-                buttonText += " - Empty";
-            } else {
-                // Show just the date part of the timestamp (first 10 characters)
-                std::string shortTime = saveSlotInfo[i].substr(0, 10);
-                buttonText += " - " + shortTime;
-            }
+    // Position buttons like main menu: 0.6f, 0.5f, 0.4f, 0.3f
+    float slot1Y = windowHeight * 0.6f;
+    float slot2Y = windowHeight * 0.5f;
+    float slot3Y = windowHeight * 0.4f;
+    float backButtonY = windowHeight * 0.3f;
+    
+    // Save Slot 1
+    std::string buttonText1 = "Save Slot 1";
+    if (0 < saveSlotInfo.size()) {
+        if (saveSlotInfo[0] == "Empty") {
+            buttonText1 += " - Empty";
         } else {
-            buttonText += " - Empty";
+            std::string shortTime = saveSlotInfo[0].substr(0, 10);
+            buttonText1 += " - " + shortTime;
         }
-        drawMenuButton(buttonText, buttonX, buttonY, buttonWidth, buttonHeight, false, selectedSlot == i);
+    } else {
+        buttonText1 += " - Empty";
     }
+    drawMenuButton(buttonText1, buttonX, slot1Y, buttonWidth, buttonHeight, false, selectedSlot == 0);
     
-    // Draw back button
-    float backButtonY = windowHeight * 0.2f;
+    // Save Slot 2
+    std::string buttonText2 = "Save Slot 2";
+    if (1 < saveSlotInfo.size()) {
+        if (saveSlotInfo[1] == "Empty") {
+            buttonText2 += " - Empty";
+        } else {
+            std::string shortTime = saveSlotInfo[1].substr(0, 10);
+            buttonText2 += " - " + shortTime;
+        }
+    } else {
+        buttonText2 += " - Empty";
+    }
+    drawMenuButton(buttonText2, buttonX, slot2Y, buttonWidth, buttonHeight, false, selectedSlot == 1);
+    
+    // Save Slot 3
+    std::string buttonText3 = "Save Slot 3";
+    if (2 < saveSlotInfo.size()) {
+        if (saveSlotInfo[2] == "Empty") {
+            buttonText3 += " - Empty";
+        } else {
+            std::string shortTime = saveSlotInfo[2].substr(0, 10);
+            buttonText3 += " - " + shortTime;
+        }
+    } else {
+        buttonText3 += " - Empty";
+    }
+    drawMenuButton(buttonText3, buttonX, slot3Y, buttonWidth, buttonHeight, false, selectedSlot == 2);
+    
+    // Back button
     drawMenuButton("Back", buttonX, backButtonY, buttonWidth, buttonHeight, false, selectedSlot == 3);
     
     glMatrixMode(GL_PROJECTION);

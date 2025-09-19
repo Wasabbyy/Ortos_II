@@ -15,24 +15,24 @@
             "maxHealth": 200,
             "state": 2,
             "type": 4,
-            "x": 181.31813049316406,
-            "y": 177.92919921875
+            "x": 190.65420532226563,
+            "y": 192.0
         }
     ],
     "enemyProjectiles": [],
     "gameState": {
         "currentLevelPath": "assets/maps/test.json",
         "levelTransitionCooldown": 0.0,
-        "saveTime": "Fri Sep 19 15:17:15 2025"
+        "saveTime": "Fri Sep 19 16:04:30 2025"
     },
     "player": {
         "health": 85,
         "level": 1,
         "maxHealth": 100,
         "maxXP": 100,
-        "x": 149.17982482910156,
+        "x": 174.65420532226563,
         "xp": 0,
-        "y": 137.6874237060547
+        "y": 192.0
     },
     "playerProjectiles": []
 }
