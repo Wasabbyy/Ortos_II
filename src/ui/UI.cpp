@@ -764,7 +764,7 @@ void UI::drawSaveSlotMenu(int windowWidth, int windowHeight, int selectedSlot, c
     drawCenteredText("Select Save Slot", windowWidth / 2.0f, windowHeight * 0.8f, 1.5f);
     
     // Draw save slots using same layout as main menu
-    float buttonWidth = 260.0f;  // Same as main menu
+    float buttonWidth = 350.0f;  // Wider for save slot text
     float buttonHeight = 60.0f;  // Same as main menu
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Same offset as main menu
     
@@ -841,7 +841,7 @@ void UI::drawLoadSlotMenu(int windowWidth, int windowHeight, int selectedSlot, c
     drawCenteredText("Select Load Slot", windowWidth / 2.0f, windowHeight * 0.8f, 1.5f);
     
     // Draw save slots using same layout as main menu
-    float buttonWidth = 260.0f;  // Same as main menu
+    float buttonWidth = 350.0f;  // Wider for save slot text
     float buttonHeight = 60.0f;  // Same as main menu
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Same offset as main menu
     
