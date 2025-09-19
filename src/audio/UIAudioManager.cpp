@@ -57,7 +57,7 @@ bool UIAudioManager::init(ALCcontext* existingContext) {
     }
 
     // Create UI sound sources (separate pool for UI sounds)
-    uiSoundSources.resize(8); // 8 simultaneous UI sound effects
+    uiSoundSources.resize(16); // 16 simultaneous UI sound effects (increased from 8)
     alGenSources(uiSoundSources.size(), uiSoundSources.data());
     
     // Check for errors in source creation

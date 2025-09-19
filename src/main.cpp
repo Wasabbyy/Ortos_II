@@ -422,6 +422,10 @@ int main() {
     bool keyEnterPressed = false;
     bool keyEscPressed = false;
     
+    // Sound debouncing
+    bool hoverSoundPlayed = false;
+    bool clickSoundPlayed = false;
+    
     // Mouse input for death screen
     double mouseX = 0.0, mouseY = 0.0;
     bool mouseLeftPressed = false;
@@ -492,10 +496,15 @@ int main() {
                 keyDownPressed = false;
             }
             
-            // Play hover sound when selection changes
+            // Play hover sound when selection changes (with debouncing)
             if (selectedMenuOption != previousSelectedMenuOption) {
-                uiAudioManager.playButtonHoverSound();
+                if (!hoverSoundPlayed) {
+                    uiAudioManager.playButtonHoverSound();
+                    hoverSoundPlayed = true;
+                }
                 previousSelectedMenuOption = selectedMenuOption;
+            } else {
+                hoverSoundPlayed = false; // Reset when not changing
             }
             
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
@@ -1116,10 +1125,15 @@ int main() {
                 keyDownPressed = false;
             }
             
-            // Play hover sound when selection changes
+            // Play hover sound when selection changes (with debouncing)
             if (selectedPauseButton != previousSelectedPauseButton) {
-                uiAudioManager.playButtonHoverSound();
+                if (!hoverSoundPlayed) {
+                    uiAudioManager.playButtonHoverSound();
+                    hoverSoundPlayed = true;
+                }
                 previousSelectedPauseButton = selectedPauseButton;
+            } else {
+                hoverSoundPlayed = false; // Reset when not changing
             }
             
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
@@ -1453,10 +1467,15 @@ int main() {
                 keyDownPressed = false;
             }
 
-            // Play hover sound when selection changes
+            // Play hover sound when selection changes (with debouncing)
             if (selectedDeathButton != previousSelectedDeathButton) {
-                uiAudioManager.playButtonHoverSound();
+                if (!hoverSoundPlayed) {
+                    uiAudioManager.playButtonHoverSound();
+                    hoverSoundPlayed = true;
+                }
                 previousSelectedDeathButton = selectedDeathButton;
+            } else {
+                hoverSoundPlayed = false; // Reset when not changing
             }
 
             // Mouse hover does NOT affect selection anymore

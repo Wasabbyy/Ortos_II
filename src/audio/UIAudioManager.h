@@ -38,6 +38,7 @@ private:
     // Volume settings
     float uiVolume;
     
+    
     // Helper functions
     bool loadWAVFile(const std::string& filePath, ALuint& buffer);
     ALuint getAvailableUISource();
