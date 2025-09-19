@@ -36,6 +36,10 @@ public:
     
     // Pause screen function
     static void drawPauseScreen(int windowWidth, int windowHeight, int selectedButton);
+    
+    // Save slot selection functions
+    static void drawSaveSlotMenu(int windowWidth, int windowHeight, int selectedSlot, const std::vector<std::string>& saveSlotInfo);
+    static void drawLoadSlotMenu(int windowWidth, int windowHeight, int selectedSlot, const std::vector<std::string>& saveSlotInfo);
 
 private:
     static TextRenderer* textRenderer;

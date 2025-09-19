@@ -1,0 +1,38 @@
+{
+    "enemies": [
+        {
+            "alive": true,
+            "health": 150,
+            "maxHealth": 150,
+            "state": 2,
+            "type": 3,
+            "x": 333.1208190917969,
+            "y": 113.70216369628906
+        },
+        {
+            "alive": false,
+            "health": 0,
+            "maxHealth": 200,
+            "state": 5,
+            "type": 4,
+            "x": 324.0996398925781,
+            "y": 159.73165893554688
+        }
+    ],
+    "enemyProjectiles": [],
+    "gameState": {
+        "currentLevelPath": "assets/maps/test.json",
+        "levelTransitionCooldown": 0.0,
+        "saveTime": "Fri Sep 19 15:13:21 2025"
+    },
+    "player": {
+        "health": 70,
+        "level": 1,
+        "maxHealth": 100,
+        "maxXP": 100,
+        "x": 322.88055419921875,
+        "xp": 25,
+        "y": 97.70216369628906
+    },
+    "playerProjectiles": []
+}

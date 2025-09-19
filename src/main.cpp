@@ -26,7 +26,9 @@ enum class GameState {
     MENU,
     PLAYING,
     PAUSED,
-    DEATH
+    DEATH,
+    SAVE_SLOT_SELECTION,
+    LOAD_SLOT_SELECTION
 };
 
 // Save data structure
@@ -54,6 +56,66 @@ struct SaveData {
     // Timestamp
     std::string saveTime;
 };
+
+// Save slot information
+struct SaveSlot {
+    int slotNumber;
+    std::string filename;
+    std::string saveTime;
+    bool exists;
+    SaveData data;
+};
+
+// Multiple save slots system
+const int MAX_SAVE_SLOTS = 3;
+std::vector<SaveSlot> saveSlots(MAX_SAVE_SLOTS);
+
+// Initialize save slots
+void initializeSaveSlots() {
+    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
+        saveSlots[i].slotNumber = i + 1;
+        saveSlots[i].filename = "savegame_slot" + std::to_string(i + 1) + ".json";
+        saveSlots[i].exists = false;
+        saveSlots[i].saveTime = "";
+    }
+}
+
+// Check which save slots exist
+void updateSaveSlots() {
+    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
+        std::ifstream file(saveSlots[i].filename);
+        saveSlots[i].exists = file.good();
+        file.close();
+        
+        if (saveSlots[i].exists) {
+            // Load save time from file
+            try {
+                std::ifstream inFile(saveSlots[i].filename);
+                json saveJson;
+                inFile >> saveJson;
+                inFile.close();
+                saveSlots[i].saveTime = saveJson["gameState"]["saveTime"];
+            } catch (...) {
+                saveSlots[i].saveTime = "Unknown";
+            }
+        }
+    }
+}
+
+// Get the most recent save slot
+int getMostRecentSaveSlot() {
+    int mostRecentSlot = -1;
+    std::string mostRecentTime = "";
+    
+    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
+        if (saveSlots[i].exists && saveSlots[i].saveTime > mostRecentTime) {
+            mostRecentTime = saveSlots[i].saveTime;
+            mostRecentSlot = i;
+        }
+    }
+    
+    return mostRecentSlot;
+}
 
 // Save game function
 bool saveGame(const SaveData& saveData, const std::string& filename = "savegame.json") {
@@ -238,6 +300,10 @@ int main() {
         spdlog::set_level(spdlog::level::debug);
         spdlog::warn("Failed to initialize file logger: {}", e.what());
     }
+    
+    // Initialize save slots system
+    initializeSaveSlots();
+    updateSaveSlots();
     if (!glfwInit()) {
         spdlog::error("Failed to initialize GLFW");
         return -1;
@@ -334,9 +400,17 @@ int main() {
     GameState currentState = GameState::MENU;
     int selectedMenuOption = 0;
     bool gameInitialized = false;
-    bool hasSaveFile = saveFileExists();
+    // Check if any save slots exist
+    bool hasSaveFile = false;
     bool introMusicStarted = false;
     bool backgroundMusicStarted = false;
+    
+    // Save slot selection variables
+    int selectedSaveSlot = 0;
+    bool saveSlotMenuInitialized = false;
+    bool loadSlotMenuInitialized = false;
+    std::vector<std::string> saveSlotInfo(3, "Empty");
+    bool loadSlotFromMainMenu = false;
     // Level management
     std::string currentLevelPath = "assets/maps/test.json";
     std::string nextLevelPath = "assets/maps/final.json";
@@ -387,6 +461,15 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (currentState == GameState::MENU) {
+            // Update save file status
+            hasSaveFile = false;
+            for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
+                if (saveSlots[i].exists) {
+                    hasSaveFile = true;
+                    break;
+                }
+            }
+            
             // Start intro music if not already started
             if (!introMusicStarted) {
                 audioManager.playMusic("intro", true); // Loop the intro music
@@ -416,7 +499,7 @@ int main() {
             }
             
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
-                uiAudioManager.playButtonClickSound();
+                    uiAudioManager.playButtonClickSound();
                 
                 if (hasSaveFile) {
                     // Menu with save file: Start Game, Continue Game, Load Game, Exit Game
@@ -426,13 +509,63 @@ int main() {
                         gameInitialized = false; // Force re-initialization
                         currentState = GameState::PLAYING;
                     } else if (selectedMenuOption == 1) {
-                        // Continue game (load save)
-                        spdlog::info("Continuing from save");
-                        currentState = GameState::PLAYING;
+                        // Continue game (load most recent save)
+                        int mostRecentSlot = getMostRecentSaveSlot();
+                        if (mostRecentSlot >= 0) {
+                            SaveData saveData;
+                            if (loadGame(saveData, saveSlots[mostRecentSlot].filename)) {
+                                // Load the game state
+                                loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
+                                
+                                // Reload the tilemap for the saved level
+                                if (tilemap) {
+                                    delete tilemap;
+                                }
+                                tilemap = new Tilemap();
+                                if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                                    spdlog::error("Failed to load tileset texture");
+                                    return -1;
+                                }
+                                if (!tilemap->loadFromJSON(currentLevelPath)) {
+                                    spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
+                                    // Fallback to default level
+                                    tilemap->loadFromJSON("assets/levels/level1.json");
+                                    currentLevelPath = "assets/levels/level1.json";
+                                }
+                                
+                                // Set up projection to match tilemap size
+                                glMatrixMode(GL_PROJECTION);
+                                glLoadIdentity();
+                                float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
+                                float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
+                                glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
+                                glMatrixMode(GL_MODELVIEW);
+                                glLoadIdentity();
+                                
+                                spdlog::info("Continuing from most recent save (slot {})", mostRecentSlot + 1);
+                                currentState = GameState::PLAYING;
+                            } else {
+                                spdlog::error("Failed to load most recent save");
+                            }
+                        } else {
+                            spdlog::warn("No save files available to continue from");
+                        }
                     } else if (selectedMenuOption == 2) {
-                        // Load game (same as continue for now)
-                        spdlog::info("Loading game");
-                        currentState = GameState::PLAYING;
+                        // Load game - go to load slot selection
+                        updateSaveSlots();
+                        // Update save slot info for display
+                        for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
+                            if (saveSlots[i].exists) {
+                                saveSlotInfo[i] = saveSlots[i].saveTime;
+                            } else {
+                                saveSlotInfo[i] = "Empty";
+                            }
+                        }
+                        selectedSaveSlot = 0;
+                        loadSlotMenuInitialized = false;
+                        loadSlotFromMainMenu = true;
+                        currentState = GameState::LOAD_SLOT_SELECTION;
+                        spdlog::info("Entering load slot selection from main menu");
                     } else if (selectedMenuOption == 3) {
                         // Exit game
                         glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -971,13 +1104,13 @@ int main() {
         else if (currentState == GameState::PAUSED) {
             // Handle pause menu input
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
-                selectedPauseButton = (selectedPauseButton - 1 + 5) % 5; // 5 options: Resume, Save Game, Load Game, Back to Menu, Exit Game
+                selectedPauseButton = (selectedPauseButton - 1 + 4) % 4; // 4 options: Resume, Save Game, Back to Menu, Exit Game
                 keyUpPressed = true;
             } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
                 keyUpPressed = false;
             }
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
-                selectedPauseButton = (selectedPauseButton + 1) % 5;
+                selectedPauseButton = (selectedPauseButton + 1) % 4;
                 keyDownPressed = true;
             } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
                 keyDownPressed = false;
@@ -997,89 +1130,21 @@ int main() {
                     currentState = GameState::PLAYING;
                     spdlog::info("Resuming game");
                 } else if (selectedPauseButton == 1) {
-                    // Save game
-                    if (gameInitialized && player) {
-                        SaveData saveData;
-                        saveData.playerX = player->getX();
-                        saveData.playerY = player->getY();
-                        saveData.playerHealth = player->getCurrentHealth();
-                        saveData.playerMaxHealth = player->getMaxHealth();
-                        saveData.playerXP = player->getCurrentXP();
-                        saveData.playerMaxXP = player->getMaxXP();
-                        saveData.playerLevel = player->getLevel();
-                        saveData.currentLevelPath = currentLevelPath;
-                        saveData.levelTransitionCooldown = levelTransitionCooldown;
-                        
-                        // Save current enemies
-                        for (const auto& enemy : enemies) {
-                            json enemyData;
-                            enemyData["x"] = enemy->getX();
-                            enemyData["y"] = enemy->getY();
-                            enemyData["health"] = enemy->getCurrentHealth();
-                            enemyData["maxHealth"] = enemy->getMaxHealth();
-                            enemyData["alive"] = enemy->isAlive();
-                            enemyData["type"] = static_cast<int>(enemy->getType());
-                            enemyData["state"] = static_cast<int>(enemy->getState());
-                            saveData.enemies.push_back(enemyData);
-                        }
-                        
-                        // Note: Projectiles are not saved since they can't be properly restored
-                        // due to the Projectile class constructor requirements
-                        
-                        // Get current time
-                        auto now = std::chrono::system_clock::now();
-                        auto time_t = std::chrono::system_clock::to_time_t(now);
-                        saveData.saveTime = std::ctime(&time_t);
-                        saveData.saveTime.pop_back(); // Remove newline
-                        
-                        if (saveGame(saveData)) {
-                            hasSaveFile = true;
-                            spdlog::info("Game saved successfully");
+                    // Save game - go to save slot selection
+                    updateSaveSlots();
+                    // Update save slot info for display
+                    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
+                        if (saveSlots[i].exists) {
+                            saveSlotInfo[i] = saveSlots[i].saveTime;
                         } else {
-                            spdlog::error("Failed to save game");
+                            saveSlotInfo[i] = "Empty";
                         }
                     }
+                    selectedSaveSlot = 0;
+                    saveSlotMenuInitialized = false;
+                    currentState = GameState::SAVE_SLOT_SELECTION;
+                    spdlog::info("Entering save slot selection");
                 } else if (selectedPauseButton == 2) {
-                    // Load game
-                    if (saveFileExists()) {
-                        SaveData saveData;
-                        if (loadGame(saveData)) {
-                            // Load the game state
-                            loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
-                            
-                            // Reload the tilemap for the saved level
-                            if (tilemap) {
-                                delete tilemap;
-                            }
-                            tilemap = new Tilemap();
-                            if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
-                                spdlog::error("Failed to load tileset texture");
-                                return -1;
-                            }
-                            if (!tilemap->loadFromJSON(currentLevelPath)) {
-                                spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
-                                // Fallback to default level
-                                tilemap->loadFromJSON("assets/levels/level1.json");
-                                currentLevelPath = "assets/levels/level1.json";
-                            }
-                            
-                            // Set up projection to match tilemap size
-                            glMatrixMode(GL_PROJECTION);
-                            glLoadIdentity();
-                            float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
-                            float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
-                            glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
-                            glMatrixMode(GL_MODELVIEW);
-                            glLoadIdentity();
-                            
-                            spdlog::info("Game loaded successfully");
-                        } else {
-                            spdlog::error("Failed to load game");
-                        }
-                    } else {
-                        spdlog::warn("No save file available to load");
-                    }
-                } else if (selectedPauseButton == 3) {
                     // Back to main menu
                     // Stop background music and reset introMusicStarted flag
                     audioManager.stopMusic();
@@ -1091,7 +1156,7 @@ int main() {
                     previousSelectedMenuOption = -1;
                     currentState = GameState::MENU;
                     spdlog::info("Returning to main menu from pause");
-                } else if (selectedPauseButton == 4) {
+                } else if (selectedPauseButton == 3) {
                     // Exit game
                     spdlog::info("Exiting game from pause menu");
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -1143,6 +1208,222 @@ int main() {
             
             // Draw pause menu overlay
             UI::drawPauseScreen(windowWidth, windowHeight, selectedPauseButton);
+        }
+        else if (currentState == GameState::SAVE_SLOT_SELECTION) {
+            // Draw game in background (paused)
+            if (tilemap) {
+                tilemap->draw();
+            }
+            if (player) {
+                player->draw();
+            }
+            for (const auto& enemy : enemies) {
+                if (enemy) {
+                    enemy->draw();
+                }
+            }
+            for (const auto& projectile : playerProjectiles) {
+                projectile.draw();
+            }
+            for (const auto& projectile : enemyProjectiles) {
+                projectile.draw();
+            }
+            for (const auto& bloodEffect : bloodEffects) {
+                if (bloodEffect) {
+                    bloodEffect->draw();
+                }
+            }
+            
+            // Draw UI elements
+            if (player) {
+                UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
+                UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
+                UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
+            }
+            
+            // Draw save slot selection menu
+            UI::drawSaveSlotMenu(windowWidth, windowHeight, selectedSaveSlot, saveSlotInfo);
+        }
+        else if (currentState == GameState::LOAD_SLOT_SELECTION) {
+            // Draw game in background (paused)
+            if (tilemap) {
+                tilemap->draw();
+            }
+            if (player) {
+                player->draw();
+            }
+            for (const auto& enemy : enemies) {
+                if (enemy) {
+                    enemy->draw();
+                }
+            }
+            for (const auto& projectile : playerProjectiles) {
+                projectile.draw();
+            }
+            for (const auto& projectile : enemyProjectiles) {
+                projectile.draw();
+            }
+            for (const auto& bloodEffect : bloodEffects) {
+                if (bloodEffect) {
+                    bloodEffect->draw();
+                }
+            }
+            
+            // Draw UI elements
+            if (player) {
+                UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
+                UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
+                UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
+            }
+            
+            // Draw load slot selection menu
+            UI::drawLoadSlotMenu(windowWidth, windowHeight, selectedSaveSlot, saveSlotInfo);
+        }
+        
+        // Input handling for save slot selection states
+        if (currentState == GameState::SAVE_SLOT_SELECTION) {
+            // Handle save slot selection input
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
+                selectedSaveSlot = (selectedSaveSlot - 1 + 4) % 4; // 3 slots + back button
+                keyUpPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
+                keyUpPressed = false;
+            }
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
+                selectedSaveSlot = (selectedSaveSlot + 1) % 4;
+                keyDownPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+                keyDownPressed = false;
+            }
+            
+            if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
+                if (selectedSaveSlot < 3) {
+                    // Save to selected slot
+                    if (gameInitialized && player) {
+                        SaveData saveData;
+                        saveData.playerX = player->getX();
+                        saveData.playerY = player->getY();
+                        saveData.playerHealth = player->getCurrentHealth();
+                        saveData.playerMaxHealth = player->getMaxHealth();
+                        saveData.playerXP = player->getCurrentXP();
+                        saveData.playerMaxXP = player->getMaxXP();
+                        saveData.playerLevel = player->getLevel();
+                        saveData.currentLevelPath = currentLevelPath;
+                        saveData.levelTransitionCooldown = levelTransitionCooldown;
+                        
+                        // Save current enemies
+                        for (const auto& enemy : enemies) {
+                            json enemyData;
+                            enemyData["x"] = enemy->getX();
+                            enemyData["y"] = enemy->getY();
+                            enemyData["health"] = enemy->getCurrentHealth();
+                            enemyData["maxHealth"] = enemy->getMaxHealth();
+                            enemyData["alive"] = enemy->isAlive();
+                            enemyData["type"] = static_cast<int>(enemy->getType());
+                            enemyData["state"] = static_cast<int>(enemy->getState());
+                            saveData.enemies.push_back(enemyData);
+                        }
+                        
+                        // Get current time
+                        auto now = std::chrono::system_clock::now();
+                        auto time_t = std::chrono::system_clock::to_time_t(now);
+                        saveData.saveTime = std::ctime(&time_t);
+                        saveData.saveTime.pop_back(); // Remove newline
+                        
+                        if (saveGame(saveData, saveSlots[selectedSaveSlot].filename)) {
+                            updateSaveSlots();
+                            hasSaveFile = true;
+                            spdlog::info("Game saved to slot {}", selectedSaveSlot + 1);
+                        } else {
+                            spdlog::error("Failed to save game to slot {}", selectedSaveSlot + 1);
+                        }
+                    }
+                    currentState = GameState::PAUSED;
+                } else {
+                    // Back button
+                    currentState = GameState::PAUSED;
+                }
+                keyEnterPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
+                keyEnterPressed = false;
+            }
+        }
+        else if (currentState == GameState::LOAD_SLOT_SELECTION) {
+            // Handle load slot selection input
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
+                selectedSaveSlot = (selectedSaveSlot - 1 + 4) % 4; // 3 slots + back button
+                keyUpPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
+                keyUpPressed = false;
+            }
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
+                selectedSaveSlot = (selectedSaveSlot + 1) % 4;
+                keyDownPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+                keyDownPressed = false;
+            }
+            
+            if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
+                if (selectedSaveSlot < 3 && saveSlots[selectedSaveSlot].exists) {
+                    // Load from selected slot
+                    SaveData saveData;
+                    if (loadGame(saveData, saveSlots[selectedSaveSlot].filename)) {
+                        // Load the game state
+                        loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
+                        
+                        // Reload the tilemap for the saved level
+                        if (tilemap) {
+                            delete tilemap;
+                        }
+                        tilemap = new Tilemap();
+                        if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                            spdlog::error("Failed to load tileset texture");
+                            return -1;
+                        }
+                        if (!tilemap->loadFromJSON(currentLevelPath)) {
+                            spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
+                            // Fallback to default level
+                            tilemap->loadFromJSON("assets/levels/level1.json");
+                            currentLevelPath = "assets/levels/level1.json";
+                        }
+                        
+                        // Set up projection to match tilemap size
+                        glMatrixMode(GL_PROJECTION);
+                        glLoadIdentity();
+                        float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
+                        float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
+                        glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
+                        glMatrixMode(GL_MODELVIEW);
+                        glLoadIdentity();
+                        
+                        spdlog::info("Game loaded from slot {}", selectedSaveSlot + 1);
+                        // Go to playing state if loaded from main menu, otherwise back to pause
+                        if (loadSlotFromMainMenu) {
+                            currentState = GameState::PLAYING;
+                        } else {
+                            currentState = GameState::PAUSED;
+                        }
+                    } else {
+                        spdlog::error("Failed to load game from slot {}", selectedSaveSlot + 1);
+                        // Go back to appropriate menu based on where we came from
+                        if (loadSlotFromMainMenu) {
+                            currentState = GameState::MENU;
+                        } else {
+                            currentState = GameState::PAUSED;
+                        }
+                    }
+                } else if (selectedSaveSlot == 3) {
+                    // Back button - go back to appropriate menu
+                    if (loadSlotFromMainMenu) {
+                        currentState = GameState::MENU;
+                    } else {
+                        currentState = GameState::PAUSED;
+                    }
+                }
+                keyEnterPressed = true;
+            } else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
+                keyEnterPressed = false;
+            }
         }
         else if (currentState == GameState::DEATH) {
             // Handle mouse input for death screen

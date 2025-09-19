@@ -722,17 +722,131 @@ void UI::drawPauseScreen(int windowWidth, int windowHeight, int selectedButton) 
     float saveButtonY = windowHeight * 0.6f;
     drawMenuButton("Save Game", buttonX, saveButtonY, buttonWidth, buttonHeight, false, selectedButton == 1);
     
-    // Load Game button
-    float loadButtonY = windowHeight * 0.5f;
-    drawMenuButton("Load Game", buttonX, loadButtonY, buttonWidth, buttonHeight, false, selectedButton == 2);
-    
     // Back to Menu button (middle)
-    float menuButtonY = windowHeight * 0.3f;
-    drawMenuButton("Back to Menu", buttonX, menuButtonY, buttonWidth, buttonHeight, false, selectedButton == 3);
+    float menuButtonY = windowHeight * 0.4f;
+    drawMenuButton("Back to Menu", buttonX, menuButtonY, buttonWidth, buttonHeight, false, selectedButton == 2);
     
     // Exit Game button (bottom)
     float exitButtonY = windowHeight * 0.2f;
-    drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedButton == 4);
+    drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedButton == 3);
+    
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+void UI::drawSaveSlotMenu(int windowWidth, int windowHeight, int selectedSlot, const std::vector<std::string>& saveSlotInfo) {
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    // Draw dark overlay
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.0f, 0.0f, 0.0f, 0.7f);
+    glBegin(GL_QUADS);
+    glVertex2f(0, 0);
+    glVertex2f(windowWidth, 0);
+    glVertex2f(windowWidth, windowHeight);
+    glVertex2f(0, windowHeight);
+    glEnd();
+    
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glEnable(GL_TEXTURE_2D);
+    
+    // Draw title
+    drawCenteredText("Select Save Slot", windowWidth / 2.0f, windowHeight * 0.8f, 1.5f);
+    
+    // Draw save slots
+    float buttonWidth = 300.0f;
+    float buttonHeight = 50.0f;
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
+    float startY = windowHeight * 0.6f;
+    float spacing = 70.0f;
+    
+    for (int i = 0; i < 3; i++) {
+        float buttonY = startY - i * spacing;
+        std::string buttonText = "Save Slot " + std::to_string(i + 1);
+        if (i < saveSlotInfo.size() && saveSlotInfo[i] != "Empty") {
+            // Show just the date part of the timestamp (first 10 characters)
+            std::string shortTime = saveSlotInfo[i].substr(0, 10);
+            buttonText += " - " + shortTime;
+        } else {
+            buttonText += " - Empty";
+        }
+        drawMenuButton(buttonText, buttonX, buttonY, buttonWidth, buttonHeight, false, selectedSlot == i);
+    }
+    
+    // Draw back button
+    float backButtonY = windowHeight * 0.2f;
+    drawMenuButton("Back", buttonX, backButtonY, buttonWidth, buttonHeight, false, selectedSlot == 3);
+    
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
+
+void UI::drawLoadSlotMenu(int windowWidth, int windowHeight, int selectedSlot, const std::vector<std::string>& saveSlotInfo) {
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, windowWidth, windowHeight, 0, -1, 1);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    
+    // Draw dark overlay
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.0f, 0.0f, 0.0f, 0.7f);
+    glBegin(GL_QUADS);
+    glVertex2f(0, 0);
+    glVertex2f(windowWidth, 0);
+    glVertex2f(windowWidth, windowHeight);
+    glVertex2f(0, windowHeight);
+    glEnd();
+    
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glEnable(GL_TEXTURE_2D);
+    
+    // Draw title
+    drawCenteredText("Select Load Slot", windowWidth / 2.0f, windowHeight * 0.8f, 1.5f);
+    
+    // Draw save slots
+    float buttonWidth = 300.0f;
+    float buttonHeight = 50.0f;
+    float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f;
+    float startY = windowHeight * 0.6f;
+    float spacing = 70.0f;
+    
+    for (int i = 0; i < 3; i++) {
+        float buttonY = startY - i * spacing;
+        std::string buttonText = "Save Slot " + std::to_string(i + 1);
+        if (i < saveSlotInfo.size()) {
+            if (saveSlotInfo[i] == "Empty") {
+                buttonText += " - Empty";
+            } else {
+                // Show just the date part of the timestamp (first 10 characters)
+                std::string shortTime = saveSlotInfo[i].substr(0, 10);
+                buttonText += " - " + shortTime;
+            }
+        } else {
+            buttonText += " - Empty";
+        }
+        drawMenuButton(buttonText, buttonX, buttonY, buttonWidth, buttonHeight, false, selectedSlot == i);
+    }
+    
+    // Draw back button
+    float backButtonY = windowHeight * 0.2f;
+    drawMenuButton("Back", buttonX, backButtonY, buttonWidth, buttonHeight, false, selectedSlot == 3);
     
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
