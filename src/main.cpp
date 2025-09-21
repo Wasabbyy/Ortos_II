@@ -70,11 +70,12 @@ struct SaveSlot {
 const int MAX_SAVE_SLOTS = 3;
 std::vector<SaveSlot> saveSlots(MAX_SAVE_SLOTS);
 
+
 // Initialize save slots
 void initializeSaveSlots() {
     for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
         saveSlots[i].slotNumber = i + 1;
-        saveSlots[i].filename = "savegame_slot" + std::to_string(i + 1) + ".json";
+        saveSlots[i].filename = "saves/savegame_slot" + std::to_string(i + 1) + ".json";
         saveSlots[i].exists = false;
         saveSlots[i].saveTime = "";
     }
@@ -102,7 +103,7 @@ void updateSaveSlots() {
     }
 }
 
-// Get the most recent save slot
+// Get the most recent save slot (by save time)
 int getMostRecentSaveSlot() {
     int mostRecentSlot = -1;
     std::string mostRecentTime = "";
@@ -116,6 +117,7 @@ int getMostRecentSaveSlot() {
     
     return mostRecentSlot;
 }
+
 
 // Save game function
 bool saveGame(const SaveData& saveData, const std::string& filename = "savegame.json") {
@@ -465,7 +467,8 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (currentState == GameState::MENU) {
-            // Update save file status
+            // Update save slots and check if any save files exist
+            updateSaveSlots();
             hasSaveFile = false;
             for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
                 if (saveSlots[i].exists) {
@@ -482,7 +485,7 @@ int main() {
             }
             
             // Handle menu input
-            int menuOptions = hasSaveFile ? 4 : 3; // Start Game, Continue Game (if save exists), Load Game, Exit Game
+            int menuOptions = hasSaveFile ? 3 : 2; // Start Game, Load Game, Exit Game (if save exists) | Start Game, Exit Game (no save)
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
                 selectedMenuOption = (selectedMenuOption - 1 + menuOptions) % menuOptions;
                 keyUpPressed = true;
@@ -499,7 +502,7 @@ int main() {
             // Play hover sound when selection changes (with debouncing)
             if (selectedMenuOption != previousSelectedMenuOption) {
                 if (!hoverSoundPlayed) {
-                    uiAudioManager.playButtonHoverSound();
+                uiAudioManager.playButtonHoverSound();
                     hoverSoundPlayed = true;
                 }
                 previousSelectedMenuOption = selectedMenuOption;
@@ -518,48 +521,6 @@ int main() {
                         gameInitialized = false; // Force re-initialization
                         currentState = GameState::PLAYING;
                     } else if (selectedMenuOption == 1) {
-                        // Continue game (load most recent save)
-                        int mostRecentSlot = getMostRecentSaveSlot();
-                        if (mostRecentSlot >= 0) {
-                            SaveData saveData;
-                            if (loadGame(saveData, saveSlots[mostRecentSlot].filename)) {
-                                // Load the game state
-                                loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
-                                
-                                // Reload the tilemap for the saved level
-                                if (tilemap) {
-                                    delete tilemap;
-                                }
-                                tilemap = new Tilemap();
-                                if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
-                                    spdlog::error("Failed to load tileset texture");
-                                    return -1;
-                                }
-                                if (!tilemap->loadFromJSON(currentLevelPath)) {
-                                    spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
-                                    // Fallback to default level
-                                    tilemap->loadFromJSON("assets/levels/level1.json");
-                                    currentLevelPath = "assets/levels/level1.json";
-                                }
-                                
-                                // Set up projection to match tilemap size
-                                glMatrixMode(GL_PROJECTION);
-                                glLoadIdentity();
-                                float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
-                                float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
-                                glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
-                                glMatrixMode(GL_MODELVIEW);
-                                glLoadIdentity();
-                                
-                                spdlog::info("Continuing from most recent save (slot {})", mostRecentSlot + 1);
-                                currentState = GameState::PLAYING;
-                            } else {
-                                spdlog::error("Failed to load most recent save");
-                            }
-                        } else {
-                            spdlog::warn("No save files available to continue from");
-                        }
-                    } else if (selectedMenuOption == 2) {
                         // Load game - go to load slot selection
                         updateSaveSlots();
                         // Update save slot info for display
@@ -575,21 +536,18 @@ int main() {
                         loadSlotFromMainMenu = true;
                         currentState = GameState::LOAD_SLOT_SELECTION;
                         spdlog::info("Entering load slot selection from main menu");
-                    } else if (selectedMenuOption == 3) {
+                    } else if (selectedMenuOption == 2) {
                         // Exit game
                         glfwSetWindowShouldClose(window, GLFW_TRUE);
                     }
                 } else {
-                    // Menu without save file: Start Game, Load Game, Exit Game
+                    // Menu without save file: Start Game, Exit Game
                     if (selectedMenuOption == 0) {
                         // Start new game - reset game state
                         spdlog::info("Starting new game");
                         gameInitialized = false; // Force re-initialization
                         currentState = GameState::PLAYING;
                     } else if (selectedMenuOption == 1) {
-                        // Load game (disabled if no save)
-                        spdlog::warn("No save file available to load");
-                    } else if (selectedMenuOption == 2) {
                         // Exit game
                         glfwSetWindowShouldClose(window, GLFW_TRUE);
                     }
@@ -1382,6 +1340,7 @@ int main() {
                     // Load from selected slot
                     SaveData saveData;
                     if (loadGame(saveData, saveSlots[selectedSaveSlot].filename)) {
+                        
                         // Load the game state
                         loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
                         
@@ -1470,7 +1429,7 @@ int main() {
             // Play hover sound when selection changes (with debouncing)
             if (selectedDeathButton != previousSelectedDeathButton) {
                 if (!hoverSoundPlayed) {
-                    uiAudioManager.playButtonHoverSound();
+                uiAudioManager.playButtonHoverSound();
                     hoverSoundPlayed = true;
                 }
                 previousSelectedDeathButton = selectedDeathButton;

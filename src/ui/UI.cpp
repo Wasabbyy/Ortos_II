@@ -583,28 +583,21 @@ void UI::drawMainMenu(int windowWidth, int windowHeight, int selectedOption, boo
     float buttonX = windowWidth / 2.0f - buttonWidth / 2.0f - 45.0f;  // Move 45 pixels to the left
     
     if (hasSaveFile) {
-        // Menu with save file: Start Game, Continue Game, Load Game, Exit Game
-        float startButtonY = windowHeight * 0.6f;
-        float continueButtonY = windowHeight * 0.5f;
-        float loadButtonY = windowHeight * 0.4f;
-        float exitButtonY = windowHeight * 0.3f;
-        
-        drawMenuButton("Start Game", buttonX, startButtonY, buttonWidth, buttonHeight, false, selectedOption == 0);
-        drawMenuButton("Continue Game", buttonX, continueButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
-        drawMenuButton("Load Game", buttonX, loadButtonY, buttonWidth, buttonHeight, false, selectedOption == 2);
-        drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedOption == 3);
-    } else {
-        // Menu without save file: Start Game, Load Game, Exit Game
+        // Menu with save file: Start Game, Load Game, Exit Game
         float startButtonY = windowHeight * 0.5f;
         float loadButtonY = windowHeight * 0.4f;
         float exitButtonY = windowHeight * 0.3f;
         
         drawMenuButton("Start Game", buttonX, startButtonY, buttonWidth, buttonHeight, false, selectedOption == 0);
-        // Draw Load Game button as disabled
-        glColor3f(0.5f, 0.5f, 0.5f); // Gray color for disabled button
-        drawMenuButton("Load Game (No Save)", buttonX, loadButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
-        glColor3f(1.0f, 1.0f, 1.0f); // Reset color
+        drawMenuButton("Load Game", buttonX, loadButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
         drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedOption == 2);
+    } else {
+        // Menu without save file: Start Game, Exit Game
+        float startButtonY = windowHeight * 0.45f;
+        float exitButtonY = windowHeight * 0.35f;
+        
+        drawMenuButton("Start Game", buttonX, startButtonY, buttonWidth, buttonHeight, false, selectedOption == 0);
+        drawMenuButton("Exit Game", buttonX, exitButtonY, buttonWidth, buttonHeight, false, selectedOption == 1);
     }
     
     glMatrixMode(GL_PROJECTION);
