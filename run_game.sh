@@ -6,10 +6,5 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Change to the project directory
 cd "$SCRIPT_DIR"
 
-# Clean and build
-cd build
-cmake .. && make
-
-# Run the executable from project root so relative asset paths work
-cd ..
+# Run the game
 ./build/Ortos_II
