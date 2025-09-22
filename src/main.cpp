@@ -20,7 +20,102 @@
 #include <fstream>
 #include <chrono>
 #include <ctime>
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
 using json = nlohmann::json;
+
+// Function to get the correct asset path regardless of where the executable is run from
+std::string getAssetPath(const std::string& relativePath) {
+    // Get the directory where the executable is located
+    std::filesystem::path exePath = std::filesystem::current_path();
+    
+    // Try to find the project root by looking for the assets directory
+    std::filesystem::path currentPath = exePath;
+    
+    // Check if we're already in the project root (assets directory exists)
+    if (std::filesystem::exists(currentPath / "assets")) {
+        return (currentPath / relativePath).string();
+    }
+    
+    // If we're in the build directory, go up one level
+    if (currentPath.filename() == "build") {
+        currentPath = currentPath.parent_path();
+        if (std::filesystem::exists(currentPath / "assets")) {
+            return (currentPath / relativePath).string();
+        }
+    }
+    
+    // Try going up directories to find the project root
+    for (int i = 0; i < 10; i++) {
+        currentPath = currentPath.parent_path();
+        if (std::filesystem::exists(currentPath / "assets")) {
+            return (currentPath / relativePath).string();
+        }
+    }
+    
+    // If we still can't find it, try to find the executable's directory
+    // This handles the case where the executable is run from anywhere
+    std::filesystem::path executablePath;
+    
+#ifdef __APPLE__
+    // macOS-specific executable path detection
+    char buffer[1024];
+    uint32_t size = sizeof(buffer);
+    if (_NSGetExecutablePath(buffer, &size) == 0) {
+        executablePath = std::filesystem::path(buffer).parent_path();
+    }
+#else
+    // Linux-specific executable path detection
+    try {
+        executablePath = std::filesystem::canonical("/proc/self/exe");
+    } catch (const std::filesystem::filesystem_error& e) {
+        // Fallback if /proc/self/exe is not available
+        executablePath = std::filesystem::path();
+    }
+#endif
+    
+    if (!executablePath.empty()) {
+        // If executable is in build directory, go up one level
+        if (executablePath.filename() == "build") {
+            executablePath = executablePath.parent_path();
+        }
+        
+        // Check if assets directory exists relative to executable
+        if (std::filesystem::exists(executablePath / "assets")) {
+            return (executablePath / relativePath).string();
+        }
+        
+        // Try going up from executable directory
+        for (int i = 0; i < 5; i++) {
+            executablePath = executablePath.parent_path();
+            if (std::filesystem::exists(executablePath / "assets")) {
+                return (executablePath / relativePath).string();
+            }
+        }
+    }
+    
+    // Last resort: try common project locations
+    std::vector<std::string> commonPaths = {
+        "/Users/filipstupar/Documents/OrtosII",
+        "./",
+        "../",
+        "../../",
+        "../../../"
+    };
+    
+    for (const auto& path : commonPaths) {
+        std::filesystem::path testPath = std::filesystem::absolute(path);
+        if (std::filesystem::exists(testPath / "assets")) {
+            return (testPath / relativePath).string();
+        }
+    }
+    
+    // If we can't find the assets directory, return the original path
+    // This will cause an error, but it's better than crashing
+    spdlog::warn("Could not find assets directory, using relative path: {}", relativePath);
+    return relativePath;
+}
 
 enum class GameState {
     MENU,
@@ -75,7 +170,7 @@ std::vector<SaveSlot> saveSlots(MAX_SAVE_SLOTS);
 void initializeSaveSlots() {
     for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
         saveSlots[i].slotNumber = i + 1;
-        saveSlots[i].filename = "saves/savegame_slot" + std::to_string(i + 1) + ".json";
+        saveSlots[i].filename = getAssetPath("saves/savegame_slot" + std::to_string(i + 1) + ".json");
         saveSlots[i].exists = false;
         saveSlots[i].saveTime = "";
     }
@@ -215,8 +310,8 @@ void loadGameState(const SaveData& saveData, Player*& player, std::vector<Enemy*
     
     // Load player textures
     stbi_set_flip_vertically_on_load(true);
-    player->loadTexture("assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
-    player->loadIdleTexture("assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
+    player->loadTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
+    player->loadIdleTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
     stbi_set_flip_vertically_on_load(false);
     
     // Move player to saved position
@@ -259,13 +354,13 @@ void loadGameState(const SaveData& saveData, Player*& player, std::vector<Enemy*
         // Load appropriate textures based on enemy type
         stbi_set_flip_vertically_on_load(true);
         if (enemyType == EnemyType::FlyingEye) {
-            enemy->loadTexture("assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
-            enemy->loadHitTexture("assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
-            enemy->loadDeathTexture("assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4);
+            enemy->loadTexture(getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
+            enemy->loadHitTexture(getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
+            enemy->loadDeathTexture(getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4);
         } else if (enemyType == EnemyType::Shroom) {
-            enemy->loadTexture("assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
-            enemy->loadHitTexture("assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
-            enemy->loadDeathTexture("assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4);
+            enemy->loadTexture(getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
+            enemy->loadHitTexture(getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
+            enemy->loadDeathTexture(getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4);
         }
         stbi_set_flip_vertically_on_load(false);
         
@@ -329,19 +424,19 @@ int main() {
     glEnable(GL_TEXTURE_2D); 
 
     // Initialize UI system with FreeType
-    if (!UI::init("assets/fonts/pixel.ttf")) {
+    if (!UI::init(getAssetPath("assets/fonts/pixel.ttf"))) {
         spdlog::error("Failed to initialize UI system");
         glfwTerminate();
         return -1;
     }
 
     // Load title screen background texture
-    if (!UI::loadTitleScreenTexture("assets/screens/titlescreen.png")) {
+    if (!UI::loadTitleScreenTexture(getAssetPath("assets/screens/titlescreen.png"))) {
         spdlog::warn("Failed to load title screen texture, will use black background");
     }
 
     // Load death screen background texture
-    if (!UI::loadDeathScreenTexture("assets/screens/deathscreen.png")) {
+    if (!UI::loadDeathScreenTexture(getAssetPath("assets/screens/deathscreen.png"))) {
         spdlog::warn("Failed to load death screen texture, will use black background");
     }
 
@@ -367,7 +462,7 @@ int main() {
 
     // Load UI sound effects
     spdlog::info("Attempting to load UI sound effects...");
-    if (!uiAudioManager.loadUISound("button", "assets/sounds/button.wav")) {
+    if (!uiAudioManager.loadUISound("button", getAssetPath("assets/sounds/button.wav"))) {
         spdlog::warn("Failed to load button sound");
     } else {
         spdlog::info("Successfully loaded button sound");
@@ -375,7 +470,7 @@ int main() {
 
     // Load intro music for title screen
     spdlog::info("Attempting to load intro music...");
-    if (!audioManager.loadMusic("intro", "assets/sounds/intro.wav")) {
+    if (!audioManager.loadMusic("intro", getAssetPath("assets/sounds/intro.wav"))) {
         spdlog::warn("Failed to load intro music");
     } else {
         spdlog::info("Successfully loaded intro music");
@@ -383,7 +478,7 @@ int main() {
 
     // Load background music for gameplay
     spdlog::info("Attempting to load background music...");
-    if (!audioManager.loadMusic("background", "assets/sounds/defaultSong.wav")) {
+    if (!audioManager.loadMusic("background", getAssetPath("assets/sounds/defaultSong.wav"))) {
         spdlog::warn("Failed to load background music");
     } else {
         spdlog::info("Successfully loaded background music");
@@ -414,8 +509,8 @@ int main() {
     std::vector<std::string> saveSlotInfo(3, "Empty");
     bool loadSlotFromMainMenu = false;
     // Level management
-    std::string currentLevelPath = "assets/maps/test.json";
-    std::string nextLevelPath = "assets/maps/final.json";
+    std::string currentLevelPath = getAssetPath("assets/maps/test.json");
+    std::string nextLevelPath = getAssetPath("assets/maps/final.json");
     float levelTransitionCooldown = 0.0f;
     
     // Input debouncing
@@ -574,19 +669,19 @@ int main() {
                                 // Initialize all game objects properly
                                 player = new Player();
                                 stbi_set_flip_vertically_on_load(true);
-                                player->loadTexture("assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
-                                player->loadIdleTexture("assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
+                                player->loadTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
+                                player->loadIdleTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
                                 stbi_set_flip_vertically_on_load(false);
                                 
                                 inputHandler = new InputHandler();
                                 tilemap = new Tilemap();
-                                if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                                if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                                     spdlog::error("Failed to load tileset texture");
                                     return -1;
                                 }
                                 
                                 // Load projectile texture
-                                Projectile::loadProjectileTexture("assets/graphic/projectiles/green_projectiles.png");
+                                Projectile::loadProjectileTexture(getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
                                 
                                 gameInitialized = true;
                             }
@@ -598,15 +693,15 @@ int main() {
                                 delete tilemap;
                             }
                             tilemap = new Tilemap();
-                            if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                            if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                                 spdlog::error("Failed to load tileset texture");
                                 return -1;
                             }
                             if (!tilemap->loadFromJSON(currentLevelPath)) {
                                 spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
                                 // Fallback to default level
-                                tilemap->loadFromJSON("assets/levels/level1.json");
-                                currentLevelPath = "assets/levels/level1.json";
+                                tilemap->loadFromJSON(getAssetPath("assets/levels/level1.json"));
+                                currentLevelPath = getAssetPath("assets/levels/level1.json");
                             }
                             
                             // Set up projection to match tilemap size
@@ -658,32 +753,32 @@ int main() {
                 
                 player = new Player();
                 stbi_set_flip_vertically_on_load(true);
-                player->loadTexture("assets/graphic/enemies/vampire/Vampire_Walk.png", 64, 64, 4);
-                player->loadIdleTexture("assets/graphic/enemies/vampire/Vampire_Idle.png", 64, 64, 2);
+                player->loadTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
+                player->loadIdleTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
                 stbi_set_flip_vertically_on_load(false);
                 
                 // Create enemies
                 // Flying eye enemy
                 Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                 stbi_set_flip_vertically_on_load(true);
-                flyingEye->loadTexture("assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
-                flyingEye->loadHitTexture("assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
-                flyingEye->loadDeathTexture("assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4); // NEW
+                flyingEye->loadTexture(getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
+                flyingEye->loadHitTexture(getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
+                flyingEye->loadDeathTexture(getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(flyingEye);
                 
                 // Shroom enemy
                 Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                 stbi_set_flip_vertically_on_load(true);
-                shroom->loadTexture("assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
-                shroom->loadHitTexture("assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
-                shroom->loadDeathTexture("assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4); // NEW
+                shroom->loadTexture(getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
+                shroom->loadHitTexture(getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
+                shroom->loadDeathTexture(getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(shroom);
                 
                 inputHandler = new InputHandler();
                 tilemap = new Tilemap();
-                if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                     spdlog::error("Failed to load tileset texture");
                     return -1;
                 }
@@ -702,13 +797,13 @@ int main() {
                 glLoadIdentity();
 
                 // Load projectile texture
-                Projectile::loadProjectileTexture("assets/graphic/projectiles/green_projectiles.png");
+                Projectile::loadProjectileTexture(getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
                 
                 gameInitialized = true;
                 spdlog::info("Game initialized successfully");
                 
                 // Load sound effects (only load what's available)
-                if (!audioManager.loadSound("intro", "assets/sounds/intro.wav")) {
+                if (!audioManager.loadSound("intro", getAssetPath("assets/sounds/intro.wav"))) {
                     spdlog::warn("Failed to load intro sound");
                 }
             }
@@ -764,18 +859,18 @@ int main() {
                     {
                         Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                         stbi_set_flip_vertically_on_load(true);
-                        flyingEye->loadTexture("assets/graphic/enemies/flying_eye/flgyingeye.png", 150, 150, 8);
-                        flyingEye->loadHitTexture("assets/graphic/enemies/flying_eye/Hit_eye.png", 150, 150, 4);
-                        flyingEye->loadDeathTexture("assets/graphic/enemies/flying_eye/Death_eye.png", 150, 150, 4);
+                        flyingEye->loadTexture(getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
+                        flyingEye->loadHitTexture(getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
+                        flyingEye->loadDeathTexture(getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4);
                         stbi_set_flip_vertically_on_load(false);
                         enemies.push_back(flyingEye);
                     }
                     {
                         Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                         stbi_set_flip_vertically_on_load(true);
-                        shroom->loadTexture("assets/graphic/enemies/shroom/shroom.png", 150, 150, 8);
-                        shroom->loadHitTexture("assets/graphic/enemies/shroom/Hit_shroom.png", 150, 150, 4);
-                        shroom->loadDeathTexture("assets/graphic/enemies/shroom/Death_shroom.png", 150, 150, 4);
+                        shroom->loadTexture(getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
+                        shroom->loadHitTexture(getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
+                        shroom->loadDeathTexture(getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4);
                         stbi_set_flip_vertically_on_load(false);
                         enemies.push_back(shroom);
                     }
@@ -1349,15 +1444,15 @@ int main() {
                             delete tilemap;
                         }
                         tilemap = new Tilemap();
-                        if (!tilemap->loadTilesetTexture("assets/graphic/tileset/tileset.png", 16, 16)) {
+                        if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                             spdlog::error("Failed to load tileset texture");
                             return -1;
                         }
                         if (!tilemap->loadFromJSON(currentLevelPath)) {
                             spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
                             // Fallback to default level
-                            tilemap->loadFromJSON("assets/levels/level1.json");
-                            currentLevelPath = "assets/levels/level1.json";
+                            tilemap->loadFromJSON(getAssetPath("assets/levels/level1.json"));
+                            currentLevelPath = getAssetPath("assets/levels/level1.json");
                         }
                         
                         // Set up projection to match tilemap size
