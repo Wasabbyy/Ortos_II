@@ -13,6 +13,7 @@
 #include "save/SaveSlot.h"
 #include "save/SaveManager.h"
 #include "save/GameStateManager.h"
+#include "collision/CollisionManager.h"
 #include <iostream>
 #include <stb_image.h>
 #include <spdlog/spdlog.h>
@@ -145,6 +146,9 @@ int main() {
     // Initialize save manager
     SaveManager saveManager(getAssetPath("saves/"));
     saveManager.initialize();
+    
+    // Initialize collision manager
+    CollisionManager collisionManager;
     if (!glfwInit()) {
         spdlog::error("Failed to initialize GLFW");
         return -1;
@@ -659,116 +663,11 @@ int main() {
                 enemy->draw();
             }
             
-            // Player-Enemy collision detection (no pushing - just stop movement)
-            bool playerCollidingWithEnemy = false; // Track if player is colliding with any enemy
+            // Handle player-enemy collisions
+            collisionManager.handlePlayerEnemyCollisions(player, enemies);
             
-            for (auto& enemy : enemies) {
-                if (enemy->isAlive()) {
-                    // Quick distance check first to avoid expensive collision calculations
-                    float dx = player->getX() - enemy->getX();
-                    float dy = player->getY() - enemy->getY();
-                    float distanceSquared = dx * dx + dy * dy;
-                    float maxDistance = 64.0f; // Only check collision if within reasonable distance
-                    
-                    if (distanceSquared < maxDistance * maxDistance) {
-                        // Check if player and enemy bounding boxes overlap
-                        bool collision = !(player->getRight() < enemy->getLeft() || 
-                                         player->getLeft() > enemy->getRight() || 
-                                         player->getBottom() < enemy->getTop() || 
-                                         player->getTop() > enemy->getBottom());
-                        
-                        if (collision) {
-                            playerCollidingWithEnemy = true; // Mark that player is colliding
-                            
-                            // Calculate overlap amounts
-                            float overlapLeft = player->getRight() - enemy->getLeft();
-                            float overlapRight = enemy->getRight() - player->getLeft();
-                            float overlapTop = player->getBottom() - enemy->getTop();
-                            float overlapBottom = enemy->getBottom() - player->getTop();
-                            
-                            // Find the minimum overlap to determine separation direction
-                            float minOverlap = std::min({overlapLeft, overlapRight, overlapTop, overlapBottom});
-                            
-                            // Separate entities by moving them apart (no pushing, just separation)
-                            float separationAmount = minOverlap * 0.5f; // Half overlap to each entity
-                            if (minOverlap == overlapLeft) {
-                                // Separate horizontally - move player left, enemy right
-                                player->move(-separationAmount, 0);
-                                enemy->move(separationAmount, 0);
-                            } else if (minOverlap == overlapRight) {
-                                // Separate horizontally - move player right, enemy left
-                                player->move(separationAmount, 0);
-                                enemy->move(-separationAmount, 0);
-                            } else if (minOverlap == overlapTop) {
-                                // Separate vertically - move player up, enemy down
-                                player->move(0, -separationAmount);
-                                enemy->move(0, separationAmount);
-                            } else if (minOverlap == overlapBottom) {
-                                // Separate vertically - move player down, enemy up
-                                player->move(0, separationAmount);
-                                enemy->move(0, -separationAmount);
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Update player collision state
-            player->setCollidingWithEnemy(playerCollidingWithEnemy);
-            
-            // Enemy-to-Enemy collision detection (no pushing - just separation)
-            for (size_t i = 0; i < enemies.size(); ++i) {
-                if (!enemies[i]->isAlive()) continue;
-                
-                for (size_t j = i + 1; j < enemies.size(); ++j) {
-                    if (!enemies[j]->isAlive()) continue;
-                    
-                    // Quick distance check first
-                    float dx = enemies[i]->getX() - enemies[j]->getX();
-                    float dy = enemies[i]->getY() - enemies[j]->getY();
-                    float distanceSquared = dx * dx + dy * dy;
-                    float maxDistance = 64.0f;
-                    
-                    if (distanceSquared < maxDistance * maxDistance) {
-                        // Check if enemy bounding boxes overlap
-                        bool collision = !(enemies[i]->getRight() < enemies[j]->getLeft() || 
-                                         enemies[i]->getLeft() > enemies[j]->getRight() || 
-                                         enemies[i]->getBottom() < enemies[j]->getTop() || 
-                                         enemies[i]->getTop() > enemies[j]->getBottom());
-                        
-                        if (collision) {
-                            // Calculate overlap amounts
-                            float overlapLeft = enemies[i]->getRight() - enemies[j]->getLeft();
-                            float overlapRight = enemies[j]->getRight() - enemies[i]->getLeft();
-                            float overlapTop = enemies[i]->getBottom() - enemies[j]->getTop();
-                            float overlapBottom = enemies[j]->getBottom() - enemies[i]->getTop();
-                            
-                            // Find the minimum overlap to determine separation direction
-                            float minOverlap = std::min({overlapLeft, overlapRight, overlapTop, overlapBottom});
-                            
-                            // Separate enemies by moving them apart (no pushing, just separation)
-                            float separationAmount = minOverlap * 0.25f; // Quarter overlap to each enemy
-                            if (minOverlap == overlapLeft) {
-                                // Separate enemies horizontally
-                                enemies[i]->move(-separationAmount, 0);
-                                enemies[j]->move(separationAmount, 0);
-                            } else if (minOverlap == overlapRight) {
-                                // Separate enemies horizontally
-                                enemies[i]->move(separationAmount, 0);
-                                enemies[j]->move(-separationAmount, 0);
-                            } else if (minOverlap == overlapTop) {
-                                // Separate enemies vertically
-                                enemies[i]->move(0, -separationAmount);
-                                enemies[j]->move(0, separationAmount);
-                            } else if (minOverlap == overlapBottom) {
-                                // Separate enemies vertically
-                                enemies[i]->move(0, separationAmount);
-                                enemies[j]->move(0, -separationAmount);
-                            }
-                        }
-                    }
-                }
-            }
+            // Handle enemy-to-enemy collisions
+            collisionManager.handleEnemyEnemyCollisions(enemies);
             
             // Enemy shooting
             for (auto& enemy : enemies) {
@@ -778,56 +677,19 @@ int main() {
             // Update and draw projectiles
             for (auto& projectile : playerProjectiles) {
                 projectile.update(deltaTime);
-                
-                // Check for wall collision
-                if (projectile.checkWallCollision(*tilemap)) {
-                    projectile.setActive(false);
-                    spdlog::info("Player projectile destroyed by wall collision");
-                }
-                
                 projectile.draw();
             }
             
             for (auto& projectile : enemyProjectiles) {
                 projectile.update(deltaTime);
-                
-                // Check for wall collision
-                if (projectile.checkWallCollision(*tilemap)) {
-                    projectile.setActive(false);
-                    spdlog::info("Enemy projectile destroyed by wall collision");
-                }
-                
                 projectile.draw();
             }
             
-            // Collision detection
-            // Player projectiles vs Enemy
-            for (auto& projectile : playerProjectiles) {
-                for (auto& enemy : enemies) {
-                    if (projectile.isActive() && enemy->isAlive()) {
-                        if (projectile.checkCollision(enemy->getX(), enemy->getY(), 8.0f)) {
-                            projectile.setActive(false);
-                            enemy->takeDamage(25, player);  // Deal 25 damage and pass player for XP reward
-                            // audioManager.playSound("enemy_hit", 0.8f);
-                            spdlog::info("Enemy hit by player projectile! Enemy HP: {}/{}", 
-                                        enemy->getCurrentHealth(), enemy->getMaxHealth());
-                        }
-                    }
-                }
-            }
+            // Handle projectile-wall collisions
+            collisionManager.handleProjectileWallCollisions(playerProjectiles, enemyProjectiles, *tilemap);
             
-            // Enemy projectiles vs Player
-            for (auto& projectile : enemyProjectiles) {
-                if (projectile.isActive()) {
-                    if (projectile.checkCollision(player->getX(), player->getY(), 8.0f)) {
-                        projectile.setActive(false);
-                        player->takeDamage(15);  // Deal 15 damage
-                        // audioManager.playSound("player_hit", 0.6f);
-                        spdlog::info("Player hit by enemy projectile! Player HP: {}/{}", 
-                                    player->getCurrentHealth(), player->getMaxHealth());
-                    }
-                }
-            }
+            // Handle projectile-entity collisions
+            collisionManager.handleProjectileCollisions(playerProjectiles, enemyProjectiles, player, enemies);
             
             // Blood effect creation when enemy dies
             // Play blood effect and remove enemies after death delay

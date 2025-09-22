@@ -51,6 +51,7 @@ set(SOURCES
     src/save/SaveSlot.cpp
     src/save/SaveManager.cpp
     src/save/GameStateManager.cpp
+    src/collision/CollisionManager.cpp
     src/external/tinyxml2.cpp
     src/external/glad.c
     src/external/stb_image.cpp
