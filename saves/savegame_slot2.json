@@ -1,29 +1,38 @@
 {
     "enemies": [
         {
-            "alive": false,
-            "health": 0,
+            "alive": true,
+            "health": 150,
             "maxHealth": 150,
-            "state": 4,
+            "state": 0,
             "type": 3,
-            "x": 126.41586303710938,
-            "y": 216.36859130859375
+            "x": 345.8591613769531,
+            "y": 138.92970275878906
+        },
+        {
+            "alive": true,
+            "health": 200,
+            "maxHealth": 200,
+            "state": 2,
+            "type": 4,
+            "x": 226.35784912109375,
+            "y": 153.27993774414063
         }
     ],
     "enemyProjectiles": [],
     "gameState": {
         "currentLevelPath": "/Users/filipstupar/Documents/OrtosII/assets/maps/test.json",
-        "levelTransitionCooldown": 0.0,
-        "saveTime": "Mon Sep 22 13:24:00 2025"
+        "levelTransitionCooldown": -9.918212890625e-05,
+        "saveTime": "Mon Sep 22 13:46:56 2025"
     },
     "player": {
-        "health": 85,
+        "health": 100,
         "level": 1,
         "maxHealth": 100,
         "maxXP": 100,
-        "x": 50.885108947753906,
+        "x": 155.65792846679688,
         "xp": 50,
-        "y": 173.1748809814453
+        "y": 72.07551574707031
     },
     "playerProjectiles": []
 }

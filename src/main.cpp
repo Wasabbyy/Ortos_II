@@ -9,21 +9,20 @@
 #include "input/InputHandler.h"
 #include "map/TileMap.h"
 #include "ui/UI.h"
+#include "save/SaveData.h"
+#include "save/SaveSlot.h"
+#include "save/SaveManager.h"
+#include "save/GameStateManager.h"
 #include <iostream>
-#include "nlohmann/json.hpp"
 #include <stb_image.h>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <filesystem>
 #include <algorithm>
-#include <fstream>
-#include <chrono>
-#include <ctime>
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
 #endif
-using json = nlohmann::json;
 
 // Function to get the correct asset path regardless of where the executable is run from
 std::string getAssetPath(const std::string& relativePath) {
@@ -124,259 +123,6 @@ enum class GameState {
     LOAD_SLOT_SELECTION
 };
 
-// Save data structure
-struct SaveData {
-    // Player data
-    float playerX;
-    float playerY;
-    int playerHealth;
-    int playerMaxHealth;
-    int playerXP;
-    int playerMaxXP;
-    int playerLevel;
-    
-    // Enemy data
-    std::vector<json> enemies;
-    
-    // Projectile data
-    std::vector<json> playerProjectiles;
-    std::vector<json> enemyProjectiles;
-    
-    // Game state
-    std::string currentLevelPath;
-    float levelTransitionCooldown;
-    
-    // Timestamp
-    std::string saveTime;
-};
-
-// Save slot information
-struct SaveSlot {
-    int slotNumber;
-    std::string filename;
-    std::string saveTime;
-    bool exists;
-    SaveData data;
-};
-
-// Multiple save slots system
-const int MAX_SAVE_SLOTS = 3;
-std::vector<SaveSlot> saveSlots(MAX_SAVE_SLOTS);
-
-
-// Initialize save slots
-void initializeSaveSlots() {
-    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
-        saveSlots[i].slotNumber = i + 1;
-        saveSlots[i].filename = getAssetPath("saves/savegame_slot" + std::to_string(i + 1) + ".json");
-        saveSlots[i].exists = false;
-        saveSlots[i].saveTime = "";
-    }
-}
-
-// Check which save slots exist
-void updateSaveSlots() {
-    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
-        std::ifstream file(saveSlots[i].filename);
-        saveSlots[i].exists = file.good();
-        file.close();
-        
-        if (saveSlots[i].exists) {
-            // Load save time from file
-            try {
-                std::ifstream inFile(saveSlots[i].filename);
-                json saveJson;
-                inFile >> saveJson;
-                inFile.close();
-                saveSlots[i].saveTime = saveJson["gameState"]["saveTime"];
-            } catch (...) {
-                saveSlots[i].saveTime = "Unknown";
-            }
-        }
-    }
-}
-
-// Get the most recent save slot (by save time)
-int getMostRecentSaveSlot() {
-    int mostRecentSlot = -1;
-    std::string mostRecentTime = "";
-    
-    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
-        if (saveSlots[i].exists && saveSlots[i].saveTime > mostRecentTime) {
-            mostRecentTime = saveSlots[i].saveTime;
-            mostRecentSlot = i;
-        }
-    }
-    
-    return mostRecentSlot;
-}
-
-
-// Save game function
-bool saveGame(const SaveData& saveData, const std::string& filename = "savegame.json") {
-    try {
-        json saveJson;
-        saveJson["player"]["x"] = saveData.playerX;
-        saveJson["player"]["y"] = saveData.playerY;
-        saveJson["player"]["health"] = saveData.playerHealth;
-        saveJson["player"]["maxHealth"] = saveData.playerMaxHealth;
-        saveJson["player"]["xp"] = saveData.playerXP;
-        saveJson["player"]["maxXP"] = saveData.playerMaxXP;
-        saveJson["player"]["level"] = saveData.playerLevel;
-        
-        saveJson["enemies"] = saveData.enemies;
-        saveJson["playerProjectiles"] = saveData.playerProjectiles;
-        saveJson["enemyProjectiles"] = saveData.enemyProjectiles;
-        
-        saveJson["gameState"]["currentLevelPath"] = saveData.currentLevelPath;
-        saveJson["gameState"]["levelTransitionCooldown"] = saveData.levelTransitionCooldown;
-        saveJson["gameState"]["saveTime"] = saveData.saveTime;
-        
-        std::ofstream file(filename);
-        if (!file.is_open()) {
-            spdlog::error("Failed to open save file: {}", filename);
-            return false;
-        }
-        
-        file << saveJson.dump(4); // Pretty print with 4 spaces
-        file.close();
-        
-        spdlog::info("Game saved successfully to: {}", filename);
-        return true;
-    } catch (const std::exception& e) {
-        spdlog::error("Failed to save game: {}", e.what());
-        return false;
-    }
-}
-
-// Load game function
-bool loadGame(SaveData& saveData, const std::string& filename = "savegame.json") {
-    try {
-        std::ifstream file(filename);
-        if (!file.is_open()) {
-            spdlog::error("Save file not found: {}", filename);
-            return false;
-        }
-        
-        json saveJson;
-        file >> saveJson;
-        file.close();
-        
-        // Load player data
-        saveData.playerX = saveJson["player"]["x"];
-        saveData.playerY = saveJson["player"]["y"];
-        saveData.playerHealth = saveJson["player"]["health"];
-        saveData.playerMaxHealth = saveJson["player"]["maxHealth"];
-        saveData.playerXP = saveJson["player"]["xp"];
-        saveData.playerMaxXP = saveJson["player"]["maxXP"];
-        saveData.playerLevel = saveJson["player"]["level"];
-        
-        // Load enemy data
-        saveData.enemies = saveJson["enemies"];
-        saveData.playerProjectiles = saveJson["playerProjectiles"];
-        saveData.enemyProjectiles = saveJson["enemyProjectiles"];
-        
-        // Load game state
-        saveData.currentLevelPath = saveJson["gameState"]["currentLevelPath"];
-        saveData.levelTransitionCooldown = saveJson["gameState"]["levelTransitionCooldown"];
-        saveData.saveTime = saveJson["gameState"]["saveTime"];
-        
-        spdlog::info("Game loaded successfully from: {}", filename);
-        return true;
-    } catch (const std::exception& e) {
-        spdlog::error("Failed to load game: {}", e.what());
-        return false;
-    }
-}
-
-// Check if save file exists
-bool saveFileExists(const std::string& filename = "savegame.json") {
-    std::ifstream file(filename);
-    return file.good();
-}
-
-// Load game state from save data
-void loadGameState(const SaveData& saveData, Player*& player, std::vector<Enemy*>& enemies, 
-                   std::vector<Projectile>& playerProjectiles, std::vector<Projectile>& enemyProjectiles,
-                   std::string& currentLevelPath, float& levelTransitionCooldown) {
-    if (!player) return;
-    
-    // Restore player state - we need to create a new player with the saved state
-    // since the Player class doesn't have setter methods
-    delete player;
-    player = new Player();
-    
-    // Load player textures
-    stbi_set_flip_vertically_on_load(true);
-    player->loadTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
-    player->loadIdleTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
-    stbi_set_flip_vertically_on_load(false);
-    
-    // Move player to saved position
-    player->move(saveData.playerX - player->getX(), saveData.playerY - player->getY());
-    
-    // Restore health by healing/damaging as needed
-    int healthDiff = saveData.playerHealth - player->getCurrentHealth();
-    if (healthDiff > 0) {
-        player->heal(healthDiff);
-    } else if (healthDiff < 0) {
-        player->takeDamage(-healthDiff);
-    }
-    
-    // Restore XP by gaining XP
-    int xpDiff = saveData.playerXP - player->getCurrentXP();
-    if (xpDiff > 0) {
-        player->gainXP(xpDiff);
-    }
-    
-    // Restore game state
-    currentLevelPath = saveData.currentLevelPath;
-    levelTransitionCooldown = saveData.levelTransitionCooldown;
-    
-    // Clear existing projectiles
-    playerProjectiles.clear();
-    enemyProjectiles.clear();
-    
-    // Clear existing enemies
-    for (auto& enemy : enemies) {
-        delete enemy;
-    }
-    enemies.clear();
-    
-    // Restore enemies from save data
-    for (const auto& enemyData : saveData.enemies) {
-        // Create enemy based on saved data
-        EnemyType enemyType = static_cast<EnemyType>(enemyData["type"]);
-        Enemy* enemy = new Enemy(enemyData["x"], enemyData["y"], enemyType);
-        
-        // Load appropriate textures based on enemy type
-        stbi_set_flip_vertically_on_load(true);
-        if (enemyType == EnemyType::FlyingEye) {
-            enemy->loadTexture(getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
-            enemy->loadHitTexture(getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
-            enemy->loadDeathTexture(getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4);
-        } else if (enemyType == EnemyType::Shroom) {
-            enemy->loadTexture(getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
-            enemy->loadHitTexture(getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
-            enemy->loadDeathTexture(getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4);
-        }
-        stbi_set_flip_vertically_on_load(false);
-        
-        // Restore enemy state
-        enemy->setAlive(enemyData["alive"]);
-        // Restore health by taking damage if needed
-        int maxHealth = enemyData["maxHealth"].get<int>();
-        int currentHealth = enemyData["health"].get<int>();
-        int healthDiff = maxHealth - currentHealth;
-        if (healthDiff > 0) {
-            enemy->takeDamage(healthDiff);
-        }
-        
-        enemies.push_back(enemy);
-    }
-    
-    spdlog::info("Game state loaded successfully");
-}
 
 int main() {
     // Initialize logger (console + file). Truncate file on each start.
@@ -396,9 +142,9 @@ int main() {
         spdlog::warn("Failed to initialize file logger: {}", e.what());
     }
     
-    // Initialize save slots system
-    initializeSaveSlots();
-    updateSaveSlots();
+    // Initialize save manager
+    SaveManager saveManager(getAssetPath("saves/"));
+    saveManager.initialize();
     if (!glfwInit()) {
         spdlog::error("Failed to initialize GLFW");
         return -1;
@@ -504,7 +250,7 @@ int main() {
     int selectedSaveSlot = 0;
     bool saveSlotMenuInitialized = false;
     bool loadSlotMenuInitialized = false;
-    std::vector<std::string> saveSlotInfo(3, "Empty");
+    std::vector<std::string> saveSlotInfo;
     bool loadSlotFromMainMenu = false;
     // Level management
     std::string currentLevelPath = getAssetPath("assets/maps/test.json");
@@ -561,14 +307,8 @@ int main() {
 
         if (currentState == GameState::MENU) {
             // Update save slots and check if any save files exist
-            updateSaveSlots();
-            hasSaveFile = false;
-            for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
-                if (saveSlots[i].exists) {
-                    hasSaveFile = true;
-                    break;
-                }
-            }
+            saveManager.updateSaveSlots();
+            hasSaveFile = saveManager.hasAnySave();
             
             // Start intro music if not already started
             if (!introMusicStarted) {
@@ -615,15 +355,8 @@ int main() {
                         currentState = GameState::PLAYING;
                     } else if (selectedMenuOption == 1) {
                         // Load game - go to load slot selection
-                        updateSaveSlots();
-                        // Update save slot info for display
-                        for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
-                            if (saveSlots[i].exists) {
-                                saveSlotInfo[i] = saveSlots[i].saveTime;
-                            } else {
-                                saveSlotInfo[i] = "Empty";
-                            }
-                        }
+                        saveManager.updateSaveSlots();
+                        saveSlotInfo = saveManager.getSaveSlotInfo();
                         selectedSaveSlot = 0;
                         loadSlotMenuInitialized = true;
                         loadSlotFromMainMenu = true;
@@ -661,7 +394,8 @@ int main() {
                     // Load game if continuing from save
                     if (hasSaveFile && (selectedMenuOption == 1 || selectedMenuOption == 2)) {
                         SaveData saveData;
-                        if (loadGame(saveData)) {
+                        int mostRecentSlot = saveManager.getMostRecentSaveSlot();
+                        if (mostRecentSlot >= 0 && saveManager.loadGame(saveData, mostRecentSlot)) {
                             // Initialize game objects first if not already done
                             if (!gameInitialized) {
                                 // Initialize all game objects properly
@@ -684,7 +418,9 @@ int main() {
                                 gameInitialized = true;
                             }
                             // Load the game state
-                            loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
+                            spdlog::info("=== MAIN: About to call GameStateManager::loadGameState (from main menu) ===");
+                            GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, getAssetPath(""));
+                            spdlog::info("=== MAIN: GameStateManager::loadGameState completed (from main menu) ===");
                             
                             // Reload the tilemap for the saved level
                             if (tilemap) {
@@ -729,6 +465,7 @@ int main() {
         else if (currentState == GameState::PLAYING) {
             // Initialize game objects if not already done
             if (!gameInitialized) {
+                spdlog::info("Initializing new game objects...");
                 // Clean up any existing game objects first
                 if (player) {
                     delete player;
@@ -749,16 +486,20 @@ int main() {
                 playerProjectiles.clear();
                 enemyProjectiles.clear();
                 
+                spdlog::info("Creating player...");
                 player = new Player();
                 stbi_set_flip_vertically_on_load(true);
+                spdlog::info("Loading player textures...");
                 player->loadTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
                 player->loadIdleTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
                 stbi_set_flip_vertically_on_load(false);
                 
                 // Create enemies
+                spdlog::info("Creating enemies...");
                 // Flying eye enemy
                 Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                 stbi_set_flip_vertically_on_load(true);
+                spdlog::info("Loading flying eye textures...");
                 flyingEye->loadTexture(getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
                 flyingEye->loadHitTexture(getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
                 flyingEye->loadDeathTexture(getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4); // NEW
@@ -768,18 +509,22 @@ int main() {
                 // Shroom enemy
                 Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                 stbi_set_flip_vertically_on_load(true);
+                spdlog::info("Loading shroom textures...");
                 shroom->loadTexture(getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
                 shroom->loadHitTexture(getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
                 shroom->loadDeathTexture(getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(shroom);
                 
+                spdlog::info("Creating input handler and tilemap...");
                 inputHandler = new InputHandler();
                 tilemap = new Tilemap();
+                spdlog::info("Loading tileset texture...");
                 if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                     spdlog::error("Failed to load tileset texture");
                     return -1;
                 }
+                spdlog::info("Loading map from JSON: {}", currentLevelPath);
                 if (!tilemap->loadFromJSON(currentLevelPath)) {
                     spdlog::error("Failed to load map from JSON.");
                     return -1;
@@ -795,6 +540,7 @@ int main() {
                 glLoadIdentity();
 
                 // Load projectile texture
+                spdlog::info("Loading projectile textures...");
                 Projectile::loadProjectileTexture(getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
                 
                 gameInitialized = true;
@@ -1196,15 +942,8 @@ int main() {
                     spdlog::info("Resuming game");
                 } else if (selectedPauseButton == 1) {
                     // Save game - go to save slot selection
-                    updateSaveSlots();
-                    // Update save slot info for display
-                    for (int i = 0; i < MAX_SAVE_SLOTS; i++) {
-                        if (saveSlots[i].exists) {
-                            saveSlotInfo[i] = saveSlots[i].saveTime;
-                        } else {
-                            saveSlotInfo[i] = "Empty";
-                        }
-                    }
+                    saveManager.updateSaveSlots();
+                    saveSlotInfo = saveManager.getSaveSlotInfo();
                     selectedSaveSlot = 0;
                     saveSlotMenuInitialized = true;
                     currentState = GameState::SAVE_SLOT_SELECTION;
@@ -1365,38 +1104,10 @@ int main() {
                 if (selectedSaveSlot < 3) {
                     // Save to selected slot
                     if (gameInitialized && player) {
-                        SaveData saveData;
-                        saveData.playerX = player->getX();
-                        saveData.playerY = player->getY();
-                        saveData.playerHealth = player->getCurrentHealth();
-                        saveData.playerMaxHealth = player->getMaxHealth();
-                        saveData.playerXP = player->getCurrentXP();
-                        saveData.playerMaxXP = player->getMaxXP();
-                        saveData.playerLevel = player->getLevel();
-                        saveData.currentLevelPath = currentLevelPath;
-                        saveData.levelTransitionCooldown = levelTransitionCooldown;
+                        SaveData saveData = GameStateManager::createSaveData(player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
                         
-                        // Save current enemies
-                        for (const auto& enemy : enemies) {
-                            json enemyData;
-                            enemyData["x"] = enemy->getX();
-                            enemyData["y"] = enemy->getY();
-                            enemyData["health"] = enemy->getCurrentHealth();
-                            enemyData["maxHealth"] = enemy->getMaxHealth();
-                            enemyData["alive"] = enemy->isAlive();
-                            enemyData["type"] = static_cast<int>(enemy->getType());
-                            enemyData["state"] = static_cast<int>(enemy->getState());
-                            saveData.enemies.push_back(enemyData);
-                        }
-                        
-                        // Get current time
-                        auto now = std::chrono::system_clock::now();
-                        auto time_t = std::chrono::system_clock::to_time_t(now);
-                        saveData.saveTime = std::ctime(&time_t);
-                        saveData.saveTime.pop_back(); // Remove newline
-                        
-                        if (saveGame(saveData, saveSlots[selectedSaveSlot].filename)) {
-                            updateSaveSlots();
+                        if (saveManager.saveGame(saveData, selectedSaveSlot)) {
+                            saveManager.updateSaveSlots();
                             hasSaveFile = true;
                             spdlog::info("Game saved to slot {}", selectedSaveSlot + 1);
                         } else {
@@ -1429,13 +1140,15 @@ int main() {
             }
             
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
-                if (selectedSaveSlot < 3 && saveSlots[selectedSaveSlot].exists) {
+                if (selectedSaveSlot < 3 && saveManager.getSaveSlot(selectedSaveSlot).hasSave()) {
                     // Load from selected slot
                     SaveData saveData;
-                    if (loadGame(saveData, saveSlots[selectedSaveSlot].filename)) {
+                    if (saveManager.loadGame(saveData, selectedSaveSlot)) {
                         
                         // Load the game state
-                        loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
+                        spdlog::info("=== MAIN: About to call GameStateManager::loadGameState ===");
+                        GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, getAssetPath(""));
+                        spdlog::info("=== MAIN: GameStateManager::loadGameState completed ===");
                         
                         // Reload the tilemap for the saved level
                         if (tilemap) {

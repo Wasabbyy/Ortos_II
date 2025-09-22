@@ -47,6 +47,10 @@ set(SOURCES
     src/ui/TextRenderer.cpp
     src/input/InputHandler.cpp
     src/map/TileMap.cpp
+    src/save/SaveData.cpp
+    src/save/SaveSlot.cpp
+    src/save/SaveManager.cpp
+    src/save/GameStateManager.cpp
     src/external/tinyxml2.cpp
     src/external/glad.c
     src/external/stb_image.cpp
