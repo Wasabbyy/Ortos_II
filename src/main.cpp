@@ -476,7 +476,9 @@ int main() {
                     player = nullptr;
                 }
                 for (auto& enemy : enemies) {
-                    delete enemy;
+                    if (enemy) {
+                        delete enemy;
+                    }
                 }
                 enemies.clear();
                 if (inputHandler) {
@@ -601,7 +603,9 @@ int main() {
 
                     // Respawn enemies: delete existing and recreate defaults
                     for (auto& enemy : enemies) {
-                        delete enemy;
+                        if (enemy) {
+                            delete enemy;
+                        }
                     }
                     enemies.clear();
                     {
@@ -1118,21 +1122,21 @@ int main() {
                     spdlog::info("Respawn button clicked, restarting game");
                     if (gameInitialized) {
                         delete player;
+                        player = nullptr;
                         for (auto& enemy : enemies) {
                             delete enemy;
                         }
                         enemies.clear();
                         delete inputHandler;
+                        inputHandler = nullptr;
                         delete tilemap;
+                        tilemap = nullptr;
                         gameInitialized = false;
                     }
                     playerProjectiles.clear();
                     enemyProjectiles.clear();
-                    // Clean up blood effects
-                    for (auto& bloodEffect : bloodEffects) {
-                        delete bloodEffect;
-                    }
-                    bloodEffects.clear();
+                    // Keep blood effects - don't clear them on respawn
+                    // Blood effects should persist to show battle history
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
                     audioManager.setMusicVolume(0.4f); // Set lower volume for background music
@@ -1160,21 +1164,21 @@ int main() {
                     spdlog::info("Enter pressed on Respawn, restarting game");
                     if (gameInitialized) {
                         delete player;
+                        player = nullptr;
                         for (auto& enemy : enemies) {
                             delete enemy;
                         }
                         enemies.clear();
                         delete inputHandler;
+                        inputHandler = nullptr;
                         delete tilemap;
+                        tilemap = nullptr;
                         gameInitialized = false;
                     }
                     playerProjectiles.clear();
                     enemyProjectiles.clear();
-                    // Clean up blood effects
-                    for (auto& bloodEffect : bloodEffects) {
-                        delete bloodEffect;
-                    }
-                    bloodEffects.clear();
+                    // Keep blood effects - don't clear them on respawn
+                    // Blood effects should persist to show battle history
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
                     audioManager.setMusicVolume(0.4f); // Set lower volume for background music
