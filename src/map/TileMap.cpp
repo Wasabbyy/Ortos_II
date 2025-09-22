@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 #include "external/tinyxml2.h"
 #include <spdlog/spdlog.h>
+#include <filesystem>
 using json = nlohmann::json;
 
 Tilemap::Tilemap() : textureID(0), tileWidth(0), tileHeight(0), 
@@ -66,8 +67,9 @@ bool Tilemap::loadFromJSON(const std::string& jsonPath) {
         return false;
     }
 
-    // Load tileset
-    std::string resolvedPath = "assets/maps/catacombs.tsx";
+    // Load tileset - resolve path relative to the JSON file's directory
+    std::filesystem::path jsonDir = std::filesystem::path(jsonPath).parent_path();
+    std::string resolvedPath = (jsonDir / "catacombs.tsx").string();
     if (!loadTilesetFromTSX(resolvedPath)) {
         spdlog::error("ERROR: Failed to load tileset: {}", resolvedPath);
         return false;
@@ -229,6 +231,10 @@ bool Tilemap::loadTilesetFromTSX(const std::string& tsxPath) {
     std::string imagePath = image->Attribute("source");
     spdlog::info("Found tileset image source: {}", imagePath);
 
-    // You could optionally normalize path here (TSX may use relative path)
-    return loadTilesetTexture(imagePath, tileWidth, tileHeight);
+    // Resolve image path relative to the TSX file's directory
+    std::filesystem::path tsxDir = std::filesystem::path(tsxPath).parent_path();
+    std::string resolvedImagePath = (tsxDir / imagePath).string();
+    spdlog::info("Resolved image path: {}", resolvedImagePath);
+    
+    return loadTilesetTexture(resolvedImagePath, tileWidth, tileHeight);
 }

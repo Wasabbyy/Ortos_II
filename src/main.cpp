@@ -27,35 +27,7 @@ using json = nlohmann::json;
 
 // Function to get the correct asset path regardless of where the executable is run from
 std::string getAssetPath(const std::string& relativePath) {
-    // Get the directory where the executable is located
-    std::filesystem::path exePath = std::filesystem::current_path();
-    
-    // Try to find the project root by looking for the assets directory
-    std::filesystem::path currentPath = exePath;
-    
-    // Check if we're already in the project root (assets directory exists)
-    if (std::filesystem::exists(currentPath / "assets")) {
-        return (currentPath / relativePath).string();
-    }
-    
-    // If we're in the build directory, go up one level
-    if (currentPath.filename() == "build") {
-        currentPath = currentPath.parent_path();
-        if (std::filesystem::exists(currentPath / "assets")) {
-            return (currentPath / relativePath).string();
-        }
-    }
-    
-    // Try going up directories to find the project root
-    for (int i = 0; i < 10; i++) {
-        currentPath = currentPath.parent_path();
-        if (std::filesystem::exists(currentPath / "assets")) {
-            return (currentPath / relativePath).string();
-        }
-    }
-    
-    // If we still can't find it, try to find the executable's directory
-    // This handles the case where the executable is run from anywhere
+    // First, try to get the actual executable path
     std::filesystem::path executablePath;
     
 #ifdef __APPLE__
@@ -75,15 +47,17 @@ std::string getAssetPath(const std::string& relativePath) {
     }
 #endif
     
+    // If we got the executable path, use it to find the project root
     if (!executablePath.empty()) {
-        // If executable is in build directory, go up one level
+        // If executable is in build directory, go up one level to project root
         if (executablePath.filename() == "build") {
             executablePath = executablePath.parent_path();
         }
         
         // Check if assets directory exists relative to executable
         if (std::filesystem::exists(executablePath / "assets")) {
-            return (executablePath / relativePath).string();
+            std::string result = (executablePath / relativePath).string();
+            return result;
         }
         
         // Try going up from executable directory
@@ -92,6 +66,30 @@ std::string getAssetPath(const std::string& relativePath) {
             if (std::filesystem::exists(executablePath / "assets")) {
                 return (executablePath / relativePath).string();
             }
+        }
+    }
+    
+    // Fallback: try current working directory
+    std::filesystem::path currentPath = std::filesystem::current_path();
+    
+    // Check if we're already in the project root (assets directory exists)
+    if (std::filesystem::exists(currentPath / "assets")) {
+        return (currentPath / relativePath).string();
+    }
+    
+    // If we're in the build directory, go up one level
+    if (currentPath.filename() == "build") {
+        currentPath = currentPath.parent_path();
+        if (std::filesystem::exists(currentPath / "assets")) {
+            return (currentPath / relativePath).string();
+        }
+    }
+    
+    // Try going up directories to find the project root
+    for (int i = 0; i < 10; i++) {
+        currentPath = currentPath.parent_path();
+        if (std::filesystem::exists(currentPath / "assets")) {
+            return (currentPath / relativePath).string();
         }
     }
     
@@ -627,7 +625,7 @@ int main() {
                             }
                         }
                         selectedSaveSlot = 0;
-                        loadSlotMenuInitialized = false;
+                        loadSlotMenuInitialized = true;
                         loadSlotFromMainMenu = true;
                         currentState = GameState::LOAD_SLOT_SELECTION;
                         spdlog::info("Entering load slot selection from main menu");
@@ -1208,7 +1206,7 @@ int main() {
                         }
                     }
                     selectedSaveSlot = 0;
-                    saveSlotMenuInitialized = false;
+                    saveSlotMenuInitialized = true;
                     currentState = GameState::SAVE_SLOT_SELECTION;
                     spdlog::info("Entering save slot selection");
                 } else if (selectedPauseButton == 2) {
