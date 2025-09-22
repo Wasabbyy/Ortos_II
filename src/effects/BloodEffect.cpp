@@ -3,25 +3,26 @@
 #include <stb_image.h>
 #include <spdlog/spdlog.h>
 
-BloodEffect::BloodEffect(float x, float y)
+BloodEffect::BloodEffect(float x, float y, const std::string& assetPath)
     : x(x), y(y), active(true), finished(false),
       animationTimer(0.0f), frameDuration(0.1f), currentFrame(0), totalFrames(5),
       textureWidth(0), textureHeight(0) {
-    loadBloodTextures();
-    spdlog::debug("Blood effect created at position ({}, {})", x, y);
+    spdlog::info("Blood effect constructor called at position ({}, {}) with asset path: {}", x, y, assetPath);
+    loadBloodTextures(assetPath);
+    spdlog::info("Blood effect created successfully at position ({}, {})", x, y);
 }
 
 BloodEffect::~BloodEffect() {
     cleanupTextures();
 }
 
-void BloodEffect::loadBloodTextures() {
+void BloodEffect::loadBloodTextures(const std::string& assetPath) {
     std::vector<std::string> bloodFiles = {
-        "assets/graphic/blood/blood_01.png",
-        "assets/graphic/blood/blood_02.png",
-        "assets/graphic/blood/blood_03.png",
-        "assets/graphic/blood/blood_04.png",
-        "assets/graphic/blood/blood_05.png"
+        assetPath + "assets/graphic/blood/blood_01.png",
+        assetPath + "assets/graphic/blood/blood_02.png",
+        assetPath + "assets/graphic/blood/blood_03.png",
+        assetPath + "assets/graphic/blood/blood_04.png",
+        assetPath + "assets/graphic/blood/blood_05.png"
     };
     
     bloodTextures.resize(totalFrames);
@@ -89,7 +90,15 @@ void BloodEffect::update(float deltaTime) {
 }
 
 void BloodEffect::draw() const {
-    if (!active || currentFrame >= bloodTextures.size() || bloodTextures[currentFrame] == 0) return;
+    spdlog::info("BloodEffect::draw() called at ({}, {}) - Active: {}, CurrentFrame: {}, TextureSize: {}", 
+                 x, y, active, currentFrame, bloodTextures.size());
+    
+    if (!active || currentFrame >= bloodTextures.size() || bloodTextures[currentFrame] == 0) {
+        spdlog::info("BloodEffect::draw() early return - Active: {}, CurrentFrame: {}, TextureSize: {}, TextureID: {}", 
+                     active, currentFrame, bloodTextures.size(), 
+                     (currentFrame < bloodTextures.size()) ? bloodTextures[currentFrame] : 0);
+        return;
+    }
     
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, bloodTextures[currentFrame]);
@@ -97,6 +106,8 @@ void BloodEffect::draw() const {
     // Draw blood effect centered on the death position
     float drawX = x - textureWidth / 2.0f;
     float drawY = y - textureHeight / 2.0f;
+    
+    spdlog::info("Drawing blood effect quad at ({}, {}) with size {}x{}", drawX, drawY, textureWidth, textureHeight);
     
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 1.0f); glVertex2f(drawX, drawY);
@@ -106,4 +117,5 @@ void BloodEffect::draw() const {
     glEnd();
     
     glDisable(GL_TEXTURE_2D);
+    spdlog::info("BloodEffect::draw() completed successfully");
 } 

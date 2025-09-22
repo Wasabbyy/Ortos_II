@@ -4,13 +4,15 @@
 
 class BloodEffect {
 public:
-    BloodEffect(float x, float y);
+    BloodEffect(float x, float y, const std::string& assetPath = "");
     ~BloodEffect();
-
+    
     void update(float deltaTime);
     void draw() const;
     bool isActive() const { return active; }
     bool isFinished() const { return finished; }
+    float getX() const { return x; }
+    float getY() const { return y; }
 
 private:
     float x, y;
@@ -28,6 +30,6 @@ private:
     int textureWidth, textureHeight;
     
     // Load blood textures
-    void loadBloodTextures();
+    void loadBloodTextures(const std::string& assetPath);
     void cleanupTextures();
 }; 

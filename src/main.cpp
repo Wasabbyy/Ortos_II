@@ -653,9 +653,13 @@ int main() {
             tilemap->draw();
             
             // Update and draw blood effects (ground layer)
+            spdlog::info("Drawing {} blood effects", bloodEffects.size());
             for (auto& bloodEffect : bloodEffects) {
-                bloodEffect->update(deltaTime);
-                bloodEffect->draw();
+                if (bloodEffect) {
+                    bloodEffect->update(deltaTime);
+                    bloodEffect->draw();
+                    spdlog::info("Drew blood effect at ({}, {})", bloodEffect->getX(), bloodEffect->getY());
+                }
             }
             
             player->draw();
@@ -697,12 +701,20 @@ int main() {
             
             // Blood effect creation when enemy dies
             // Play blood effect and remove enemies after death delay
+            spdlog::info("Checking {} enemies for blood effect creation", enemies.size());
             for (auto& enemy : enemies) {
-                if (enemy->shouldCreateBloodEffect()) {
-                    bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY() + 12)); // Move blood 12px down
-                    enemy->markBloodEffectCreated();
-                    // audioManager.playSound("enemy_death", 1.0f);
-                    spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
+                if (enemy) {
+                    spdlog::info("Enemy at ({}, {}) - Alive: {}, Should create blood: {}", 
+                                 enemy->getX(), enemy->getY(), enemy->isAlive(), enemy->shouldCreateBloodEffect());
+                    if (!enemy->isAlive() && !enemy->shouldCreateBloodEffect()) {
+                        spdlog::info("Enemy at ({}, {}) is dead but blood effect already created", enemy->getX(), enemy->getY());
+                    }
+                    if (enemy->shouldCreateBloodEffect()) {
+                        bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY() + 12, getAssetPath(""))); // Move blood 12px down
+                        enemy->markBloodEffectCreated();
+                        // audioManager.playSound("enemy_death", 1.0f);
+                        spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
+                    }
                 }
             }
             // Remove enemies whose death timer has expired
