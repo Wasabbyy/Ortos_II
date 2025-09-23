@@ -15,6 +15,7 @@
 #include "save/GameStateManager.h"
 #include "collision/CollisionManager.h"
 #include "core/GameInitializer.h"
+#include "core/GameplayManager.h"
 #include <iostream>
 #include <stb_image.h>
 #include <spdlog/spdlog.h>
@@ -45,7 +46,7 @@ int main() {
         spdlog::error("Failed to initialize game");
         return -1;
     }
-    
+
     // Get initialized components
     GLFWwindow* window = initializer.getWindow();
     AudioManager* audioManager = initializer.getAudioManager();
@@ -58,6 +59,13 @@ int main() {
     // Initialize collision manager
     CollisionManager collisionManager;
     
+    // Initialize gameplay manager
+    GameplayManager gameplayManager;
+    if (!gameplayManager.initialize(initializer.getAssetPath(""), audioManager, uiAudioManager)) {
+        spdlog::error("Failed to initialize gameplay manager");
+        return -1;
+    }
+
     // Get window dimensions
     int windowWidth = 1920;
     int windowHeight = 1080;
@@ -77,10 +85,7 @@ int main() {
     bool loadSlotMenuInitialized = false;
     std::vector<std::string> saveSlotInfo;
     bool loadSlotFromMainMenu = false;
-    // Level management
-    std::string currentLevelPath = initializer.getAssetPath("assets/maps/test.json");
-    std::string nextLevelPath = initializer.getAssetPath("assets/maps/final.json");
-    float levelTransitionCooldown = 0.0f;
+    // Level management is now handled by GameplayManager
     
     // Input debouncing
     bool keyUpPressed = false;
@@ -103,14 +108,7 @@ int main() {
     bool previousRespawnButtonHovered = false;
     bool previousExitButtonHovered = false;
 
-    // Game objects (will be initialized when starting game)
-    Player* player = nullptr;
-    std::vector<Enemy*> enemies;
-    std::vector<Projectile> playerProjectiles;
-    std::vector<Projectile> enemyProjectiles;
-    std::vector<BloodEffect*> bloodEffects;
-    InputHandler* inputHandler = nullptr;
-    Tilemap* tilemap = nullptr;
+    // Game objects are now managed by GameplayManager
 
     float lastTime = glfwGetTime();
 
@@ -221,57 +219,9 @@ int main() {
                         SaveData saveData;
                         int mostRecentSlot = saveManager.getMostRecentSaveSlot();
                         if (mostRecentSlot >= 0 && saveManager.loadGame(saveData, mostRecentSlot)) {
-                            // Initialize game objects first if not already done
-                            if (!gameInitialized) {
-                                // Initialize all game objects properly
-                                player = new Player();
-                                stbi_set_flip_vertically_on_load(true);
-                                player->loadTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
-                                player->loadIdleTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
-                                stbi_set_flip_vertically_on_load(false);
-                                
-                                inputHandler = new InputHandler();
-                                tilemap = new Tilemap();
-                                if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
-                                    spdlog::error("Failed to load tileset texture");
-                                    return -1;
-                                }
-                                
-                                // Load projectile texture
-                                Projectile::loadProjectileTexture(initializer.getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
-                                
+                            // Load the game state using GameplayManager
+                            gameplayManager.loadGame(saveData, initializer.getAssetPath(""));
                                 gameInitialized = true;
-                            }
-                            // Load the game state
-                            spdlog::info("=== MAIN: About to call GameStateManager::loadGameState (from main menu) ===");
-                            GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, initializer.getAssetPath(""));
-                            spdlog::info("=== MAIN: GameStateManager::loadGameState completed (from main menu) ===");
-                            
-                            // Reload the tilemap for the saved level
-                            if (tilemap) {
-                                delete tilemap;
-                            }
-                            tilemap = new Tilemap();
-                            if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
-                                spdlog::error("Failed to load tileset texture");
-                                return -1;
-                            }
-                            if (!tilemap->loadFromJSON(currentLevelPath)) {
-                                spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
-                                // Fallback to default level
-                                tilemap->loadFromJSON(initializer.getAssetPath("assets/levels/level1.json"));
-                                currentLevelPath = initializer.getAssetPath("assets/levels/level1.json");
-                            }
-                            
-                            // Set up projection to match tilemap size
-                            glMatrixMode(GL_PROJECTION);
-                            glLoadIdentity();
-                            float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
-                            float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
-                            glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
-                            glMatrixMode(GL_MODELVIEW);
-                            glLoadIdentity();
-                            
                             spdlog::info("Game loaded from main menu");
                         } else {
                             spdlog::error("Failed to load game from main menu");
@@ -288,88 +238,9 @@ int main() {
             UI::drawMainMenu(windowWidth, windowHeight, selectedMenuOption, hasSaveFile);
         }
         else if (currentState == GameState::PLAYING) {
-            // Initialize game objects if not already done
-            if (!gameInitialized) {
-                spdlog::info("Initializing new game objects...");
-                // Clean up any existing game objects first
-                if (player) {
-                    delete player;
-                    player = nullptr;
-                }
-                for (auto& enemy : enemies) {
-                    if (enemy) {
-                        delete enemy;
-                    }
-                }
-                enemies.clear();
-                if (inputHandler) {
-                    delete inputHandler;
-                    inputHandler = nullptr;
-                }
-                if (tilemap) {
-                    delete tilemap;
-                    tilemap = nullptr;
-                }
-                playerProjectiles.clear();
-                enemyProjectiles.clear();
-                
-                spdlog::info("Creating player...");
-                player = new Player();
-                stbi_set_flip_vertically_on_load(true);
-                spdlog::info("Loading player textures...");
-                player->loadTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
-                player->loadIdleTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
-                stbi_set_flip_vertically_on_load(false);
-                
-                // Create enemies
-                spdlog::info("Creating enemies...");
-                // Flying eye enemy
-                Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
-                stbi_set_flip_vertically_on_load(true);
-                spdlog::info("Loading flying eye textures...");
-                flyingEye->loadTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
-                flyingEye->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
-                flyingEye->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4); // NEW
-                stbi_set_flip_vertically_on_load(false);
-                enemies.push_back(flyingEye);
-                
-                // Shroom enemy
-                Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
-                stbi_set_flip_vertically_on_load(true);
-                spdlog::info("Loading shroom textures...");
-                shroom->loadTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
-                shroom->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
-                shroom->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4); // NEW
-                stbi_set_flip_vertically_on_load(false);
-                enemies.push_back(shroom);
-                
-                spdlog::info("Creating input handler and tilemap...");
-                inputHandler = new InputHandler();
-                tilemap = new Tilemap();
-                spdlog::info("Loading tileset texture...");
-                if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
-                    spdlog::error("Failed to load tileset texture");
-                    return -1;
-                }
-                spdlog::info("Loading map from JSON: {}", currentLevelPath);
-                if (!tilemap->loadFromJSON(currentLevelPath)) {
-                    spdlog::error("Failed to load map from JSON.");
-                    return -1;
-                }
-
-                // Set up projection to match tilemap size
-                glMatrixMode(GL_PROJECTION);
-                glLoadIdentity();
-                float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
-                float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
-                glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
-                glMatrixMode(GL_MODELVIEW);
-                glLoadIdentity();
-
-                // Load projectile texture
-                spdlog::info("Loading projectile textures...");
-                Projectile::loadProjectileTexture(initializer.getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
-                
+            // Initialize game if not already done
+            if (!gameplayManager.isGameInitialized()) {
+                gameplayManager.startNewGame();
                 gameInitialized = true;
                 spdlog::info("Game initialized successfully");
                 
@@ -379,194 +250,9 @@ int main() {
                 }
             }
 
-            // Game logic
-            // Decrease level transition cooldown
-            if (levelTransitionCooldown > 0.0f) {
-                levelTransitionCooldown -= deltaTime;
-            }
-
-            // Gate open if no enemies are alive
-            bool anyEnemyAliveForMove = std::any_of(enemies.begin(), enemies.end(), [](Enemy* e){ return e && e->isAlive(); });
-            bool gateOpenForMove = !anyEnemyAliveForMove;
-            inputHandler->processInput(window, *player, deltaTime, *tilemap, playerProjectiles, gateOpenForMove);
-
-            // Gate trigger: step on tiles with IDs 120,121,122,123
-            {
-                int tileW = tilemap->getTileWidth();
-                int tileH = tilemap->getTileHeight();
-                int playerTileX = static_cast<int>(player->getX() / tileW);
-                int playerTileY = static_cast<int>(player->getY() / tileH);
-                int gid = tilemap->getNormalizedTileIdAt(playerTileX, playerTileY);
-                bool onGate = (gid == 120 || gid == 121 || gid == 122 || gid == 123);
-                bool anyEnemyAlive = std::any_of(enemies.begin(), enemies.end(), [](Enemy* e){ return e && e->isAlive(); });
-                if (levelTransitionCooldown <= 0.0f && onGate && !anyEnemyAlive) {
-                    // Simulate leaving the map through the gate: reset to center of the same map and respawn enemies
-                    spdlog::info("Gate passed on tileID {} at (x={} y={}). Resetting to center and respawning enemies on same map.", gid, playerTileX, playerTileY);
-
-                    // Update projection (same map, but keep consistent)
-                    glMatrixMode(GL_PROJECTION);
-                    glLoadIdentity();
-                    float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
-                    float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
-                    glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
-                    glMatrixMode(GL_MODELVIEW);
-                    glLoadIdentity();
-
-                    // Clear projectiles
-                    playerProjectiles.clear();
-                    enemyProjectiles.clear();
-
-                    // Clear blood effects
-                    for (auto& bloodEffect : bloodEffects) {
-                        delete bloodEffect;
-                    }
-                    bloodEffects.clear();
-
-                    // Respawn enemies: delete existing and recreate defaults
-                    for (auto& enemy : enemies) {
-                        if (enemy) {
-                            delete enemy;
-                        }
-                    }
-                    enemies.clear();
-                    {
-                        Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
-                        stbi_set_flip_vertically_on_load(true);
-                        flyingEye->loadTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
-                        flyingEye->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
-                        flyingEye->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4);
-                        stbi_set_flip_vertically_on_load(false);
-                        enemies.push_back(flyingEye);
-                    }
-                    {
-                        Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
-                        stbi_set_flip_vertically_on_load(true);
-                        shroom->loadTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
-                        shroom->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
-                        shroom->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4);
-                        stbi_set_flip_vertically_on_load(false);
-                        enemies.push_back(shroom);
-                    }
-
-                    // Teleport player to map center
-                    float centerX = mapWidth * 0.5f;
-                    float centerY = mapHeight * 0.5f;
-                    float dx = centerX - player->getX();
-                    float dy = centerY - player->getY();
-                    player->move(dx, dy);
-
-                    // Regenerate player's HP to full on gate entry
-                    int healAmount = player->getMaxHealth() - player->getCurrentHealth();
-                    if (healAmount > 0) {
-                        player->heal(healAmount);
-                    }
-
-                    // Prevent immediate retriggering
-                    levelTransitionCooldown = 0.5f;
-                }
-            }
-            
-            // Play shoot sound if player shot
-            if (playerProjectiles.size() > 0 && playerProjectiles.back().isActive()) {
-                // audioManager->playSound("shoot", 0.7f); // Commented out - no shoot sound available
-            }
-        
-            tilemap->draw();
-            
-            // Update and draw blood effects (ground layer)
-            spdlog::info("Drawing {} blood effects", bloodEffects.size());
-            for (auto& bloodEffect : bloodEffects) {
-                if (bloodEffect) {
-                    bloodEffect->update(deltaTime);
-                    bloodEffect->draw();
-                    spdlog::info("Drew blood effect at ({}, {})", bloodEffect->getX(), bloodEffect->getY());
-                }
-            }
-            
-            player->draw();
-            
-            // Update and draw enemy
-            for (auto& enemy : enemies) {
-                enemy->update(deltaTime, player->getX(), player->getY(), *tilemap);
-                enemy->updateAnimation(deltaTime);
-                enemy->draw();
-            }
-            
-            // Handle player-enemy collisions
-            collisionManager.handlePlayerEnemyCollisions(player, enemies);
-            
-            // Handle enemy-to-enemy collisions
-            collisionManager.handleEnemyEnemyCollisions(enemies);
-            
-            // Enemy shooting
-            for (auto& enemy : enemies) {
-                enemy->shootProjectile(player->getX(), player->getY(), enemyProjectiles);
-            }
-            
-            // Update and draw projectiles
-            for (auto& projectile : playerProjectiles) {
-                projectile.update(deltaTime);
-                projectile.draw();
-            }
-            
-            for (auto& projectile : enemyProjectiles) {
-                projectile.update(deltaTime);
-                projectile.draw();
-            }
-            
-            // Handle projectile-wall collisions
-            collisionManager.handleProjectileWallCollisions(playerProjectiles, enemyProjectiles, *tilemap);
-            
-            // Handle projectile-entity collisions
-            collisionManager.handleProjectileCollisions(playerProjectiles, enemyProjectiles, player, enemies);
-            
-            // Blood effect creation when enemy dies
-            // Play blood effect and remove enemies after death delay
-            spdlog::info("Checking {} enemies for blood effect creation", enemies.size());
-            for (auto& enemy : enemies) {
-                if (enemy) {
-                    spdlog::info("Enemy at ({}, {}) - Alive: {}, Should create blood: {}", 
-                                 enemy->getX(), enemy->getY(), enemy->isAlive(), enemy->shouldCreateBloodEffect());
-                    if (!enemy->isAlive() && !enemy->shouldCreateBloodEffect()) {
-                        spdlog::info("Enemy at ({}, {}) is dead but blood effect already created", enemy->getX(), enemy->getY());
-                    }
-                    if (enemy->shouldCreateBloodEffect()) {
-                        bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY() + 12, initializer.getAssetPath(""))); // Move blood 12px down
-                        enemy->markBloodEffectCreated();
-                        // audioManager->playSound("enemy_death", 1.0f);
-                        spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
-                    }
-                }
-            }
-            // Remove enemies whose death timer has expired
-            enemies.erase(
-                std::remove_if(enemies.begin(), enemies.end(), [](Enemy* enemy) {
-                    if (enemy->shouldRemoveAfterDeath()) {
-                        delete enemy;
-                        return true;
-                    }
-                    return false;
-                }),
-                enemies.end()
-            );
-            
-            // Clean up inactive projectiles
-            playerProjectiles.erase(
-                std::remove_if(playerProjectiles.begin(), playerProjectiles.end(),
-                    [](const Projectile& p) { return !p.isActive(); }),
-                playerProjectiles.end()
-            );
-            
-            enemyProjectiles.erase(
-                std::remove_if(enemyProjectiles.begin(), enemyProjectiles.end(),
-                    [](const Projectile& p) { return !p.isActive(); }),
-                enemyProjectiles.end()
-            );
-            
-            // Draw UI (player health bar, XP bar, and level indicator) LAST so it's always on top
-            UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
-            UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
-            UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
+            // Update and draw gameplay
+            gameplayManager.update(deltaTime, window, windowWidth, windowHeight);
+            gameplayManager.draw(windowWidth, windowHeight);
 
             // Check for ESC key to pause game
             if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !keyEscPressed) {
@@ -585,7 +271,7 @@ int main() {
             }
             
             // Check if player has died
-            if (!player->isAlive()) {
+            if (!gameplayManager.isPlayerAlive()) {
                 // audioManager->playSound("player_death", 1.0f);
                 // Stop background music when player dies
                 audioManager->stopMusic();
@@ -679,34 +365,8 @@ int main() {
             }
 
             // Draw the game in the background (paused state) - NO UPDATES, just drawing
-            if (gameInitialized) {
-                tilemap->draw();
-                
-                // Draw blood effects (ground layer) - NO UPDATE, just draw
-                for (auto& bloodEffect : bloodEffects) {
-                    bloodEffect->draw();
-                }
-                
-                player->draw();
-                
-                // Draw enemies - NO UPDATE, just draw
-                for (auto& enemy : enemies) {
-                    enemy->draw();
-                }
-                
-                // Draw projectiles - NO UPDATE, just draw
-                for (auto& projectile : playerProjectiles) {
-                    projectile.draw();
-                }
-                
-                for (auto& projectile : enemyProjectiles) {
-                    projectile.draw();
-                }
-                
-                // Draw UI (player health bar, XP bar, and level indicator)
-                UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
-                UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
-                UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
+            if (gameplayManager.isGameInitialized()) {
+                gameplayManager.drawPaused(windowWidth, windowHeight);
             }
             
             // Draw pause menu overlay
@@ -714,34 +374,8 @@ int main() {
         }
         else if (currentState == GameState::SAVE_SLOT_SELECTION) {
             // Draw game in background (paused)
-            if (tilemap) {
-                tilemap->draw();
-            }
-            if (player) {
-                player->draw();
-            }
-            for (const auto& enemy : enemies) {
-                if (enemy) {
-                    enemy->draw();
-                }
-            }
-            for (const auto& projectile : playerProjectiles) {
-                projectile.draw();
-            }
-            for (const auto& projectile : enemyProjectiles) {
-                projectile.draw();
-            }
-            for (const auto& bloodEffect : bloodEffects) {
-                if (bloodEffect) {
-                    bloodEffect->draw();
-                }
-            }
-            
-            // Draw UI elements
-            if (player) {
-                UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
-                UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
-                UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
+            if (gameplayManager.isGameInitialized()) {
+                gameplayManager.drawPaused(windowWidth, windowHeight);
             }
             
             // Draw save slot selection menu
@@ -749,34 +383,8 @@ int main() {
         }
         else if (currentState == GameState::LOAD_SLOT_SELECTION) {
             // Draw game in background (paused)
-            if (tilemap) {
-                tilemap->draw();
-            }
-            if (player) {
-                player->draw();
-            }
-            for (const auto& enemy : enemies) {
-                if (enemy) {
-                    enemy->draw();
-                }
-            }
-            for (const auto& projectile : playerProjectiles) {
-                projectile.draw();
-            }
-            for (const auto& projectile : enemyProjectiles) {
-                projectile.draw();
-            }
-            for (const auto& bloodEffect : bloodEffects) {
-                if (bloodEffect) {
-                    bloodEffect->draw();
-                }
-            }
-            
-            // Draw UI elements
-            if (player) {
-                UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
-                UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
-                UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
+            if (gameplayManager.isGameInitialized()) {
+                gameplayManager.drawPaused(windowWidth, windowHeight);
             }
             
             // Draw load slot selection menu
@@ -802,8 +410,8 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
                 if (selectedSaveSlot < 3) {
                     // Save to selected slot
-                    if (gameInitialized && player) {
-                        SaveData saveData = GameStateManager::createSaveData(player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown);
+                    if (gameplayManager.isGameInitialized()) {
+                        SaveData saveData = gameplayManager.createSaveData();
                         
                         if (saveManager.saveGame(saveData, selectedSaveSlot)) {
                             saveManager.updateSaveSlots();
@@ -843,36 +451,8 @@ int main() {
                     // Load from selected slot
                     SaveData saveData;
                     if (saveManager.loadGame(saveData, selectedSaveSlot)) {
-                        
-                        // Load the game state
-                        spdlog::info("=== MAIN: About to call GameStateManager::loadGameState ===");
-                        GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, initializer.getAssetPath(""));
-                        spdlog::info("=== MAIN: GameStateManager::loadGameState completed ===");
-                        
-                        // Reload the tilemap for the saved level
-                        if (tilemap) {
-                            delete tilemap;
-                        }
-                        tilemap = new Tilemap();
-                        if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
-                            spdlog::error("Failed to load tileset texture");
-                            return -1;
-                        }
-                        if (!tilemap->loadFromJSON(currentLevelPath)) {
-                            spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
-                            // Fallback to default level
-                            tilemap->loadFromJSON(initializer.getAssetPath("assets/levels/level1.json"));
-                            currentLevelPath = initializer.getAssetPath("assets/levels/level1.json");
-                        }
-                        
-                        // Set up projection to match tilemap size
-                        glMatrixMode(GL_PROJECTION);
-                        glLoadIdentity();
-                        float mapWidth = tilemap->getWidthInTiles() * tilemap->getTileWidth();
-                        float mapHeight = tilemap->getHeightInTiles() * tilemap->getTileHeight();
-                        glOrtho(0.0, mapWidth, mapHeight, 0.0, -1.0, 1.0);
-                        glMatrixMode(GL_MODELVIEW);
-                        glLoadIdentity();
+                        // Load the game state using GameplayManager
+                        gameplayManager.loadGame(saveData, initializer.getAssetPath(""));
                         
                         spdlog::info("Game loaded from slot {}", selectedSaveSlot + 1);
                         // Go to playing state if loaded from main menu, otherwise back to pause
@@ -953,23 +533,8 @@ int main() {
                     uiAudioManager->playButtonClickSound();
                     // Reset game state
                     spdlog::info("Respawn button clicked, restarting game");
-                    if (gameInitialized) {
-                        delete player;
-                        player = nullptr;
-                        for (auto& enemy : enemies) {
-                            delete enemy;
-                        }
-                        enemies.clear();
-                        delete inputHandler;
-                        inputHandler = nullptr;
-                        delete tilemap;
-                        tilemap = nullptr;
+                    gameplayManager.resetGame();
                         gameInitialized = false;
-                    }
-                    playerProjectiles.clear();
-                    enemyProjectiles.clear();
-                    // Keep blood effects - don't clear them on respawn
-                    // Blood effects should persist to show battle history
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
                     audioManager->setMusicVolume(0.4f); // Set lower volume for background music
@@ -995,23 +560,8 @@ int main() {
                     // Play click sound before respawning
                     uiAudioManager->playButtonClickSound();
                     spdlog::info("Enter pressed on Respawn, restarting game");
-                    if (gameInitialized) {
-                        delete player;
-                        player = nullptr;
-                        for (auto& enemy : enemies) {
-                            delete enemy;
-                        }
-                        enemies.clear();
-                        delete inputHandler;
-                        inputHandler = nullptr;
-                        delete tilemap;
-                        tilemap = nullptr;
+                    gameplayManager.resetGame();
                         gameInitialized = false;
-                    }
-                    playerProjectiles.clear();
-                    enemyProjectiles.clear();
-                    // Keep blood effects - don't clear them on respawn
-                    // Blood effects should persist to show battle history
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
                     audioManager->setMusicVolume(0.4f); // Set lower volume for background music
@@ -1039,22 +589,7 @@ int main() {
         glfwPollEvents();
     }
 
-    // Cleanup
-    if (gameInitialized) {
-        delete player;
-        for (auto& enemy : enemies) {
-            delete enemy;
-        }
-        enemies.clear();
-        delete inputHandler;
-        delete tilemap;
-    }
-    
-    // Clean up blood effects
-    for (auto& bloodEffect : bloodEffects) {
-        delete bloodEffect;
-    }
-    bloodEffects.clear();
+    // Cleanup is handled by GameplayManager destructor
 
     // Cleanup UI system
     UI::cleanup();

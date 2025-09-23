@@ -161,7 +161,6 @@ void UI::drawCenteredText(const std::string& text, float x, float y, float scale
 }
 
 void UI::drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight) {
-    spdlog::info("Drawing health bar: HP {}/{}", currentHealth, maxHealth);
     
     // Save current matrix state
     glMatrixMode(GL_PROJECTION);
@@ -224,7 +223,6 @@ void UI::drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int
 }
 
 void UI::drawXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight) {
-    spdlog::info("Drawing XP bar: XP {}/{}", currentXP, maxXP);
     
     // Save current matrix state
     glMatrixMode(GL_PROJECTION);
@@ -311,7 +309,6 @@ void UI::drawXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight) 
 }
 
 void UI::drawLevelIndicator(int level, int windowWidth, int windowHeight) {
-    spdlog::info("Drawing level indicator: Level {}", level);
     
     // Save current matrix state
     glMatrixMode(GL_PROJECTION);

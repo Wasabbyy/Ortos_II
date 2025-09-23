@@ -53,6 +53,7 @@ set(SOURCES
     src/save/GameStateManager.cpp
     src/collision/CollisionManager.cpp
     src/core/GameInitializer.cpp
+    src/core/GameplayManager.cpp
     src/external/tinyxml2.cpp
     src/external/glad.c
     src/external/stb_image.cpp

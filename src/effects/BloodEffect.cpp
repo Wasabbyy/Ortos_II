@@ -7,9 +7,7 @@ BloodEffect::BloodEffect(float x, float y, const std::string& assetPath)
     : x(x), y(y), active(true), finished(false),
       animationTimer(0.0f), frameDuration(0.1f), currentFrame(0), totalFrames(5),
       textureWidth(0), textureHeight(0) {
-    spdlog::info("Blood effect constructor called at position ({}, {}) with asset path: {}", x, y, assetPath);
     loadBloodTextures(assetPath);
-    spdlog::info("Blood effect created successfully at position ({}, {})", x, y);
 }
 
 BloodEffect::~BloodEffect() {
@@ -36,7 +34,7 @@ void BloodEffect::loadBloodTextures(const std::string& assetPath) {
             continue;
         }
         
-        spdlog::debug("Loaded blood texture: {} ({}x{})", bloodFiles[i], width, height);
+        // Loaded blood texture successfully
         
         // Store dimensions from first texture
         if (i == 0) {
@@ -84,19 +82,13 @@ void BloodEffect::update(float deltaTime) {
             // Animation finished, keep the last frame (blood_05) on the ground
             currentFrame = totalFrames - 1;
             finished = true;
-            spdlog::debug("Blood effect animation finished, keeping blood on ground");
+            // Blood effect animation finished, keeping blood on ground
         }
     }
 }
 
 void BloodEffect::draw() const {
-    spdlog::info("BloodEffect::draw() called at ({}, {}) - Active: {}, CurrentFrame: {}, TextureSize: {}", 
-                 x, y, active, currentFrame, bloodTextures.size());
-    
     if (!active || currentFrame >= bloodTextures.size() || bloodTextures[currentFrame] == 0) {
-        spdlog::info("BloodEffect::draw() early return - Active: {}, CurrentFrame: {}, TextureSize: {}, TextureID: {}", 
-                     active, currentFrame, bloodTextures.size(), 
-                     (currentFrame < bloodTextures.size()) ? bloodTextures[currentFrame] : 0);
         return;
     }
     
@@ -107,8 +99,6 @@ void BloodEffect::draw() const {
     float drawX = x - textureWidth / 2.0f;
     float drawY = y - textureHeight / 2.0f;
     
-    spdlog::info("Drawing blood effect quad at ({}, {}) with size {}x{}", drawX, drawY, textureWidth, textureHeight);
-    
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 1.0f); glVertex2f(drawX, drawY);
     glTexCoord2f(1.0f, 1.0f); glVertex2f(drawX + textureWidth, drawY);
@@ -117,5 +107,4 @@ void BloodEffect::draw() const {
     glEnd();
     
     glDisable(GL_TEXTURE_2D);
-    spdlog::info("BloodEffect::draw() completed successfully");
 } 
