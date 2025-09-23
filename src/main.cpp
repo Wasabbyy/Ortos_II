@@ -14,6 +14,7 @@
 #include "save/SaveManager.h"
 #include "save/GameStateManager.h"
 #include "collision/CollisionManager.h"
+#include "core/GameInitializer.h"
 #include <iostream>
 #include <stb_image.h>
 #include <spdlog/spdlog.h>
@@ -25,95 +26,7 @@
 #include <mach-o/dyld.h>
 #endif
 
-// Function to get the correct asset path regardless of where the executable is run from
-std::string getAssetPath(const std::string& relativePath) {
-    // First, try to get the actual executable path
-    std::filesystem::path executablePath;
-    
-#ifdef __APPLE__
-    // macOS-specific executable path detection
-    char buffer[1024];
-    uint32_t size = sizeof(buffer);
-    if (_NSGetExecutablePath(buffer, &size) == 0) {
-        executablePath = std::filesystem::path(buffer).parent_path();
-    }
-#else
-    // Linux-specific executable path detection
-    try {
-        executablePath = std::filesystem::canonical("/proc/self/exe");
-    } catch (const std::filesystem::filesystem_error& e) {
-        // Fallback if /proc/self/exe is not available
-        executablePath = std::filesystem::path();
-    }
-#endif
-    
-    // If we got the executable path, use it to find the project root
-    if (!executablePath.empty()) {
-        // If executable is in build directory, go up one level to project root
-        if (executablePath.filename() == "build") {
-            executablePath = executablePath.parent_path();
-        }
-        
-        // Check if assets directory exists relative to executable
-        if (std::filesystem::exists(executablePath / "assets")) {
-            std::string result = (executablePath / relativePath).string();
-            return result;
-        }
-        
-        // Try going up from executable directory
-        for (int i = 0; i < 5; i++) {
-            executablePath = executablePath.parent_path();
-            if (std::filesystem::exists(executablePath / "assets")) {
-                return (executablePath / relativePath).string();
-            }
-        }
-    }
-    
-    // Fallback: try current working directory
-    std::filesystem::path currentPath = std::filesystem::current_path();
-    
-    // Check if we're already in the project root (assets directory exists)
-    if (std::filesystem::exists(currentPath / "assets")) {
-        return (currentPath / relativePath).string();
-    }
-    
-    // If we're in the build directory, go up one level
-    if (currentPath.filename() == "build") {
-        currentPath = currentPath.parent_path();
-        if (std::filesystem::exists(currentPath / "assets")) {
-            return (currentPath / relativePath).string();
-        }
-    }
-    
-    // Try going up directories to find the project root
-    for (int i = 0; i < 10; i++) {
-        currentPath = currentPath.parent_path();
-        if (std::filesystem::exists(currentPath / "assets")) {
-            return (currentPath / relativePath).string();
-        }
-    }
-    
-    // Last resort: try common project locations
-    std::vector<std::string> commonPaths = {
-        "/Users/filipstupar/Documents/OrtosII",
-        "./",
-        "../",
-        "../../",
-        "../../../"
-    };
-    
-    for (const auto& path : commonPaths) {
-        std::filesystem::path testPath = std::filesystem::absolute(path);
-        if (std::filesystem::exists(testPath / "assets")) {
-            return (testPath / relativePath).string();
-        }
-    }
-    
-    // If we can't find the assets directory, return the original path
-    // This will cause an error, but it's better than crashing
-    spdlog::warn("Could not find assets directory, using relative path: {}", relativePath);
-    return relativePath;
-}
+// Asset path function is now handled by GameInitializer
 
 enum class GameState {
     MENU,
@@ -126,120 +39,28 @@ enum class GameState {
 
 
 int main() {
-    // Initialize logger (console + file). Truncate file on each start.
-    try {
-        std::filesystem::create_directories("logs");
-        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/ortos.log", true);
-        std::vector<spdlog::sink_ptr> sinks { console_sink, file_sink };
-        auto logger = std::make_shared<spdlog::logger>("multi_sink", sinks.begin(), sinks.end());
-        spdlog::set_default_logger(logger);
-        spdlog::set_level(spdlog::level::info);
-        spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
-        spdlog::info("Starting Ortos II application");
-    } catch (const std::exception& e) {
-        // Fallback to default logger if file sink fails
-        spdlog::set_level(spdlog::level::debug);
-        spdlog::warn("Failed to initialize file logger: {}", e.what());
+    // Initialize the game using GameInitializer
+    GameInitializer initializer;
+    if (!initializer.initialize()) {
+        spdlog::error("Failed to initialize game");
+        return -1;
     }
     
+    // Get initialized components
+    GLFWwindow* window = initializer.getWindow();
+    AudioManager* audioManager = initializer.getAudioManager();
+    UIAudioManager* uiAudioManager = initializer.getUIAudioManager();
+    
     // Initialize save manager
-    SaveManager saveManager(getAssetPath("saves/"));
+    SaveManager saveManager(initializer.getAssetPath("saves/"));
     saveManager.initialize();
     
     // Initialize collision manager
     CollisionManager collisionManager;
-    if (!glfwInit()) {
-        spdlog::error("Failed to initialize GLFW");
-        return -1;
-    }
-
-    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
-    const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Ortos II", primaryMonitor, nullptr);
-
-    if (!window) {
-        spdlog::error("Failed to create GLFW window");
-        glfwTerminate();
-        return -1;
-    }
-
-    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
-    glfwMakeContextCurrent(window);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST); 
-    glEnable(GL_TEXTURE_2D); 
-
-    // Initialize UI system with FreeType
-    if (!UI::init(getAssetPath("assets/fonts/pixel.ttf"))) {
-        spdlog::error("Failed to initialize UI system");
-        glfwTerminate();
-        return -1;
-    }
-
-    // Load title screen background texture
-    if (!UI::loadTitleScreenTexture(getAssetPath("assets/screens/titlescreen.png"))) {
-        spdlog::warn("Failed to load title screen texture, will use black background");
-    }
-
-    // Load death screen background texture
-    if (!UI::loadDeathScreenTexture(getAssetPath("assets/screens/deathscreen.png"))) {
-        spdlog::warn("Failed to load death screen texture, will use black background");
-    }
-
-    // Initialize AudioManager
-    AudioManager audioManager;
-    spdlog::info("Attempting to initialize AudioManager...");
-    if (!audioManager.init()) {
-        spdlog::error("Failed to initialize AudioManager");
-        glfwTerminate();
-        return -1;
-    }
-    spdlog::info("AudioManager initialized successfully");
-
-    // Initialize UIAudioManager
-    UIAudioManager uiAudioManager;
-    spdlog::info("Attempting to initialize UIAudioManager...");
-    if (!uiAudioManager.init(audioManager.getContext())) {
-        spdlog::error("Failed to initialize UIAudioManager");
-        glfwTerminate();
-        return -1;
-    }
-    spdlog::info("UIAudioManager initialized successfully");
-
-    // Load UI sound effects
-    spdlog::info("Attempting to load UI sound effects...");
-    if (!uiAudioManager.loadUISound("button", getAssetPath("assets/sounds/button.wav"))) {
-        spdlog::warn("Failed to load button sound");
-    } else {
-        spdlog::info("Successfully loaded button sound");
-    }
-
-    // Load intro music for title screen
-    spdlog::info("Attempting to load intro music...");
-    if (!audioManager.loadMusic("intro", getAssetPath("assets/sounds/intro.wav"))) {
-        spdlog::warn("Failed to load intro music");
-    } else {
-        spdlog::info("Successfully loaded intro music");
-    }
-
-    // Load background music for gameplay
-    spdlog::info("Attempting to load background music...");
-    if (!audioManager.loadMusic("background", getAssetPath("assets/sounds/defaultSong.wav"))) {
-        spdlog::warn("Failed to load background music");
-    } else {
-        spdlog::info("Successfully loaded background music");
-    }
-
-    // Load all projectile textures (player, eye, shroom)
-    Projectile::loadAllProjectileTextures();
-
-    // Set up viewport and orthographic projection
+    
+    // Get window dimensions
     int windowWidth = 1920;
     int windowHeight = 1080;
-    glfwSetWindowSize(window, windowWidth, windowHeight);
-    glViewport(0, 0, windowWidth, windowHeight);
 
     // Game state management
     GameState currentState = GameState::MENU;
@@ -257,8 +78,8 @@ int main() {
     std::vector<std::string> saveSlotInfo;
     bool loadSlotFromMainMenu = false;
     // Level management
-    std::string currentLevelPath = getAssetPath("assets/maps/test.json");
-    std::string nextLevelPath = getAssetPath("assets/maps/final.json");
+    std::string currentLevelPath = initializer.getAssetPath("assets/maps/test.json");
+    std::string nextLevelPath = initializer.getAssetPath("assets/maps/final.json");
     float levelTransitionCooldown = 0.0f;
     
     // Input debouncing
@@ -316,7 +137,7 @@ int main() {
             
             // Start intro music if not already started
             if (!introMusicStarted) {
-                audioManager.playMusic("intro", true); // Loop the intro music
+                audioManager->playMusic("intro", true); // Loop the intro music
                 introMusicStarted = true;
                 spdlog::info("Started intro music");
             }
@@ -339,7 +160,7 @@ int main() {
             // Play hover sound when selection changes (with debouncing)
             if (selectedMenuOption != previousSelectedMenuOption) {
                 if (!hoverSoundPlayed) {
-                uiAudioManager.playButtonHoverSound();
+                uiAudioManager->playButtonHoverSound();
                     hoverSoundPlayed = true;
                 }
                 previousSelectedMenuOption = selectedMenuOption;
@@ -348,7 +169,7 @@ int main() {
             }
             
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
-                    uiAudioManager.playButtonClickSound();
+                    uiAudioManager->playButtonClickSound();
                 
                 if (hasSaveFile) {
                     // Menu with save file: Start Game, Continue Game, Load Game, Exit Game
@@ -386,12 +207,12 @@ int main() {
                 // Start background music when entering game
                 if (currentState == GameState::PLAYING) {
                     // Stop intro music when starting game
-                    audioManager.stopMusic();
+                    audioManager->stopMusic();
                     introMusicStarted = false;
                     // Set lower volume for background music during gameplay
-                    audioManager.setMusicVolume(0.4f); // Reduced from default 1.0 to 0.4
+                    audioManager->setMusicVolume(0.4f); // Reduced from default 1.0 to 0.4
                     // Start background music for gameplay
-                    audioManager.playMusic("background", true); // Loop the background music
+                    audioManager->playMusic("background", true); // Loop the background music
                     backgroundMusicStarted = true;
                     spdlog::info("Started background music for gameplay at reduced volume (0.4)");
                     
@@ -405,25 +226,25 @@ int main() {
                                 // Initialize all game objects properly
                                 player = new Player();
                                 stbi_set_flip_vertically_on_load(true);
-                                player->loadTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
-                                player->loadIdleTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
+                                player->loadTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
+                                player->loadIdleTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
                                 stbi_set_flip_vertically_on_load(false);
                                 
                                 inputHandler = new InputHandler();
                                 tilemap = new Tilemap();
-                                if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
+                                if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                                     spdlog::error("Failed to load tileset texture");
                                     return -1;
                                 }
                                 
                                 // Load projectile texture
-                                Projectile::loadProjectileTexture(getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
+                                Projectile::loadProjectileTexture(initializer.getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
                                 
                                 gameInitialized = true;
                             }
                             // Load the game state
                             spdlog::info("=== MAIN: About to call GameStateManager::loadGameState (from main menu) ===");
-                            GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, getAssetPath(""));
+                            GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, initializer.getAssetPath(""));
                             spdlog::info("=== MAIN: GameStateManager::loadGameState completed (from main menu) ===");
                             
                             // Reload the tilemap for the saved level
@@ -431,15 +252,15 @@ int main() {
                                 delete tilemap;
                             }
                             tilemap = new Tilemap();
-                            if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
+                            if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                                 spdlog::error("Failed to load tileset texture");
                                 return -1;
                             }
                             if (!tilemap->loadFromJSON(currentLevelPath)) {
                                 spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
                                 // Fallback to default level
-                                tilemap->loadFromJSON(getAssetPath("assets/levels/level1.json"));
-                                currentLevelPath = getAssetPath("assets/levels/level1.json");
+                                tilemap->loadFromJSON(initializer.getAssetPath("assets/levels/level1.json"));
+                                currentLevelPath = initializer.getAssetPath("assets/levels/level1.json");
                             }
                             
                             // Set up projection to match tilemap size
@@ -496,8 +317,8 @@ int main() {
                 player = new Player();
                 stbi_set_flip_vertically_on_load(true);
                 spdlog::info("Loading player textures...");
-                player->loadTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
-                player->loadIdleTexture(getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
+                player->loadTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Walk.png"), 64, 64, 4);
+                player->loadIdleTexture(initializer.getAssetPath("assets/graphic/enemies/vampire/Vampire_Idle.png"), 64, 64, 2);
                 stbi_set_flip_vertically_on_load(false);
                 
                 // Create enemies
@@ -506,9 +327,9 @@ int main() {
                 Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                 stbi_set_flip_vertically_on_load(true);
                 spdlog::info("Loading flying eye textures...");
-                flyingEye->loadTexture(getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
-                flyingEye->loadHitTexture(getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
-                flyingEye->loadDeathTexture(getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4); // NEW
+                flyingEye->loadTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
+                flyingEye->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
+                flyingEye->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(flyingEye);
                 
@@ -516,9 +337,9 @@ int main() {
                 Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                 stbi_set_flip_vertically_on_load(true);
                 spdlog::info("Loading shroom textures...");
-                shroom->loadTexture(getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
-                shroom->loadHitTexture(getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
-                shroom->loadDeathTexture(getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4); // NEW
+                shroom->loadTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
+                shroom->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
+                shroom->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4); // NEW
                 stbi_set_flip_vertically_on_load(false);
                 enemies.push_back(shroom);
                 
@@ -526,7 +347,7 @@ int main() {
                 inputHandler = new InputHandler();
                 tilemap = new Tilemap();
                 spdlog::info("Loading tileset texture...");
-                if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
+                if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                     spdlog::error("Failed to load tileset texture");
                     return -1;
                 }
@@ -547,13 +368,13 @@ int main() {
 
                 // Load projectile texture
                 spdlog::info("Loading projectile textures...");
-                Projectile::loadProjectileTexture(getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
+                Projectile::loadProjectileTexture(initializer.getAssetPath("assets/graphic/projectiles/green_projectiles.png"));
                 
                 gameInitialized = true;
                 spdlog::info("Game initialized successfully");
                 
                 // Load sound effects (only load what's available)
-                if (!audioManager.loadSound("intro", getAssetPath("assets/sounds/intro.wav"))) {
+                if (!audioManager->loadSound("intro", initializer.getAssetPath("assets/sounds/intro.wav"))) {
                     spdlog::warn("Failed to load intro sound");
                 }
             }
@@ -611,18 +432,18 @@ int main() {
                     {
                         Enemy* flyingEye = new Enemy(25 * 16.0f, 10 * 16.0f, EnemyType::FlyingEye);
                         stbi_set_flip_vertically_on_load(true);
-                        flyingEye->loadTexture(getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
-                        flyingEye->loadHitTexture(getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
-                        flyingEye->loadDeathTexture(getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4);
+                        flyingEye->loadTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/flgyingeye.png"), 150, 150, 8);
+                        flyingEye->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Hit_eye.png"), 150, 150, 4);
+                        flyingEye->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/flying_eye/Death_eye.png"), 150, 150, 4);
                         stbi_set_flip_vertically_on_load(false);
                         enemies.push_back(flyingEye);
                     }
                     {
                         Enemy* shroom = new Enemy(15 * 16.0f, 12 * 16.0f, EnemyType::Shroom);
                         stbi_set_flip_vertically_on_load(true);
-                        shroom->loadTexture(getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
-                        shroom->loadHitTexture(getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
-                        shroom->loadDeathTexture(getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4);
+                        shroom->loadTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/shroom.png"), 150, 150, 8);
+                        shroom->loadHitTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Hit_shroom.png"), 150, 150, 4);
+                        shroom->loadDeathTexture(initializer.getAssetPath("assets/graphic/enemies/shroom/Death_shroom.png"), 150, 150, 4);
                         stbi_set_flip_vertically_on_load(false);
                         enemies.push_back(shroom);
                     }
@@ -647,7 +468,7 @@ int main() {
             
             // Play shoot sound if player shot
             if (playerProjectiles.size() > 0 && playerProjectiles.back().isActive()) {
-                // audioManager.playSound("shoot", 0.7f); // Commented out - no shoot sound available
+                // audioManager->playSound("shoot", 0.7f); // Commented out - no shoot sound available
             }
         
             tilemap->draw();
@@ -710,9 +531,9 @@ int main() {
                         spdlog::info("Enemy at ({}, {}) is dead but blood effect already created", enemy->getX(), enemy->getY());
                     }
                     if (enemy->shouldCreateBloodEffect()) {
-                        bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY() + 12, getAssetPath(""))); // Move blood 12px down
+                        bloodEffects.push_back(new BloodEffect(enemy->getX(), enemy->getY() + 12, initializer.getAssetPath(""))); // Move blood 12px down
                         enemy->markBloodEffectCreated();
-                        // audioManager.playSound("enemy_death", 1.0f);
+                        // audioManager->playSound("enemy_death", 1.0f);
                         spdlog::info("Blood effect created at enemy death position ({}, {})", enemy->getX(), enemy->getY());
                     }
                 }
@@ -765,12 +586,12 @@ int main() {
             
             // Check if player has died
             if (!player->isAlive()) {
-                // audioManager.playSound("player_death", 1.0f);
+                // audioManager->playSound("player_death", 1.0f);
                 // Stop background music when player dies
-                audioManager.stopMusic();
+                audioManager->stopMusic();
                 backgroundMusicStarted = false;
                 // Reset music volume to normal for intro music
-                audioManager.setMusicVolume(1.0f);
+                audioManager->setMusicVolume(1.0f);
                 spdlog::info("Stopped background music due to player death");
                 selectedDeathButton = 0;
                 deathScreenInitialized = false;
@@ -803,7 +624,7 @@ int main() {
             // Play hover sound when selection changes (with debouncing)
             if (selectedPauseButton != previousSelectedPauseButton) {
                 if (!hoverSoundPlayed) {
-                    uiAudioManager.playButtonHoverSound();
+                    uiAudioManager->playButtonHoverSound();
                     hoverSoundPlayed = true;
                 }
                 previousSelectedPauseButton = selectedPauseButton;
@@ -812,7 +633,7 @@ int main() {
             }
             
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
-                uiAudioManager.playButtonClickSound();
+                uiAudioManager->playButtonClickSound();
                 
                 if (selectedPauseButton == 0) {
                     // Resume game
@@ -829,11 +650,11 @@ int main() {
                 } else if (selectedPauseButton == 2) {
                     // Back to main menu
                     // Stop background music and reset introMusicStarted flag
-                    audioManager.stopMusic();
+                    audioManager->stopMusic();
                     introMusicStarted = false;
                     backgroundMusicStarted = false;
                     // Reset music volume to normal for intro music
-                    audioManager.setMusicVolume(1.0f);
+                    audioManager->setMusicVolume(1.0f);
                     // Reset menu hover tracking
                     previousSelectedMenuOption = -1;
                     currentState = GameState::MENU;
@@ -1025,7 +846,7 @@ int main() {
                         
                         // Load the game state
                         spdlog::info("=== MAIN: About to call GameStateManager::loadGameState ===");
-                        GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, getAssetPath(""));
+                        GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, initializer.getAssetPath(""));
                         spdlog::info("=== MAIN: GameStateManager::loadGameState completed ===");
                         
                         // Reload the tilemap for the saved level
@@ -1033,15 +854,15 @@ int main() {
                             delete tilemap;
                         }
                         tilemap = new Tilemap();
-                        if (!tilemap->loadTilesetTexture(getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
+                        if (!tilemap->loadTilesetTexture(initializer.getAssetPath("assets/graphic/tileset/tileset.png"), 16, 16)) {
                             spdlog::error("Failed to load tileset texture");
                             return -1;
                         }
                         if (!tilemap->loadFromJSON(currentLevelPath)) {
                             spdlog::error("Failed to load tilemap for saved level: {}", currentLevelPath);
                             // Fallback to default level
-                            tilemap->loadFromJSON(getAssetPath("assets/levels/level1.json"));
-                            currentLevelPath = getAssetPath("assets/levels/level1.json");
+                            tilemap->loadFromJSON(initializer.getAssetPath("assets/levels/level1.json"));
+                            currentLevelPath = initializer.getAssetPath("assets/levels/level1.json");
                         }
                         
                         // Set up projection to match tilemap size
@@ -1113,7 +934,7 @@ int main() {
             // Play hover sound when selection changes (with debouncing)
             if (selectedDeathButton != previousSelectedDeathButton) {
                 if (!hoverSoundPlayed) {
-                uiAudioManager.playButtonHoverSound();
+                uiAudioManager->playButtonHoverSound();
                     hoverSoundPlayed = true;
                 }
                 previousSelectedDeathButton = selectedDeathButton;
@@ -1129,7 +950,7 @@ int main() {
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !mouseLeftPressed) {
                 if (respawnButtonHovered) {
                     // Play click sound before respawning
-                    uiAudioManager.playButtonClickSound();
+                    uiAudioManager->playButtonClickSound();
                     // Reset game state
                     spdlog::info("Respawn button clicked, restarting game");
                     if (gameInitialized) {
@@ -1151,14 +972,14 @@ int main() {
                     // Blood effects should persist to show battle history
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
-                    audioManager.setMusicVolume(0.4f); // Set lower volume for background music
-                    audioManager.playMusic("background", true); // Loop the background music
+                    audioManager->setMusicVolume(0.4f); // Set lower volume for background music
+                    audioManager->playMusic("background", true); // Loop the background music
                     backgroundMusicStarted = true;
                     spdlog::info("Started background music for gameplay at reduced volume (0.4)");
                     currentState = GameState::PLAYING;
                 } else if (exitButtonHovered) {
                     // Play click sound before exiting
-                    uiAudioManager.playButtonClickSound();
+                    uiAudioManager->playButtonClickSound();
                     spdlog::info("Exit button clicked, exiting game");
                     deathScreenInitialized = false; // <-- FIX: reset on exit
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -1172,7 +993,7 @@ int main() {
             if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
                 if (selectedDeathButton == 0) {
                     // Play click sound before respawning
-                    uiAudioManager.playButtonClickSound();
+                    uiAudioManager->playButtonClickSound();
                     spdlog::info("Enter pressed on Respawn, restarting game");
                     if (gameInitialized) {
                         delete player;
@@ -1193,14 +1014,14 @@ int main() {
                     // Blood effects should persist to show battle history
                     deathScreenInitialized = false; // <-- FIX: reset on respawn
                     // Start background music for gameplay
-                    audioManager.setMusicVolume(0.4f); // Set lower volume for background music
-                    audioManager.playMusic("background", true); // Loop the background music
+                    audioManager->setMusicVolume(0.4f); // Set lower volume for background music
+                    audioManager->playMusic("background", true); // Loop the background music
                     backgroundMusicStarted = true;
                     spdlog::info("Started background music for gameplay at reduced volume (0.4)");
                     currentState = GameState::PLAYING;
                 } else if (selectedDeathButton == 1) {
                     // Play click sound before exiting
-                    uiAudioManager.playButtonClickSound();
+                    uiAudioManager->playButtonClickSound();
                     spdlog::info("Enter pressed on Exit, exiting game");
                     deathScreenInitialized = false; // <-- FIX: reset on exit
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -1242,6 +1063,6 @@ int main() {
     Projectile::cleanupProjectileTexture();
 
     spdlog::info("Shutting down Ortos II application");
-    glfwTerminate();
+    // GameInitializer will handle cleanup in its destructor
     return 0;
 }
