@@ -22,6 +22,10 @@ else()
     find_package(OpenAL REQUIRED)
 endif()
 
+# Find SQLite3 package
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SQLITE3 REQUIRED sqlite3)
+
 # Include directories
 include_directories(
     include
@@ -31,6 +35,7 @@ include_directories(
     ${FREETYPE_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIRS}
     ${OPENAL_INCLUDE_DIRS}
+    ${SQLITE3_INCLUDE_DIRS}
     # Add other include paths if needed
 )
 
@@ -51,6 +56,8 @@ set(SOURCES
     src/save/SaveSlot.cpp
     src/save/SaveManager.cpp
     src/save/GameStateManager.cpp
+    src/save/EnhancedSaveManager.cpp
+    src/database/DatabaseManager.cpp
     src/collision/CollisionManager.cpp
     src/core/GameInitializer.cpp
     src/core/GameplayManager.cpp
@@ -70,6 +77,7 @@ if(APPLE)
         ${FREETYPE_LIBRARIES}
         ${GLM_LIBRARIES}
         ${OPENAL_LIBRARIES}
+        ${SQLITE3_LIBRARIES}
         "-framework OpenGL"
         "-framework Cocoa"
         "-framework IOKit"
@@ -82,6 +90,7 @@ elseif(UNIX AND NOT APPLE)  # Linux
         ${FREETYPE_LIBRARIES}
         ${GLM_LIBRARIES}
         ${OPENAL_LIBRARIES}
+        ${SQLITE3_LIBRARIES}
         GL
         openal
     )
@@ -91,6 +100,7 @@ elseif(WIN32)  # Windows
         ${FREETYPE_LIBRARIES}
         ${GLM_LIBRARIES}
         ${OPENAL_LIBRARIES}
+        ${SQLITE3_LIBRARIES}
         opengl32
         OpenAL32
     )

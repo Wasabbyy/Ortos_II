@@ -8,3 +8,4 @@ cd "$SCRIPT_DIR"
 
 # Run the game
 ./build/Ortos_II
+

@@ -12,6 +12,7 @@
 #include "save/SaveData.h"
 #include "save/SaveSlot.h"
 #include "save/SaveManager.h"
+#include "save/EnhancedSaveManager.h"
 #include "save/GameStateManager.h"
 #include "collision/CollisionManager.h"
 #include "core/GameInitializer.h"
@@ -52,8 +53,8 @@ int main() {
     AudioManager* audioManager = initializer.getAudioManager();
     UIAudioManager* uiAudioManager = initializer.getUIAudioManager();
     
-    // Initialize save manager
-    SaveManager saveManager(initializer.getAssetPath("saves/"));
+    // Initialize enhanced save manager with database support
+    EnhancedSaveManager saveManager(initializer.getAssetPath("saves/"));
     saveManager.initialize();
     
     // Initialize collision manager

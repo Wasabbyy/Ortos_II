@@ -28,6 +28,16 @@ public:
     std::string currentLevelPath;
     float levelTransitionCooldown = 0.0f;
     
+    // Extended player data
+    int totalXP = 0;
+    int coins = 0;
+    int playTime = 0; // in seconds
+    int enemiesKilled = 0;
+    int deaths = 0;
+    
+    // Inventory system
+    std::vector<json> inventory;
+    
     // Timestamp
     std::string saveTime;
 

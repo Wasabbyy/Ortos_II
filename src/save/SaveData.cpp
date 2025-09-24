@@ -32,6 +32,16 @@ json SaveData::toJson() const {
     j["gameState"]["levelTransitionCooldown"] = levelTransitionCooldown;
     j["gameState"]["saveTime"] = saveTime;
     
+    // Extended player data
+    j["player"]["totalXP"] = totalXP;
+    j["player"]["coins"] = coins;
+    j["player"]["playTime"] = playTime;
+    j["player"]["enemiesKilled"] = enemiesKilled;
+    j["player"]["deaths"] = deaths;
+    
+    // Inventory
+    j["inventory"] = inventory;
+    
     return j;
 }
 
@@ -55,6 +65,18 @@ void SaveData::fromJson(const json& j) {
         currentLevelPath = j["gameState"]["currentLevelPath"];
         levelTransitionCooldown = j["gameState"]["levelTransitionCooldown"];
         saveTime = j["gameState"]["saveTime"];
+        
+        // Load extended player data (with defaults for backward compatibility)
+        totalXP = j["player"].value("totalXP", 0);
+        coins = j["player"].value("coins", 0);
+        playTime = j["player"].value("playTime", 0);
+        enemiesKilled = j["player"].value("enemiesKilled", 0);
+        deaths = j["player"].value("deaths", 0);
+        
+        // Load inventory (with default empty array for backward compatibility)
+        if (j.contains("inventory")) {
+            inventory = j["inventory"];
+        }
     } catch (const std::exception& e) {
         // Reset to default values on error
         *this = SaveData();
