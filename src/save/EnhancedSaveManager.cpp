@@ -8,7 +8,10 @@ EnhancedSaveManager::EnhancedSaveManager(const std::string& saveDir)
 }
 
 EnhancedSaveManager::~EnhancedSaveManager() {
-    if (databaseManager) {
+    if (databaseManager && databaseManager->isInitialized()) {
+        // Clean up temporary players before closing database
+        deleteTemporaryPlayers();
+        spdlog::info("Cleaned up temporary players in destructor");
         databaseManager->close();
     }
 }
@@ -47,9 +50,15 @@ bool EnhancedSaveManager::saveGame(const SaveData& saveData, int slotIndex) {
     
     // Save to database
     if (databaseManager && databaseManager->isInitialized()) {
-        dbSuccess = saveToDatabase(saveData);
+        dbSuccess = saveToDatabase(saveData, slotIndex + 1); // Use slot index + 1 as player ID
         if (!dbSuccess) {
             spdlog::warn("Failed to save to database");
+        }
+        
+        // Make player permanent when saving to a slot
+        if (dbSuccess) {
+            makeCurrentPlayerPermanent(slotIndex + 1);
+            spdlog::info("Player made permanent after saving to slot {}", slotIndex + 1);
         }
     }
     
@@ -60,8 +69,8 @@ bool EnhancedSaveManager::saveGame(const SaveData& saveData, int slotIndex) {
 bool EnhancedSaveManager::loadGame(SaveData& saveData, int slotIndex) {
     // Try to load from database first (more reliable)
     if (databaseManager && databaseManager->isInitialized()) {
-        if (loadFromDatabase(saveData)) {
-            spdlog::info("Loaded game from database");
+        if (loadFromDatabase(saveData, slotIndex + 1)) { // Use slot index + 1 as player ID
+            spdlog::info("Loaded game from database for slot {}", slotIndex + 1);
             return true;
         }
     }
@@ -72,7 +81,7 @@ bool EnhancedSaveManager::loadGame(SaveData& saveData, int slotIndex) {
         
         // If we have database support, save the loaded data to database
         if (databaseManager && databaseManager->isInitialized()) {
-            saveToDatabase(saveData);
+            saveToDatabase(saveData, slotIndex + 1); // Use slot index + 1 as player ID
         }
         
         return true;
@@ -82,7 +91,7 @@ bool EnhancedSaveManager::loadGame(SaveData& saveData, int slotIndex) {
     return false;
 }
 
-bool EnhancedSaveManager::saveToDatabase(const SaveData& saveData) {
+bool EnhancedSaveManager::saveToDatabase(const SaveData& saveData, int slotIndex) {
     if (!databaseManager || !databaseManager->isInitialized()) {
         return false;
     }
@@ -90,6 +99,9 @@ bool EnhancedSaveManager::saveToDatabase(const SaveData& saveData) {
     try {
         // Convert SaveData to PlayerStats
         PlayerStats stats = saveDataToPlayerStats(saveData);
+        
+        // Set player ID to slot index
+        stats.playerId = slotIndex;
         
         // Save player stats
         if (!databaseManager->savePlayerStats(stats)) {
@@ -119,24 +131,24 @@ bool EnhancedSaveManager::saveToDatabase(const SaveData& saveData) {
     }
 }
 
-bool EnhancedSaveManager::loadFromDatabase(SaveData& saveData) {
+bool EnhancedSaveManager::loadFromDatabase(SaveData& saveData, int slotIndex) {
     if (!databaseManager || !databaseManager->isInitialized()) {
         return false;
     }
     
     try {
-        // Load player stats
+        // Load player stats for specific slot
         PlayerStats stats;
-        if (!databaseManager->loadPlayerStats(stats)) {
-            spdlog::error("Failed to load player stats from database");
+        if (!databaseManager->loadPlayerStats(stats, slotIndex)) {
+            spdlog::error("Failed to load player stats from database for slot {}", slotIndex);
             return false;
         }
         
         // Convert PlayerStats to SaveData
         playerStatsToSaveData(stats, saveData);
         
-        // Load inventory items
-        std::vector<Item> items = databaseManager->getPlayerItems();
+        // Load inventory items for specific slot
+        std::vector<Item> items = databaseManager->getPlayerItems(slotIndex);
         saveData.inventory = itemsToInventory(items);
         
         // Load game state
@@ -364,4 +376,88 @@ std::vector<json> EnhancedSaveManager::itemsToInventory(const std::vector<Item>&
         inventory.push_back(itemJson);
     }
     return inventory;
+}
+
+// Temporary player management methods
+bool EnhancedSaveManager::createTemporaryPlayer(const SaveData& saveData) {
+    if (!databaseManager || !databaseManager->isInitialized()) {
+        spdlog::warn("Database not initialized, cannot create temporary player");
+        return false;
+    }
+    
+    PlayerStats tempStats = saveDataToPlayerStats(saveData);
+    tempStats.isTemporary = true;
+    tempStats.playerId = 1; // Temporary players always use ID 1
+    
+    spdlog::info("Creating temporary player in database");
+    bool success = databaseManager->createTemporaryPlayer(tempStats);
+    
+    if (success) {
+        // Also save items for temporary player
+        for (const auto& itemJson : saveData.inventory) {
+            if (itemJson.contains("name") && itemJson.contains("type")) {
+                addItem(itemJson["name"], itemJson["type"], 
+                       itemJson.value("quantity", 1), 
+                       itemJson.value("value", 0), 
+                       itemJson.value("properties", json::object()));
+            }
+        }
+    }
+    
+    return success;
+}
+
+bool EnhancedSaveManager::makeCurrentPlayerPermanent(int playerId) {
+    if (!databaseManager || !databaseManager->isInitialized()) {
+        spdlog::warn("Database not initialized, cannot make player permanent");
+        return false;
+    }
+    
+    spdlog::info("Making player {} permanent", playerId);
+    return databaseManager->makePlayerPermanent(playerId);
+}
+
+bool EnhancedSaveManager::deleteTemporaryPlayers() {
+    if (!databaseManager || !databaseManager->isInitialized()) {
+        spdlog::warn("Database not initialized, cannot delete temporary players");
+        return false;
+    }
+    
+    spdlog::info("Deleting all temporary players");
+    return databaseManager->deleteTemporaryPlayers();
+}
+
+bool EnhancedSaveManager::isCurrentPlayerTemporary() {
+    if (!databaseManager || !databaseManager->isInitialized()) {
+        return false;
+    }
+    
+    return databaseManager->isPlayerTemporary(1); // Default player ID is 1
+}
+
+bool EnhancedSaveManager::updateTemporaryPlayerStats(const SaveData& saveData) {
+    if (!databaseManager || !databaseManager->isInitialized()) {
+        return false;
+    }
+    
+    try {
+        // Convert SaveData to PlayerStats
+        PlayerStats stats = saveDataToPlayerStats(saveData);
+        
+        // Ensure this is marked as temporary and uses player ID 1
+        stats.isTemporary = true;
+        stats.playerId = 1;
+        
+        // Save player stats
+        if (!databaseManager->savePlayerStats(stats)) {
+            spdlog::error("Failed to update temporary player stats to database");
+            return false;
+        }
+        
+        spdlog::info("Updated temporary player stats in database");
+        return true;
+    } catch (const std::exception& e) {
+        spdlog::error("Exception in updateTemporaryPlayerStats: {}", e.what());
+        return false;
+    }
 }

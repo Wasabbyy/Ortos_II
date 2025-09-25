@@ -66,6 +66,9 @@ int main() {
         spdlog::error("Failed to initialize gameplay manager");
         return -1;
     }
+    
+    // Set save manager for gameplay manager
+    gameplayManager.setSaveManager(&saveManager);
 
     // Get window dimensions
     int windowWidth = 1920;
@@ -267,6 +270,8 @@ int main() {
                 currentState = GameState::PAUSED;
                 keyEscPressed = true;
                 spdlog::info("Game paused");
+                // Update player stats in database when pausing
+                gameplayManager.updatePlayerStatsInDatabase();
             } else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
                 keyEscPressed = false;
             }
@@ -349,6 +354,8 @@ int main() {
                 } else if (selectedPauseButton == 3) {
                     // Exit game
                     spdlog::info("Exiting game from pause menu");
+                    // Update player stats in database before exiting
+                    gameplayManager.updatePlayerStatsInDatabase();
                     glfwSetWindowShouldClose(window, GLFW_TRUE);
                 }
                 keyEnterPressed = true;

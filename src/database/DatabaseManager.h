@@ -20,6 +20,7 @@ struct PlayerStats {
     float y = 0.0f;
     std::string currentLevelPath = "";
     std::string lastSaveTime = "";
+    bool isTemporary = false; // NEW: Flag to mark temporary players
     
     // Future expansion fields
     int coins = 0;
@@ -51,8 +52,14 @@ public:
     
     // Player stats management
     bool savePlayerStats(const PlayerStats& stats);
-    bool loadPlayerStats(PlayerStats& stats);
+    bool loadPlayerStats(PlayerStats& stats, int playerId = 1);
     bool updatePlayerStats(const PlayerStats& stats);
+    
+    // Temporary player management
+    bool createTemporaryPlayer(const PlayerStats& stats);
+    bool makePlayerPermanent(int playerId = 1);
+    bool deleteTemporaryPlayers();
+    bool isPlayerTemporary(int playerId = 1);
     
     // Item management
     bool addItem(const Item& item);

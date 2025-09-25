@@ -14,6 +14,7 @@
 #include "ui/UI.h"
 #include "save/SaveManager.h"
 #include "save/GameStateManager.h"
+#include "save/EnhancedSaveManager.h"
 
 class GameplayManager {
 public:
@@ -22,6 +23,7 @@ public:
 
     // Initialization
     bool initialize(const std::string& assetPath, AudioManager* audioManager, UIAudioManager* uiAudioManager);
+    void setSaveManager(EnhancedSaveManager* saveManager);
     void cleanup();
 
     // Game state management
@@ -49,6 +51,7 @@ public:
     // Save/Load operations
     SaveData createSaveData() const;
     void loadGameState(const SaveData& saveData, const std::string& assetPath);
+    void updatePlayerStatsInDatabase();
 
 private:
     // Game objects
@@ -64,6 +67,9 @@ private:
     // Audio managers
     AudioManager* audioManager;
     UIAudioManager* uiAudioManager;
+    
+    // Save manager
+    EnhancedSaveManager* saveManager;
 
     // Game state
     bool gameInitialized;

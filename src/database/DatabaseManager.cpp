@@ -59,6 +59,7 @@ bool DatabaseManager::createTables() {
             y REAL NOT NULL DEFAULT 0.0,
             current_level_path TEXT NOT NULL DEFAULT '',
             last_save_time TEXT NOT NULL DEFAULT '',
+            is_temporary INTEGER NOT NULL DEFAULT 0,
             coins INTEGER NOT NULL DEFAULT 0,
             play_time INTEGER NOT NULL DEFAULT 0,
             enemies_killed INTEGER NOT NULL DEFAULT 0,
@@ -103,9 +104,9 @@ bool DatabaseManager::savePlayerStats(const PlayerStats& stats) {
     std::string query = R"(
         INSERT OR REPLACE INTO player_stats 
         (player_id, level, current_xp, max_xp, total_xp, health, max_health, 
-         x, y, current_level_path, last_save_time, coins, play_time, 
+         x, y, current_level_path, last_save_time, is_temporary, coins, play_time, 
          enemies_killed, deaths, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     )";
     
     sqlite3_stmt* stmt;
@@ -127,11 +128,12 @@ bool DatabaseManager::savePlayerStats(const PlayerStats& stats) {
     sqlite3_bind_double(stmt, 9, stats.y);
     sqlite3_bind_text(stmt, 10, stats.currentLevelPath.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 11, stats.lastSaveTime.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int(stmt, 12, stats.coins);
-    sqlite3_bind_int(stmt, 13, stats.playTime);
-    sqlite3_bind_int(stmt, 14, stats.enemiesKilled);
-    sqlite3_bind_int(stmt, 15, stats.deaths);
-    sqlite3_bind_text(stmt, 16, getCurrentTimestamp().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 12, stats.isTemporary ? 1 : 0);
+    sqlite3_bind_int(stmt, 13, stats.coins);
+    sqlite3_bind_int(stmt, 14, stats.playTime);
+    sqlite3_bind_int(stmt, 15, stats.enemiesKilled);
+    sqlite3_bind_int(stmt, 16, stats.deaths);
+    sqlite3_bind_text(stmt, 17, getCurrentTimestamp().c_str(), -1, SQLITE_STATIC);
     
     rc = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
@@ -145,7 +147,7 @@ bool DatabaseManager::savePlayerStats(const PlayerStats& stats) {
     return true;
 }
 
-bool DatabaseManager::loadPlayerStats(PlayerStats& stats) {
+bool DatabaseManager::loadPlayerStats(PlayerStats& stats, int playerId) {
     std::string query = "SELECT * FROM player_stats WHERE player_id = ?";
     
     sqlite3_stmt* stmt;
@@ -155,7 +157,7 @@ bool DatabaseManager::loadPlayerStats(PlayerStats& stats) {
         return false;
     }
     
-    sqlite3_bind_int(stmt, 1, stats.playerId);
+    sqlite3_bind_int(stmt, 1, playerId);
     
     rc = sqlite3_step(stmt);
     if (rc == SQLITE_ROW) {
@@ -175,10 +177,11 @@ bool DatabaseManager::loadPlayerStats(PlayerStats& stats) {
         const char* saveTime = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 10));
         stats.lastSaveTime = saveTime ? saveTime : "";
         
-        stats.coins = sqlite3_column_int(stmt, 11);
-        stats.playTime = sqlite3_column_int(stmt, 12);
-        stats.enemiesKilled = sqlite3_column_int(stmt, 13);
-        stats.deaths = sqlite3_column_int(stmt, 14);
+        stats.isTemporary = sqlite3_column_int(stmt, 11) != 0;
+        stats.coins = sqlite3_column_int(stmt, 12);
+        stats.playTime = sqlite3_column_int(stmt, 13);
+        stats.enemiesKilled = sqlite3_column_int(stmt, 14);
+        stats.deaths = sqlite3_column_int(stmt, 15);
         
         sqlite3_finalize(stmt);
         spdlog::info("Player stats loaded successfully");
@@ -637,4 +640,136 @@ bool DatabaseManager::tableExists(const std::string& tableName) {
     sqlite3_finalize(stmt);
     
     return rc == SQLITE_ROW;
+}
+
+// Temporary player management methods
+bool DatabaseManager::createTemporaryPlayer(const PlayerStats& stats) {
+    // First, delete any existing temporary players
+    deleteTemporaryPlayers();
+    
+    PlayerStats tempStats = stats;
+    tempStats.isTemporary = true;
+    tempStats.lastSaveTime = getCurrentTimestamp();
+    tempStats.playerId = 1; // Use same player ID but ensure temporary flag is set
+    
+    spdlog::info("Creating temporary player with ID: {}", tempStats.playerId);
+    
+    // Use INSERT instead of INSERT OR REPLACE to avoid overwriting permanent players
+    std::string query = R"(
+        INSERT INTO player_stats 
+        (player_id, level, current_xp, max_xp, total_xp, health, max_health, 
+         x, y, current_level_path, last_save_time, is_temporary, coins, play_time, 
+         enemies_killed, deaths, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    )";
+    
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        spdlog::error("Failed to prepare temporary player insert statement: {}", sqlite3_errmsg(db));
+        return false;
+    }
+    
+    // Bind parameters (same as savePlayerStats but using INSERT)
+    sqlite3_bind_int(stmt, 1, tempStats.playerId);
+    sqlite3_bind_int(stmt, 2, tempStats.level);
+    sqlite3_bind_int(stmt, 3, tempStats.currentXP);
+    sqlite3_bind_int(stmt, 4, tempStats.maxXP);
+    sqlite3_bind_int(stmt, 5, tempStats.totalXP);
+    sqlite3_bind_int(stmt, 6, tempStats.health);
+    sqlite3_bind_int(stmt, 7, tempStats.maxHealth);
+    sqlite3_bind_double(stmt, 8, tempStats.x);
+    sqlite3_bind_double(stmt, 9, tempStats.y);
+    sqlite3_bind_text(stmt, 10, tempStats.currentLevelPath.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 11, tempStats.lastSaveTime.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 12, tempStats.isTemporary ? 1 : 0);
+    sqlite3_bind_int(stmt, 13, tempStats.coins);
+    sqlite3_bind_int(stmt, 14, tempStats.playTime);
+    sqlite3_bind_int(stmt, 15, tempStats.enemiesKilled);
+    sqlite3_bind_int(stmt, 16, tempStats.deaths);
+    sqlite3_bind_text(stmt, 17, getCurrentTimestamp().c_str(), -1, SQLITE_STATIC);
+    
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    
+    if (rc != SQLITE_DONE) {
+        spdlog::error("Failed to insert temporary player: {}", sqlite3_errmsg(db));
+        return false;
+    }
+    
+    spdlog::info("Temporary player inserted successfully");
+    return true;
+}
+
+bool DatabaseManager::makePlayerPermanent(int playerId) {
+    std::string query = "UPDATE player_stats SET is_temporary = 0, updated_at = ? WHERE player_id = ?";
+    
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        spdlog::error("Failed to prepare statement: {}", sqlite3_errmsg(db));
+        return false;
+    }
+    
+    sqlite3_bind_text(stmt, 1, getCurrentTimestamp().c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 2, playerId);
+    
+    rc = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    
+    if (rc != SQLITE_DONE) {
+        spdlog::error("Failed to make player permanent: {}", sqlite3_errmsg(db));
+        return false;
+    }
+    
+    spdlog::info("Player {} made permanent", playerId);
+    return true;
+}
+
+bool DatabaseManager::deleteTemporaryPlayers() {
+    // First delete all items belonging to temporary players
+    std::string deleteItemsQuery = R"(
+        DELETE FROM items WHERE player_id IN (
+            SELECT player_id FROM player_stats WHERE is_temporary = 1
+        )
+    )";
+    
+    if (!executeQuery(deleteItemsQuery)) {
+        spdlog::error("Failed to delete temporary player items");
+        return false;
+    }
+    
+    // Then delete temporary players
+    std::string deletePlayersQuery = "DELETE FROM player_stats WHERE is_temporary = 1";
+    
+    if (!executeQuery(deletePlayersQuery)) {
+        spdlog::error("Failed to delete temporary players");
+        return false;
+    }
+    
+    spdlog::info("All temporary players and their items deleted");
+    return true;
+}
+
+bool DatabaseManager::isPlayerTemporary(int playerId) {
+    std::string query = "SELECT is_temporary FROM player_stats WHERE player_id = ?";
+    
+    sqlite3_stmt* stmt;
+    int rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        spdlog::error("Failed to prepare statement: {}", sqlite3_errmsg(db));
+        return false;
+    }
+    
+    sqlite3_bind_int(stmt, 1, playerId);
+    
+    rc = sqlite3_step(stmt);
+    if (rc == SQLITE_ROW) {
+        bool isTemp = sqlite3_column_int(stmt, 0) != 0;
+        sqlite3_finalize(stmt);
+        return isTemp;
+    }
+    
+    sqlite3_finalize(stmt);
+    return false; // Player doesn't exist, consider it not temporary
 }

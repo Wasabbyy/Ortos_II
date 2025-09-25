@@ -9,6 +9,7 @@ GameplayManager::GameplayManager()
     , tilemap(nullptr)
     , audioManager(nullptr)
     , uiAudioManager(nullptr)
+    , saveManager(nullptr)
     , gameInitialized(false)
     , currentLevelPath("")
     , nextLevelPath("")
@@ -32,6 +33,10 @@ bool GameplayManager::initialize(const std::string& assetPath, AudioManager* aud
     
     spdlog::info("GameplayManager initialized with asset path: {}", assetPath);
     return true;
+}
+
+void GameplayManager::setSaveManager(EnhancedSaveManager* saveManager) {
+    this->saveManager = saveManager;
 }
 
 void GameplayManager::cleanup() {
@@ -76,6 +81,17 @@ void GameplayManager::startNewGame() {
     resetGame();
     initializeGameObjects();
     loadLevel(currentLevelPath);
+    
+    // Create temporary player in database
+    if (saveManager && saveManager->isDatabaseEnabled()) {
+        SaveData tempSaveData = createSaveData();
+        if (saveManager->createTemporaryPlayer(tempSaveData)) {
+            spdlog::info("Temporary player created for new game");
+        } else {
+            spdlog::warn("Failed to create temporary player");
+        }
+    }
+    
     gameInitialized = true;
     spdlog::info("New game started successfully");
 }
@@ -159,6 +175,20 @@ SaveData GameplayManager::createSaveData() const {
 
 void GameplayManager::loadGameState(const SaveData& saveData, const std::string& assetPath) {
     GameStateManager::loadGameState(saveData, player, enemies, playerProjectiles, enemyProjectiles, currentLevelPath, levelTransitionCooldown, assetPath);
+}
+
+void GameplayManager::updatePlayerStatsInDatabase() {
+    if (!saveManager || !saveManager->isDatabaseEnabled() || !player) {
+        return;
+    }
+    
+    // Only update database if current player is temporary
+    if (saveManager->isCurrentPlayerTemporary()) {
+        SaveData currentSaveData = createSaveData();
+        saveManager->updateTemporaryPlayerStats(currentSaveData);
+    } else {
+        spdlog::info("Skipping database update - player is permanent");
+    }
 }
 
 void GameplayManager::initializeGameObjects() {

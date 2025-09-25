@@ -18,9 +18,10 @@ public:
     bool loadGame(SaveData& saveData, int slotIndex);
     
     // Database-specific methods
-    bool saveToDatabase(const SaveData& saveData);
-    bool loadFromDatabase(SaveData& saveData);
+    bool saveToDatabase(const SaveData& saveData, int slotIndex = 1);
+    bool loadFromDatabase(SaveData& saveData, int slotIndex = 1);
     bool migrateJsonToDatabase();
+    bool updateTemporaryPlayerStats(const SaveData& saveData);
     
     // Item management
     bool addItem(const std::string& name, const std::string& type, int quantity = 1, int value = 0, const json& properties = json::object());
@@ -38,6 +39,12 @@ public:
     bool backupDatabase(const std::string& backupPath);
     bool restoreDatabase(const std::string& backupPath);
     bool isDatabaseEnabled() const { return databaseManager && databaseManager->isInitialized(); }
+    
+    // Temporary player management
+    bool createTemporaryPlayer(const SaveData& saveData);
+    bool makeCurrentPlayerPermanent(int playerId = 1);
+    bool deleteTemporaryPlayers();
+    bool isCurrentPlayerTemporary();
     
     // Hybrid mode: Use both JSON and database
     void setHybridMode(bool enabled) { hybridMode = enabled; }
