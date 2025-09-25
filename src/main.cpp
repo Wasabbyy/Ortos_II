@@ -174,11 +174,12 @@ int main() {
                     uiAudioManager->playButtonClickSound();
                 
                 if (hasSaveFile) {
-                    // Menu with save file: Start Game, Continue Game, Load Game, Exit Game
+                    // Menu with save file: Start Game, Load Game, Exit Game
                     if (selectedMenuOption == 0) {
-                        // Start new game - reset game state
-                        spdlog::info("Starting new game");
+                        // Start new game - always create fresh game
+                        spdlog::info("Starting fresh new game");
                         gameInitialized = false; // Force re-initialization
+                        gameplayManager.resetGame(); // Reset the gameplay manager state
                         currentState = GameState::PLAYING;
                     } else if (selectedMenuOption == 1) {
                         // Load game - go to load slot selection
@@ -197,8 +198,9 @@ int main() {
                     // Menu without save file: Start Game, Exit Game
                     if (selectedMenuOption == 0) {
                         // Start new game - reset game state
-                        spdlog::info("Starting new game");
+                        spdlog::info("Starting fresh new game");
                         gameInitialized = false; // Force re-initialization
+                        gameplayManager.resetGame(); // Reset the gameplay manager state
                         currentState = GameState::PLAYING;
                     } else if (selectedMenuOption == 1) {
                         // Exit game
