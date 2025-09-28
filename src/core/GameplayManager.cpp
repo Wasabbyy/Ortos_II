@@ -69,6 +69,13 @@ void GameplayManager::cleanup() {
     }
     bloodEffects.clear();
     
+    for (auto& gateEffect : gateEffects) {
+        if (gateEffect) {
+            delete gateEffect;
+        }
+    }
+    gateEffects.clear();
+    
     playerProjectiles.clear();
     enemyProjectiles.clear();
     
@@ -152,6 +159,7 @@ void GameplayManager::draw(int windowWidth, int windowHeight) {
     drawEntities();
     drawProjectiles();
     drawBloodEffects();
+    drawGateEffects();
     drawUI(windowWidth, windowHeight);
 }
 
@@ -163,6 +171,7 @@ void GameplayManager::drawPaused(int windowWidth, int windowHeight) {
     drawEntities();
     drawProjectiles();
     drawBloodEffects();
+    drawGateEffects();
     drawUI(windowWidth, windowHeight);
 }
 
@@ -271,8 +280,35 @@ void GameplayManager::handleLevelTransition() {
     bool onGate = (gid == 120 || gid == 121 || gid == 122 || gid == 123);
     bool anyEnemyAlive = std::any_of(enemies.begin(), enemies.end(), [](Enemy* e){ return e && e->isAlive(); });
     
+    // Create gate effects when all enemies are killed (but before gate transition)
+    static bool gateEffectsCreated = false;
+    if (!anyEnemyAlive && !gateEffectsCreated) {
+        createGateEffects();
+        gateEffectsCreated = true;
+        spdlog::info("All enemies killed, creating gate opening effects");
+    }
+    
+    // Reset gate effects flag when enemies respawn
+    if (anyEnemyAlive) {
+        gateEffectsCreated = false;
+        // Also clear any existing gate effects when enemies respawn
+        for (auto& gateEffect : gateEffects) {
+            if (gateEffect) {
+                delete gateEffect;
+            }
+        }
+        gateEffects.clear();
+    }
+    
     if (onGate && !anyEnemyAlive) {
         spdlog::info("Gate passed on tileID {} at (x={} y={}). Resetting to center and respawning enemies on same map.", gid, playerTileX, playerTileY);
+        
+        // Stop gate effects from looping (they will finish their current animation cycle)
+        for (auto& gateEffect : gateEffects) {
+            if (gateEffect) {
+                gateEffect->stopLooping();
+            }
+        }
         
         // Clear projectiles
         playerProjectiles.clear();
@@ -283,6 +319,15 @@ void GameplayManager::handleLevelTransition() {
             delete bloodEffect;
         }
         bloodEffects.clear();
+        
+        // Clear gate effects
+        for (auto& gateEffect : gateEffects) {
+            delete gateEffect;
+        }
+        gateEffects.clear();
+        
+        // Reset gate effects flag
+        gateEffectsCreated = false;
         
         // Respawn enemies
         respawnEnemies();
@@ -338,6 +383,13 @@ void GameplayManager::updateEntities(float deltaTime) {
     for (auto& bloodEffect : bloodEffects) {
         if (bloodEffect) {
             bloodEffect->update(deltaTime);
+        }
+    }
+    
+    // Update gate effects
+    for (auto& gateEffect : gateEffects) {
+        if (gateEffect) {
+            gateEffect->update(deltaTime);
         }
     }
 }
@@ -471,4 +523,65 @@ void GameplayManager::teleportPlayerToCenter() {
     player->move(dx, dy);
     
     spdlog::info("Player teleported to center of map");
+}
+
+void GameplayManager::createGateEffects() {
+    if (!tilemap) {
+        spdlog::error("Cannot create gate effects - tilemap is null");
+        return;
+    }
+    
+    int tileW = tilemap->getTileWidth();
+    int tileH = tilemap->getTileHeight();
+    
+    spdlog::info("Creating gate effects - tilemap size: {}x{}, tile size: {}x{}", 
+                 tilemap->getWidthInTiles(), tilemap->getHeightInTiles(), tileW, tileH);
+    
+    // Clear any existing gate effects first
+    for (auto& gateEffect : gateEffects) {
+        if (gateEffect) {
+            delete gateEffect;
+        }
+    }
+    gateEffects.clear();
+    
+    // Find gate tiles in row 0 (based on logs showing gates at (17,0), (18,0), (19,0), (20,0))
+    int targetGateRow = 0; // Use row 0 where the gates are located
+    
+    // Find the center of all gate tiles to create one effect
+    float gateCenterX = 0.0f;
+    float gateCenterY = targetGateRow * tileH + tileH * 2.5f; // Position much lower (125% down the tile)
+    int gateCount = 0;
+    
+    for (int x = 0; x < tilemap->getWidthInTiles(); ++x) {
+        int gid = tilemap->getNormalizedTileIdAt(x, targetGateRow);
+        if (gid == 120 || gid == 121 || gid == 122 || gid == 123) {
+            gateCenterX += x * tileW + tileW / 2.0f;
+            gateCount++;
+            spdlog::info("Found gate tile GID {} at ({}, {})", gid, x, targetGateRow);
+        }
+    }
+    
+    if (gateCount > 0) {
+        gateCenterX /= gateCount; // Calculate average X position
+        
+        // Create ONE gate effect at the center of all gate tiles
+        GateEffect* gateEffect = new GateEffect(gateCenterX, gateCenterY, assetPath);
+        gateEffects.push_back(gateEffect);
+        
+        spdlog::info("Created single gate effect at world position ({}, {}) covering {} gate tiles", 
+                     gateCenterX, gateCenterY, gateCount);
+    } else {
+        spdlog::warn("No gate tiles found in row {}", targetGateRow);
+    }
+    
+    spdlog::info("Gate effects creation completed - created {} effects", gateEffects.size());
+}
+
+void GameplayManager::drawGateEffects() {
+    for (auto& gateEffect : gateEffects) {
+        if (gateEffect && gateEffect->isActive()) {
+            gateEffect->draw();
+        }
+    }
 }

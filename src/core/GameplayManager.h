@@ -6,6 +6,7 @@
 #include "enemy/Enemy.h"
 #include "projectile/Projectile.h"
 #include "effects/BloodEffect.h"
+#include "effects/GateEffect.h"
 #include "input/InputHandler.h"
 #include "map/Tilemap.h"
 #include "collision/CollisionManager.h"
@@ -44,6 +45,7 @@ public:
     const std::vector<Projectile>& getPlayerProjectiles() const { return playerProjectiles; }
     const std::vector<Projectile>& getEnemyProjectiles() const { return enemyProjectiles; }
     const std::vector<BloodEffect*>& getBloodEffects() const { return bloodEffects; }
+    const std::vector<GateEffect*>& getGateEffects() const { return gateEffects; }
     Tilemap* getTilemap() const { return tilemap; }
     const std::string& getCurrentLevelPath() const { return currentLevelPath; }
     float getLevelTransitionCooldown() const { return levelTransitionCooldown; }
@@ -60,6 +62,7 @@ private:
     std::vector<Projectile> playerProjectiles;
     std::vector<Projectile> enemyProjectiles;
     std::vector<BloodEffect*> bloodEffects;
+    std::vector<GateEffect*> gateEffects;
     InputHandler* inputHandler;
     Tilemap* tilemap;
     CollisionManager collisionManager;
@@ -87,12 +90,14 @@ private:
     void updateEntities(float deltaTime);
     void handleCollisions();
     void createBloodEffects();
+    void createGateEffects();
     void cleanupInactiveObjects();
     void drawGameWorld();
     void drawUI(int windowWidth, int windowHeight);
     void drawEntities();
     void drawProjectiles();
     void drawBloodEffects();
+    void drawGateEffects();
 
     // Level management
     void loadLevel(const std::string& levelPath);
