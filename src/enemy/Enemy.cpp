@@ -427,7 +427,7 @@ void Enemy::shootProjectile(float targetX, float targetY, std::vector<Projectile
     }
 }
 
-void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap& tilemap) {
+void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap& tilemap, std::vector<Projectile>& enemyProjectiles) {
     if (!alive) return;
     
     // Update shooting cooldown
@@ -449,6 +449,11 @@ void Enemy::update(float deltaTime, float playerX, float playerY, const Tilemap&
         spdlog::debug("Enemy patrolling near player at distance: {}", distanceToPlayer);
     } else {
         state = EnemyState::Idle;
+    }
+    
+    // Try to shoot at player if in range and cooldown is ready
+    if (distanceToPlayer <= shootRange && shootCooldown <= 0) {
+        shootProjectile(playerX, playerY, enemyProjectiles);
     }
     
     float moveX = 0.0f, moveY = 0.0f;

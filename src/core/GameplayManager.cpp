@@ -320,7 +320,7 @@ void GameplayManager::updateEntities(float deltaTime) {
     // Update enemies
     for (auto& enemy : enemies) {
         if (enemy) {
-            enemy->update(deltaTime, player->getX(), player->getY(), *tilemap);
+            enemy->update(deltaTime, player->getX(), player->getY(), *tilemap, enemyProjectiles);
             enemy->updateAnimation(deltaTime);
         }
     }

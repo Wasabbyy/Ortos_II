@@ -32,7 +32,7 @@ public:
     void loadTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames);
     void loadHitTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames);
     void updateAnimation(float deltaTime);
-    void update(float deltaTime, float playerX, float playerY, const class Tilemap& tilemap);
+    void update(float deltaTime, float playerX, float playerY, const class Tilemap& tilemap, std::vector<class Projectile>& enemyProjectiles);
     void move(float dx, float dy);
     void shootProjectile(float targetX, float targetY, std::vector<Projectile>& projectiles);
     void loadDeathTexture(const std::string& filePath, int frameWidth, int frameHeight, int totalFrames); // New
