@@ -40,6 +40,9 @@ public:
     // Save slot selection functions
     static void drawSaveSlotMenu(int windowWidth, int windowHeight, int selectedSlot, const std::vector<std::string>& saveSlotInfo);
     static void drawLoadSlotMenu(int windowWidth, int windowHeight, int selectedSlot, const std::vector<std::string>& saveSlotInfo);
+    
+    // Settings menu function
+    static void drawSettingsMenu(int windowWidth, int windowHeight, int selectedOption, float masterVolume, float musicVolume, float sfxVolume);
 
 private:
     static TextRenderer* textRenderer;

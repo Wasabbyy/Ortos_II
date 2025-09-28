@@ -18,6 +18,7 @@
 #include "core/GameInitializer.h"
 #include "core/GameplayManager.h"
 #include "core/GameStateManager.h"
+#include "config/ConfigManager.h"
 #include <iostream>
 #include <stb_image.h>
 #include <spdlog/spdlog.h>
@@ -50,6 +51,10 @@ int main() {
     EnhancedSaveManager saveManager(initializer.getAssetPath("saves/"));
     saveManager.initialize();
     
+    // Initialize config manager for settings
+    ConfigManager configManager;
+    configManager.initialize(initializer.getAssetPath("config/game_config.cfg"));
+    
     // Initialize gameplay manager
     GameplayManager gameplayManager;
     if (!gameplayManager.initialize(initializer.getAssetPath(""), audioManager, uiAudioManager)) {
@@ -62,7 +67,7 @@ int main() {
 
     // Initialize game state manager
     CoreGameStateManager gameStateManager;
-    gameStateManager.initialize(&gameplayManager, &saveManager, audioManager, uiAudioManager, window, initializer.getAssetPath(""));
+    gameStateManager.initialize(&gameplayManager, &saveManager, audioManager, uiAudioManager, &configManager, window, initializer.getAssetPath(""));
 
     // Get window dimensions
     int windowWidth = 1920;

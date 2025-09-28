@@ -2,7 +2,7 @@
 #include <spdlog/spdlog.h>
 
 CoreGameStateManager::CoreGameStateManager() 
-    : gameplayManager(nullptr), saveManager(nullptr), audioManager(nullptr), uiAudioManager(nullptr), window(nullptr),
+    : gameplayManager(nullptr), saveManager(nullptr), audioManager(nullptr), uiAudioManager(nullptr), configManager(nullptr), window(nullptr),
       currentState(GameState::MENU), gameInitialized(false), hasSaveFile(false),
       selectedMenuOption(0), previousSelectedMenuOption(-1),
       selectedPauseButton(0), previousSelectedPauseButton(-1),
@@ -10,6 +10,9 @@ CoreGameStateManager::CoreGameStateManager()
       selectedDeathButton(0), previousSelectedDeathButton(-1),
       mouseX(0.0), mouseY(0.0), respawnButtonHovered(false), exitButtonHovered(false),
       previousRespawnButtonHovered(false), previousExitButtonHovered(false),
+      selectedSettingsOption(0), previousSelectedSettingsOption(-1),
+      masterVolume(1.0f), musicVolume(1.0f), sfxVolume(1.0f), previousState(GameState::MENU),
+      volumeAdjustTimer(0.0f), volumeAdjustDelay(0.2f),
       introMusicStarted(false), backgroundMusicStarted(false),
       keyUpPressed(false), keyDownPressed(false), keyEnterPressed(false), keyEscPressed(false),
       mouseLeftPressed(false), hoverSoundPlayed(false), clickSoundPlayed(false) {
@@ -20,21 +23,26 @@ CoreGameStateManager::~CoreGameStateManager() {
 }
 
 void CoreGameStateManager::initialize(GameplayManager* gameplayManager, 
-                                 EnhancedSaveManager* saveManager,
-                                 AudioManager* audioManager,
-                                 UIAudioManager* uiAudioManager,
-                                 GLFWwindow* window,
-                                 const std::string& assetPath) {
+                                      EnhancedSaveManager* saveManager,
+                                      AudioManager* audioManager,
+                                      UIAudioManager* uiAudioManager,
+                                      ConfigManager* configManager,
+                                      GLFWwindow* window,
+                                      const std::string& assetPath) {
     this->gameplayManager = gameplayManager;
     this->saveManager = saveManager;
     this->audioManager = audioManager;
     this->uiAudioManager = uiAudioManager;
+    this->configManager = configManager;
     this->window = window;
     this->assetPath = assetPath;
     
     // Initialize save slots and check for existing saves
     updateSaveSlots();
     hasSaveFile = saveManager->hasAnySave();
+    
+    // Load settings from config file
+    loadSettings();
     
     // Start intro music
     startIntroMusic();
@@ -63,6 +71,9 @@ void CoreGameStateManager::update(float deltaTime, int windowWidth, int windowHe
             break;
         case GameState::LOAD_SLOT_SELECTION:
             handleLoadSlotSelectionState(windowWidth, windowHeight);
+            break;
+        case GameState::SETTINGS:
+            handleSettingsState(windowWidth, windowHeight);
             break;
     }
 }
@@ -101,6 +112,14 @@ void CoreGameStateManager::draw(int windowWidth, int windowHeight) {
             }
             // Draw load slot selection menu
             UI::drawLoadSlotMenu(windowWidth, windowHeight, selectedSaveSlot, saveSlotInfo);
+            break;
+        case GameState::SETTINGS:
+            // Draw game in background (paused)
+            if (gameplayManager->isGameInitialized()) {
+                gameplayManager->drawPaused(windowWidth, windowHeight);
+            }
+            // Draw settings menu
+            UI::drawSettingsMenu(windowWidth, windowHeight, selectedSettingsOption, masterVolume, musicVolume, sfxVolume);
             break;
     }
 }
@@ -212,7 +231,7 @@ void CoreGameStateManager::resetInputStates() {
 }
 
 void CoreGameStateManager::handleMenuInput() {
-    int menuOptions = hasSaveFile ? 3 : 2; // Start Game, Load Game, Exit Game (if save exists) | Start Game, Exit Game (no save)
+    int menuOptions = hasSaveFile ? 4 : 3; // Start Game, Load Game, Settings, Exit Game (if save exists) | Start Game, Settings, Exit Game (no save)
     
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
         selectedMenuOption = (selectedMenuOption - 1 + menuOptions) % menuOptions;
@@ -234,7 +253,7 @@ void CoreGameStateManager::handleMenuInput() {
         playClickSound();
         
         if (hasSaveFile) {
-            // Menu with save file: Start Game, Load Game, Exit Game
+            // Menu with save file: Start Game, Load Game, Settings, Exit Game
             if (selectedMenuOption == 0) {
                 // Start new game - always create fresh game
                 spdlog::info("Starting fresh new game");
@@ -246,11 +265,15 @@ void CoreGameStateManager::handleMenuInput() {
                 transitionToLoadSlotSelection();
                 spdlog::info("Entering load slot selection from main menu");
             } else if (selectedMenuOption == 2) {
+                // Settings
+                previousState = currentState;
+                transitionToSettings();
+            } else if (selectedMenuOption == 3) {
                 // Exit game
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
         } else {
-            // Menu without save file: Start Game, Exit Game
+            // Menu without save file: Start Game, Settings, Exit Game
             if (selectedMenuOption == 0) {
                 // Start new game - reset game state
                 spdlog::info("Starting fresh new game");
@@ -258,6 +281,10 @@ void CoreGameStateManager::handleMenuInput() {
                 gameplayManager->resetGame(); // Reset the gameplay manager state
                 transitionToPlaying();
             } else if (selectedMenuOption == 1) {
+                // Settings
+                previousState = currentState;
+                transitionToSettings();
+            } else if (selectedMenuOption == 2) {
                 // Exit game
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
@@ -271,13 +298,13 @@ void CoreGameStateManager::handleMenuInput() {
 
 void CoreGameStateManager::handlePauseInput() {
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
-        selectedPauseButton = (selectedPauseButton - 1 + 4) % 4; // 4 options: Resume, Save Game, Back to Menu, Exit Game
+        selectedPauseButton = (selectedPauseButton - 1 + 5) % 5; // 5 options: Resume, Save Game, Settings, Back to Menu, Exit Game
         keyUpPressed = true;
     } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
         keyUpPressed = false;
     }
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
-        selectedPauseButton = (selectedPauseButton + 1) % 4;
+        selectedPauseButton = (selectedPauseButton + 1) % 5;
         keyDownPressed = true;
     } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
         keyDownPressed = false;
@@ -298,10 +325,14 @@ void CoreGameStateManager::handlePauseInput() {
             transitionToSaveSlotSelection();
             spdlog::info("Entering save slot selection");
         } else if (selectedPauseButton == 2) {
+            // Settings
+            previousState = currentState;
+            transitionToSettings();
+        } else if (selectedPauseButton == 3) {
             // Back to main menu
             transitionToMenu();
             spdlog::info("Returning to main menu from pause");
-        } else if (selectedPauseButton == 3) {
+        } else if (selectedPauseButton == 4) {
             // Exit game
             spdlog::info("Exiting game from pause menu");
             // Update player stats in database before exiting
@@ -546,6 +577,82 @@ void CoreGameStateManager::transitionToLoadSlotSelection() {
     currentState = GameState::LOAD_SLOT_SELECTION;
 }
 
+void CoreGameStateManager::transitionToSettings() {
+    selectedSettingsOption = 0;
+    currentState = GameState::SETTINGS;
+}
+
+void CoreGameStateManager::handleSettingsState(int windowWidth, int windowHeight) {
+    // Update volume adjust timer
+    volumeAdjustTimer += 0.016f; // Assume ~60fps
+    
+    handleSettingsInput();
+}
+
+void CoreGameStateManager::handleSettingsInput() {
+    // 2 options: Master Volume, Back
+    const int settingsOptions = 2;
+    
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && !keyUpPressed) {
+        selectedSettingsOption = (selectedSettingsOption - 1 + settingsOptions) % settingsOptions;
+        keyUpPressed = true;
+    } else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE) {
+        keyUpPressed = false;
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && !keyDownPressed) {
+        selectedSettingsOption = (selectedSettingsOption + 1) % settingsOptions;
+        keyDownPressed = true;
+    } else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE) {
+        keyDownPressed = false;
+    }
+    
+    // Play hover sound when selection changes (with debouncing)
+    playHoverSound(selectedSettingsOption, previousSelectedSettingsOption);
+    
+    // Volume adjustment with left/right arrows (only for master volume)
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && volumeAdjustTimer >= volumeAdjustDelay) {
+        if (selectedSettingsOption == 0) { // Master Volume
+            masterVolume = std::max(0.0f, masterVolume - 0.05f);
+            audioManager->setMasterVolume(masterVolume);
+            volumeAdjustTimer = 0.0f; // Reset timer
+            saveSettings(); // Save settings immediately
+            spdlog::debug("Master volume decreased to: {}", masterVolume);
+        }
+    }
+    
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && volumeAdjustTimer >= volumeAdjustDelay) {
+        if (selectedSettingsOption == 0) { // Master Volume
+            masterVolume = std::min(1.0f, masterVolume + 0.05f);
+            audioManager->setMasterVolume(masterVolume);
+            volumeAdjustTimer = 0.0f; // Reset timer
+            saveSettings(); // Save settings immediately
+            spdlog::debug("Master volume increased to: {}", masterVolume);
+        }
+    }
+    
+    if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS && !keyEnterPressed) {
+        playClickSound();
+        
+        if (selectedSettingsOption == 1) {
+            // Back button - return to previous state
+            currentState = previousState;
+            spdlog::info("Returning from settings to previous state");
+        }
+        keyEnterPressed = true;
+    } else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_RELEASE) {
+        keyEnterPressed = false;
+    }
+    
+    // ESC key to go back
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !keyEscPressed) {
+        currentState = previousState;
+        spdlog::info("Returning from settings to previous state via ESC");
+        keyEscPressed = true;
+    } else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
+        keyEscPressed = false;
+    }
+}
+
 void CoreGameStateManager::updateSaveSlots() {
     saveManager->updateSaveSlots();
 }
@@ -568,4 +675,45 @@ void CoreGameStateManager::playClickSound() {
 
 bool CoreGameStateManager::isMouseOverButton(double mouseX, double mouseY, float buttonX, float buttonY, float buttonWidth, float buttonHeight) {
     return UI::isMouseOverButton(mouseX, mouseY, buttonX, buttonY, buttonWidth, buttonHeight);
+}
+
+void CoreGameStateManager::loadSettings() {
+    if (!configManager || !configManager->isLoaded()) {
+        spdlog::warn("ConfigManager not available, using default settings");
+        return;
+    }
+
+    // Load volume settings
+    masterVolume = configManager->getFloat("master_volume", 1.0f);
+    musicVolume = configManager->getFloat("music_volume", 1.0f);
+    sfxVolume = configManager->getFloat("sfx_volume", 1.0f);
+
+    // Apply loaded settings to audio manager
+    if (audioManager) {
+        audioManager->setMasterVolume(masterVolume);
+        audioManager->setMusicVolume(musicVolume);
+        audioManager->setSoundVolume(sfxVolume);
+    }
+
+    spdlog::info("Loaded settings - Master: {:.2f}, Music: {:.2f}, SFX: {:.2f}", 
+                 masterVolume, musicVolume, sfxVolume);
+}
+
+void CoreGameStateManager::saveSettings() {
+    if (!configManager || !configManager->isLoaded()) {
+        spdlog::warn("ConfigManager not available, cannot save settings");
+        return;
+    }
+
+    // Save volume settings
+    configManager->setFloat("master_volume", masterVolume);
+    configManager->setFloat("music_volume", musicVolume);
+    configManager->setFloat("sfx_volume", sfxVolume);
+
+    // Save to file
+    if (configManager->saveConfig()) {
+        spdlog::info("Settings saved successfully");
+    } else {
+        spdlog::error("Failed to save settings to config file");
+    }
 }

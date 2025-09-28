@@ -62,6 +62,7 @@ set(SOURCES
     src/core/GameInitializer.cpp
     src/core/GameplayManager.cpp
     src/core/GameStateManager.cpp
+    src/config/ConfigManager.cpp
     src/external/tinyxml2.cpp
     src/external/glad.c
     src/external/stb_image.cpp
