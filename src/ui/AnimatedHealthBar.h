@@ -12,17 +12,10 @@ public:
     void cleanup();
 
 private:
-    unsigned int handsTextureID;
+    // Array of texture IDs for different health levels (100%, 80%, 60%, 40%, 20%, 0%)
+    unsigned int healthTextures[6];
     int textureWidth, textureHeight;
     int frameWidth, frameHeight;
-    int framesPerRow;
-    int totalRows;
-    int totalFrames;
-    
-    // Animation properties
-    float animationTimer;
-    float frameDuration;
-    int currentFrame;
     
     // Health bar properties
     float barWidth;
@@ -31,7 +24,8 @@ private:
     
     bool initialized;
     
-    void loadHandsTexture(const std::string& assetPath);
-    void cleanupTexture();
+    void loadHealthTextures(const std::string& assetPath);
+    void cleanupTextures();
+    int getHealthLevelIndex(int currentHealth, int maxHealth);
 };
 

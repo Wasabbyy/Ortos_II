@@ -40,6 +40,6 @@ private:
     // Constants
     static constexpr float MAX_COLLISION_DISTANCE = 64.0f;
     static constexpr float PROJECTILE_COLLISION_RADIUS = 8.0f;
-    static constexpr int PLAYER_PROJECTILE_DAMAGE = 25;
-    static constexpr int ENEMY_PROJECTILE_DAMAGE = 15;
+    static constexpr int PLAYER_PROJECTILE_DAMAGE = 20;  // Adjusted to match 6 health levels (5 hits = 100% to 0%)
+    static constexpr int ENEMY_PROJECTILE_DAMAGE = 20;   // Adjusted to match 6 health levels (5 hits = 100% to 0%)
 };
