@@ -10,6 +10,7 @@ TextRenderer* UI::textRenderer = nullptr;
 bool UI::initialized = false;
 GLuint UI::titleScreenTextureID = 0;
 GLuint UI::deathScreenTextureID = 0;
+AnimatedHealthBar* UI::animatedHealthBar = nullptr;
 
 bool UI::init(const std::string& fontPath) {
     if (initialized) {
@@ -126,7 +127,39 @@ void UI::cleanup() {
         deathScreenTextureID = 0;
     }
     
+    if (animatedHealthBar) {
+        animatedHealthBar->cleanup();
+        delete animatedHealthBar;
+        animatedHealthBar = nullptr;
+    }
+    
     initialized = false;
+}
+
+void UI::initAnimatedHealthBar(const std::string& assetPath) {
+    if (animatedHealthBar) {
+        spdlog::warn("AnimatedHealthBar already initialized!");
+        return;
+    }
+    
+    animatedHealthBar = new AnimatedHealthBar();
+    animatedHealthBar->initialize(assetPath);
+    spdlog::info("AnimatedHealthBar initialized");
+}
+
+void UI::updateAnimatedHealthBar(float deltaTime) {
+    if (animatedHealthBar) {
+        animatedHealthBar->update(deltaTime);
+    }
+}
+
+void UI::drawAnimatedPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight) {
+    if (animatedHealthBar) {
+        animatedHealthBar->draw(currentHealth, maxHealth, windowWidth, windowHeight);
+    } else {
+        // Fallback to regular health bar if animated one is not available
+        drawPlayerHealth(currentHealth, maxHealth, windowWidth, windowHeight);
+    }
 }
 
 void UI::drawText(const std::string& text, float x, float y, float scale, float r, float g, float b) {

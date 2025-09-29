@@ -2,11 +2,18 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include "ui/TextRenderer.h"
+#include "ui/AnimatedHealthBar.h"
 
 class UI {
 public:
     // Initialize the UI system with a font
     static bool init(const std::string& fontPath = "assets/fonts/Arial.ttc");
+    
+    // Initialize animated health bar
+    static void initAnimatedHealthBar(const std::string& assetPath);
+    
+    // Update animated health bar
+    static void updateAnimatedHealthBar(float deltaTime);
     
     // Cleanup
     static void cleanup();
@@ -18,6 +25,7 @@ public:
     static bool loadDeathScreenTexture(const std::string& imagePath);
     
     static void drawPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight);
+    static void drawAnimatedPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight);
     static void drawEnemyHealthBar(float x, float y, int currentHealth, int maxHealth);
     static void drawHeart(float x, float y, bool filled, float size = 16.0f);
     static void drawXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight);
@@ -49,4 +57,5 @@ private:
     static bool initialized;
     static GLuint titleScreenTextureID;
     static GLuint deathScreenTextureID;
+    static AnimatedHealthBar* animatedHealthBar;
 }; 

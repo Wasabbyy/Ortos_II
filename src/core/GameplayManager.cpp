@@ -392,6 +392,9 @@ void GameplayManager::updateEntities(float deltaTime) {
             gateEffect->update(deltaTime);
         }
     }
+    
+    // Update animated health bar
+    UI::updateAnimatedHealthBar(deltaTime);
 }
 
 void GameplayManager::handleCollisions() {
@@ -451,7 +454,7 @@ void GameplayManager::drawGameWorld() {
 
 void GameplayManager::drawUI(int windowWidth, int windowHeight) {
     if (player) {
-        UI::drawPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
+        UI::drawAnimatedPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
         UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
         UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
     }

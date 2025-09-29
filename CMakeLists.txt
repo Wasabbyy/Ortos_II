@@ -64,6 +64,8 @@ set(SOURCES
     src/core/GameplayManager.cpp
     src/core/GameStateManager.cpp
     src/config/ConfigManager.cpp
+    src/effects/GateEffect.cpp
+    src/ui/AnimatedHealthBar.cpp
     src/external/tinyxml2.cpp
     src/external/glad.c
     src/external/stb_image.cpp

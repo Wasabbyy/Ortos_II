@@ -161,6 +161,9 @@ bool GameInitializer::initializeUI() {
         spdlog::warn("Failed to load death screen texture, will use black background");
     }
     
+    // Initialize animated health bar
+    UI::initAnimatedHealthBar(getAssetPath(""));
+    
     // Load all projectile textures (player, eye, shroom)
     Projectile::loadAllProjectileTextures();
     
