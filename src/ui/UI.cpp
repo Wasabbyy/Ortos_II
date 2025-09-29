@@ -355,20 +355,10 @@ void UI::drawLevelIndicator(int level, int windowWidth, int windowHeight) {
     glLoadIdentity();
     
         // Position next to health bar at the top of the screen
-        float x = 60.0f;  // Health bar width + margin
+        float x = 80.0f;  // Health bar width + margin
         float y = 900.0f;  // Top of screen, same as XP bar
     
-    // Draw level background (dark gold)
-    glDisable(GL_TEXTURE_2D);
-    glColor3f(0.3f, 0.2f, 0.0f);
-    glBegin(GL_QUADS);
-    glVertex2f(x, y - 11.0f);
-    glVertex2f(x + 60.0f, y - 11.0f);
-    glVertex2f(x + 60.0f, y + 11.0f);
-    glVertex2f(x, y + 11.0f);
-    glEnd();
-    
-    
+    // Level background removed - just draw text
     glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
     glEnable(GL_TEXTURE_2D);
     

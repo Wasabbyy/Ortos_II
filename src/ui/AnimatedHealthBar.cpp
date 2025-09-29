@@ -31,7 +31,7 @@ void AnimatedHealthBar::loadHealthTextures(const std::string& assetPath) {
     int healthPercentages[] = {100, 80, 60, 40, 20, 0};
     
     for (int i = 0; i < 6; i++) {
-        std::string healthFile = assetPath + "assets/graphic/enviroment/health_variants/detailed/hands_health_" + 
+        std::string healthFile = assetPath + "assets/graphic/enviroment/healbar/detailed/hands_health_" + 
                                 std::to_string(healthPercentages[i]) + ".png";
         
         spdlog::info("Attempting to load health texture: {}", healthFile);
