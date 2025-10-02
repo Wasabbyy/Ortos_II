@@ -3,6 +3,7 @@
 #include <string>
 #include "ui/TextRenderer.h"
 #include "ui/AnimatedHealthBar.h"
+#include "ui/AnimatedXPBar.h"
 
 class UI {
 public:
@@ -14,6 +15,12 @@ public:
     
     // Update animated health bar
     static void updateAnimatedHealthBar(float deltaTime);
+    
+    // Initialize animated XP bar
+    static void initAnimatedXPBar(const std::string& assetPath);
+    
+    // Update animated XP bar
+    static void updateAnimatedXPBar(float deltaTime);
     
     // Cleanup
     static void cleanup();
@@ -29,6 +36,8 @@ public:
     static void drawEnemyHealthBar(float x, float y, int currentHealth, int maxHealth);
     static void drawHeart(float x, float y, bool filled, float size = 16.0f);
     static void drawXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight);
+    static void drawAnimatedXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight);
+    static void drawAnimatedXPBarWithState(int xpState, int windowWidth, int windowHeight);
     static void drawLevelIndicator(int level, int windowWidth, int windowHeight);
     
     // Menu functions
@@ -58,4 +67,5 @@ private:
     static GLuint titleScreenTextureID;
     static GLuint deathScreenTextureID;
     static AnimatedHealthBar* animatedHealthBar;
+    static AnimatedXPBar* animatedXPBar;
 }; 

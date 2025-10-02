@@ -66,6 +66,7 @@ set(SOURCES
     src/config/ConfigManager.cpp
     src/effects/GateEffect.cpp
     src/ui/AnimatedHealthBar.cpp
+    src/ui/AnimatedXPBar.cpp
     src/external/tinyxml2.cpp
     src/external/glad.c
     src/external/stb_image.cpp

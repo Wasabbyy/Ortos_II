@@ -124,7 +124,7 @@ void AnimatedHealthBar::draw(int currentHealth, int maxHealth, int windowWidth, 
     
     // Set health bar position and make it bigger, moved more to the right
     barX = 80.0f + barWidth / 2.0f; // Moved from 150.0f to 170.0f to move further right
-    barY = 100.0f;
+    barY = 70.0f;
     
     // Make the health bar smaller while maintaining proper aspect ratio
     // The hands image is 128x64, so when rotated 90 degrees it becomes 64x128

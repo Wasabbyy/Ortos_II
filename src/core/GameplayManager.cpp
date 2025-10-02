@@ -455,7 +455,7 @@ void GameplayManager::drawGameWorld() {
 void GameplayManager::drawUI(int windowWidth, int windowHeight) {
     if (player) {
         UI::drawAnimatedPlayerHealth(player->getCurrentHealth(), player->getMaxHealth(), windowWidth, windowHeight);
-        UI::drawXPBar(player->getCurrentXP(), player->getMaxXP(), windowWidth, windowHeight);
+        UI::drawAnimatedXPBarWithState(player->getXPState(), windowWidth, windowHeight);
         UI::drawLevelIndicator(player->getLevel(), windowWidth, windowHeight);
     }
 }

@@ -11,6 +11,7 @@ bool UI::initialized = false;
 GLuint UI::titleScreenTextureID = 0;
 GLuint UI::deathScreenTextureID = 0;
 AnimatedHealthBar* UI::animatedHealthBar = nullptr;
+AnimatedXPBar* UI::animatedXPBar = nullptr;
 
 bool UI::init(const std::string& fontPath) {
     if (initialized) {
@@ -133,6 +134,12 @@ void UI::cleanup() {
         animatedHealthBar = nullptr;
     }
     
+    if (animatedXPBar) {
+        animatedXPBar->cleanup();
+        delete animatedXPBar;
+        animatedXPBar = nullptr;
+    }
+    
     initialized = false;
 }
 
@@ -153,12 +160,50 @@ void UI::updateAnimatedHealthBar(float deltaTime) {
     }
 }
 
+void UI::initAnimatedXPBar(const std::string& assetPath) {
+    if (animatedXPBar) {
+        spdlog::warn("AnimatedXPBar already initialized!");
+        return;
+    }
+    
+    animatedXPBar = new AnimatedXPBar();
+    animatedXPBar->initialize(assetPath);
+    spdlog::info("AnimatedXPBar initialized");
+}
+
+void UI::updateAnimatedXPBar(float deltaTime) {
+    if (animatedXPBar) {
+        animatedXPBar->update(deltaTime);
+    }
+}
+
 void UI::drawAnimatedPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight) {
     if (animatedHealthBar) {
         animatedHealthBar->draw(currentHealth, maxHealth, windowWidth, windowHeight);
     } else {
         // Fallback to regular health bar if animated one is not available
         drawPlayerHealth(currentHealth, maxHealth, windowWidth, windowHeight);
+    }
+}
+
+void UI::drawAnimatedXPBar(int currentXP, int maxXP, int windowWidth, int windowHeight) {
+    if (animatedXPBar) {
+        animatedXPBar->draw(currentXP, maxXP, windowWidth, windowHeight);
+    } else {
+        // Fallback to regular XP bar if animated one is not available
+        drawXPBar(currentXP, maxXP, windowWidth, windowHeight);
+    }
+}
+
+void UI::drawAnimatedXPBarWithState(int xpState, int windowWidth, int windowHeight) {
+    if (animatedXPBar) {
+        animatedXPBar->drawWithState(xpState, windowWidth, windowHeight);
+    } else {
+        // Fallback to regular XP bar if animated one is not available
+        // Use a default XP amount based on state
+        int currentXP = xpState * 20; // Each state represents 20 XP
+        int maxXP = 100;
+        drawXPBar(currentXP, maxXP, windowWidth, windowHeight);
     }
 }
 

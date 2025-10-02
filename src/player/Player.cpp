@@ -252,6 +252,9 @@ void Player::gainXP(int amount) {
     currentXP += amount;
     spdlog::info("Player gained {} XP. Current XP: {}/{}", amount, currentXP, maxXP);
     
+    // Update XP state based on current XP progress
+    updateXPState();
+    
     // Check for level up
     while (currentXP >= maxXP && level < 5) {
         levelUp();
@@ -265,10 +268,30 @@ void Player::levelUp() {
     }
     
     currentXP = 0;  // Reset XP to 0 when leveling up
+    xpState = 0;    // Reset XP state to first state
     level++;
     
-    // Increase max XP for next level (exponential growth)
-    maxXP = static_cast<int>(maxXP * 1.5f);
+    // Keep max XP fixed at 100 for all levels
+    maxXP = 100;
     
     spdlog::info("Player leveled up to level {}! XP: {}/{}", level, currentXP, maxXP);
+}
+
+void Player::updateXPState() {
+    if (maxXP <= 0) {
+        xpState = 0;
+        return;
+    }
+    
+    float xpRatio = static_cast<float>(currentXP) / maxXP;
+    
+    // Map XP ratio to state index (0-4) with thresholds
+    // Each state represents 20% of the XP bar
+    if (xpRatio >= 0.8f) xpState = 4;      // 80-100% -> xpbar_05
+    else if (xpRatio >= 0.6f) xpState = 3; // 60-80%  -> xpbar_04
+    else if (xpRatio >= 0.4f) xpState = 2; // 40-60%  -> xpbar_03
+    else if (xpRatio >= 0.2f) xpState = 1; // 20-40%  -> xpbar_02
+    else xpState = 0;                      // 0-20%   -> xpbar_01
+    
+    spdlog::debug("XP State updated: {} (XP: {}/{}, ratio: {:.2f})", xpState, currentXP, maxXP, xpRatio);
 }

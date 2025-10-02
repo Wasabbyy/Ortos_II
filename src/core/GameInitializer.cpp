@@ -164,6 +164,9 @@ bool GameInitializer::initializeUI() {
     // Initialize animated health bar
     UI::initAnimatedHealthBar(getAssetPath(""));
     
+    // Initialize animated XP bar
+    UI::initAnimatedXPBar(getAssetPath(""));
+    
     // Load all projectile textures (player, eye, shroom)
     Projectile::loadAllProjectileTextures();
     

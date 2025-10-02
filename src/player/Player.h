@@ -47,8 +47,10 @@ public:
     int getCurrentXP() const { return currentXP; }
     int getMaxXP() const { return maxXP; }
     int getLevel() const { return level; }
+    int getXPState() const { return xpState; }
     void gainXP(int amount);
     void levelUp();
+    void updateXPState();
     
     // Collision state
     void setCollidingWithEnemy(bool colliding) { m_isCollidingWithEnemy = colliding; }
@@ -91,6 +93,7 @@ private:
     
     // XP system
     int currentXP = 0;
-    int maxXP = 100;  // XP needed for level 1 -> 2
+    int maxXP = 100;  // Fixed XP needed for each level
     int level = 1;
+    int xpState = 0;  // Current XP bar state (0-4 for xpbar_01 to xpbar_05)
 };
