@@ -76,6 +76,13 @@ void GameplayManager::cleanup() {
     }
     gateEffects.clear();
     
+    for (auto& damageNumber : damageNumbers) {
+        if (damageNumber) {
+            delete damageNumber;
+        }
+    }
+    damageNumbers.clear();
+    
     playerProjectiles.clear();
     enemyProjectiles.clear();
     
@@ -160,6 +167,7 @@ void GameplayManager::draw(int windowWidth, int windowHeight) {
     drawProjectiles();
     drawBloodEffects();
     drawGateEffects();
+    drawDamageNumbers();
     drawUI(windowWidth, windowHeight);
 }
 
@@ -172,6 +180,7 @@ void GameplayManager::drawPaused(int windowWidth, int windowHeight) {
     drawProjectiles();
     drawBloodEffects();
     drawGateEffects();
+    drawDamageNumbers();
     drawUI(windowWidth, windowHeight);
 }
 
@@ -393,6 +402,13 @@ void GameplayManager::updateEntities(float deltaTime) {
         }
     }
     
+    // Update damage numbers
+    for (auto& damageNumber : damageNumbers) {
+        if (damageNumber) {
+            damageNumber->update(deltaTime);
+        }
+    }
+    
     // Update animated health bar
     UI::updateAnimatedHealthBar(deltaTime);
 }
@@ -407,8 +423,8 @@ void GameplayManager::handleCollisions() {
     // Handle projectile-wall collisions
     collisionManager.handleProjectileWallCollisions(playerProjectiles, enemyProjectiles, *tilemap);
     
-    // Handle projectile-entity collisions
-    collisionManager.handleProjectileCollisions(playerProjectiles, enemyProjectiles, player, enemies);
+    // Handle projectile-entity collisions (pass this so damage numbers can be spawned)
+    collisionManager.handleProjectileCollisions(playerProjectiles, enemyProjectiles, player, enemies, this);
 }
 
 void GameplayManager::createBloodEffects() {
@@ -445,6 +461,18 @@ void GameplayManager::cleanupInactiveObjects() {
         std::remove_if(enemyProjectiles.begin(), enemyProjectiles.end(),
             [](const Projectile& p) { return !p.isActive(); }),
         enemyProjectiles.end()
+    );
+    
+    // Clean up finished damage numbers
+    damageNumbers.erase(
+        std::remove_if(damageNumbers.begin(), damageNumbers.end(), [](DamageNumber* dmg) {
+            if (dmg->isFinished()) {
+                delete dmg;
+                return true;
+            }
+            return false;
+        }),
+        damageNumbers.end()
     );
 }
 
@@ -587,4 +615,17 @@ void GameplayManager::drawGateEffects() {
             gateEffect->draw();
         }
     }
+}
+
+void GameplayManager::drawDamageNumbers() {
+    for (auto& damageNumber : damageNumbers) {
+        if (damageNumber && damageNumber->isActive()) {
+            damageNumber->draw();
+        }
+    }
+}
+
+void GameplayManager::spawnDamageNumber(float x, float y, int damage, bool isPlayerDamage) {
+    damageNumbers.push_back(new DamageNumber(x, y, damage, isPlayerDamage));
+    spdlog::debug("Spawned damage number at ({}, {}) with damage: {}", x, y, damage);
 }

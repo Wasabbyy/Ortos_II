@@ -1,4 +1,5 @@
 #include "CollisionManager.h"
+#include "core/GameplayManager.h"
 #include <spdlog/spdlog.h>
 #include <algorithm>
 
@@ -87,7 +88,8 @@ void CollisionManager::handleProjectileWallCollisions(std::vector<Projectile>& p
 void CollisionManager::handleProjectileCollisions(std::vector<Projectile>& playerProjectiles,
                                                  std::vector<Projectile>& enemyProjectiles,
                                                  Player* player,
-                                                 std::vector<Enemy*>& enemies) {
+                                                 std::vector<Enemy*>& enemies,
+                                                 class GameplayManager* gameplayManager) {
     // Player projectiles vs Enemy
     for (auto& projectile : playerProjectiles) {
         if (!projectile.isActive()) continue;
@@ -100,6 +102,12 @@ void CollisionManager::handleProjectileCollisions(std::vector<Projectile>& playe
                 enemy->takeDamage(PLAYER_PROJECTILE_DAMAGE, player);  // Deal damage and pass player for XP reward
                 spdlog::info("Enemy hit by player projectile! Enemy HP: {}/{}", 
                             enemy->getCurrentHealth(), enemy->getMaxHealth());
+                
+                // Spawn damage number at enemy position
+                if (gameplayManager) {
+                    gameplayManager->spawnDamageNumber(enemy->getX(), enemy->getY() - 20, PLAYER_PROJECTILE_DAMAGE, false);
+                }
+                
                 break; // Projectile can only hit one enemy
             }
         }
@@ -114,6 +122,11 @@ void CollisionManager::handleProjectileCollisions(std::vector<Projectile>& playe
             player->takeDamage(ENEMY_PROJECTILE_DAMAGE);  // Deal damage
             spdlog::info("Player hit by enemy projectile! Player HP: {}/{}", 
                         player->getCurrentHealth(), player->getMaxHealth());
+            
+            // Spawn damage number at player position
+            if (gameplayManager) {
+                gameplayManager->spawnDamageNumber(player->getX(), player->getY() - 20, ENEMY_PROJECTILE_DAMAGE, true);
+            }
         }
     }
 }

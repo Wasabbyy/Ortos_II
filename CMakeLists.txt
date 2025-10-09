@@ -47,6 +47,7 @@ set(SOURCES
     src/projectile/Projectile.cpp
     src/effects/BloodEffect.cpp
     src/effects/GateEffect.cpp
+    src/effects/DamageNumber.cpp
     src/audio/AudioManager.cpp
     src/audio/UIAudioManager.cpp
     src/ui/UI.cpp

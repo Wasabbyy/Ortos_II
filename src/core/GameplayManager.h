@@ -7,6 +7,7 @@
 #include "projectile/Projectile.h"
 #include "effects/BloodEffect.h"
 #include "effects/GateEffect.h"
+#include "effects/DamageNumber.h"
 #include "input/InputHandler.h"
 #include "map/Tilemap.h"
 #include "collision/CollisionManager.h"
@@ -46,6 +47,10 @@ public:
     const std::vector<Projectile>& getEnemyProjectiles() const { return enemyProjectiles; }
     const std::vector<BloodEffect*>& getBloodEffects() const { return bloodEffects; }
     const std::vector<GateEffect*>& getGateEffects() const { return gateEffects; }
+    const std::vector<DamageNumber*>& getDamageNumbers() const { return damageNumbers; }
+    
+    // Spawn damage number
+    void spawnDamageNumber(float x, float y, int damage, bool isPlayerDamage);
     Tilemap* getTilemap() const { return tilemap; }
     const std::string& getCurrentLevelPath() const { return currentLevelPath; }
     float getLevelTransitionCooldown() const { return levelTransitionCooldown; }
@@ -63,6 +68,7 @@ private:
     std::vector<Projectile> enemyProjectiles;
     std::vector<BloodEffect*> bloodEffects;
     std::vector<GateEffect*> gateEffects;
+    std::vector<DamageNumber*> damageNumbers;
     InputHandler* inputHandler;
     Tilemap* tilemap;
     CollisionManager collisionManager;
@@ -98,6 +104,7 @@ private:
     void drawProjectiles();
     void drawBloodEffects();
     void drawGateEffects();
+    void drawDamageNumbers();
 
     // Level management
     void loadLevel(const std::string& levelPath);

@@ -25,7 +25,8 @@ public:
     void handleProjectileCollisions(std::vector<Projectile>& playerProjectiles,
                                    std::vector<Projectile>& enemyProjectiles,
                                    Player* player,
-                                   std::vector<Enemy*>& enemies);
+                                   std::vector<Enemy*>& enemies,
+                                   class GameplayManager* gameplayManager = nullptr);
 
 private:
     // Helper functions for collision detection
