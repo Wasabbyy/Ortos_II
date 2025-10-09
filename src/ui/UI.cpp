@@ -418,8 +418,8 @@ void UI::drawLevelIndicator(int level, int windowWidth, int windowHeight) {
     glLoadIdentity();
     
     // Position next to health bar at the top of the screen
-    float x = 80.0f;  // Health bar width + margin
-    float y = windowHeight - 150.0f;  // Top of screen
+    float x = 1720.0f;  // Health bar width + margin
+    float y = 1050.0f;  // Top of screen
     
     // Level background removed - just draw text
     glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
@@ -429,14 +429,14 @@ void UI::drawLevelIndicator(int level, int windowWidth, int windowHeight) {
     if (textRenderer) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        textRenderer->renderText("Level", x, y, 0.8f, 1.0f, 1.0f, 1.0f);
+        textRenderer->renderText("Level", x, y, 1.4f, 1.0f, 1.0f, 1.0f);
     }
     
     // Draw Roman numeral using pixel art if available
     if (romanNumeralRenderer) {
         // Position Roman numeral after "Level" text
-        float numeralX = x + 80.0f;  // Offset for "Level " text
-        float numeralY = y - 35.0f;  // Slightly below the text
+        float numeralX = 1770.0f;  // Offset for "Level " text
+        float numeralY = 920.0f;  // Slightly below the text
         float scale = 0.4f;  // Scale for better readability
         
         romanNumeralRenderer->drawRomanNumeral(level, numeralX, numeralY, scale);
