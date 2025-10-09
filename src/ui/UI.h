@@ -4,6 +4,7 @@
 #include "ui/TextRenderer.h"
 #include "ui/AnimatedHealthBar.h"
 #include "ui/AnimatedXPBar.h"
+#include "ui/RomanNumeralRenderer.h"
 
 class UI {
 public:
@@ -21,6 +22,9 @@ public:
     
     // Update animated XP bar
     static void updateAnimatedXPBar(float deltaTime);
+    
+    // Initialize Roman numeral renderer
+    static void initRomanNumeralRenderer(const std::string& assetPath);
     
     // Cleanup
     static void cleanup();
@@ -68,4 +72,5 @@ private:
     static GLuint deathScreenTextureID;
     static AnimatedHealthBar* animatedHealthBar;
     static AnimatedXPBar* animatedXPBar;
+    static RomanNumeralRenderer* romanNumeralRenderer;
 }; 

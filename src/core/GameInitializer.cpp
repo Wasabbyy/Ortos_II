@@ -167,6 +167,9 @@ bool GameInitializer::initializeUI() {
     // Initialize animated XP bar
     UI::initAnimatedXPBar(getAssetPath(""));
     
+    // Initialize Roman numeral renderer for level display
+    UI::initRomanNumeralRenderer(getAssetPath("assets/graphic/roman_numerals"));
+    
     // Load all projectile textures (player, eye, shroom)
     Projectile::loadAllProjectileTextures();
     

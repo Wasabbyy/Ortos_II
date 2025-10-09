@@ -12,6 +12,7 @@ GLuint UI::titleScreenTextureID = 0;
 GLuint UI::deathScreenTextureID = 0;
 AnimatedHealthBar* UI::animatedHealthBar = nullptr;
 AnimatedXPBar* UI::animatedXPBar = nullptr;
+RomanNumeralRenderer* UI::romanNumeralRenderer = nullptr;
 
 bool UI::init(const std::string& fontPath) {
     if (initialized) {
@@ -140,6 +141,12 @@ void UI::cleanup() {
         animatedXPBar = nullptr;
     }
     
+    if (romanNumeralRenderer) {
+        romanNumeralRenderer->cleanup();
+        delete romanNumeralRenderer;
+        romanNumeralRenderer = nullptr;
+    }
+    
     initialized = false;
 }
 
@@ -175,6 +182,17 @@ void UI::updateAnimatedXPBar(float deltaTime) {
     if (animatedXPBar) {
         animatedXPBar->update(deltaTime);
     }
+}
+
+void UI::initRomanNumeralRenderer(const std::string& assetPath) {
+    if (romanNumeralRenderer) {
+        spdlog::warn("RomanNumeralRenderer already initialized!");
+        return;
+    }
+    
+    romanNumeralRenderer = new RomanNumeralRenderer();
+    romanNumeralRenderer->initialize(assetPath);
+    spdlog::info("RomanNumeralRenderer initialized");
 }
 
 void UI::drawAnimatedPlayerHealth(int currentHealth, int maxHealth, int windowWidth, int windowHeight) {
@@ -399,42 +417,35 @@ void UI::drawLevelIndicator(int level, int windowWidth, int windowHeight) {
     glPushMatrix();
     glLoadIdentity();
     
-        // Position next to health bar at the top of the screen
-        float x = 80.0f;  // Health bar width + margin
-        float y = 900.0f;  // Top of screen, same as XP bar
+    // Position next to health bar at the top of the screen
+    float x = 80.0f;  // Health bar width + margin
+    float y = windowHeight - 150.0f;  // Top of screen
     
     // Level background removed - just draw text
     glColor3f(1.0f, 1.0f, 1.0f);  // Reset color
     glEnable(GL_TEXTURE_2D);
     
-    // Draw level text using Roman numerals
-    std::string levelText;
-    switch (level) {
-        case 1: levelText = "Level I"; break;
-        case 2: levelText = "Level II"; break;
-        case 3: levelText = "Level III"; break;
-        case 4: levelText = "Level IV"; break;
-        case 5: levelText = "Level V"; break;
-        default: levelText = "Level I"; break;  // Default to level 1 if invalid
-    }
+    // Draw "Level" text first
     if (textRenderer) {
-        // Use the same text rendering setup as the menu buttons
-        glMatrixMode(GL_PROJECTION);
-        glPushMatrix();
-        glLoadIdentity();
-        glOrtho(0, 1920, 0, 1080, -1, 1);
-        glMatrixMode(GL_MODELVIEW);
-        glPushMatrix();
-        glLoadIdentity();
-        glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glColor3f(1.0f, 1.0f, 1.0f);
-        textRenderer->renderText(levelText, x + 5.0f, y + 5.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
-        glMatrixMode(GL_MODELVIEW);
-        glPopMatrix();
+        textRenderer->renderText("Level", x, y, 0.8f, 1.0f, 1.0f, 1.0f);
+    }
+    
+    // Draw Roman numeral using pixel art if available
+    if (romanNumeralRenderer) {
+        // Position Roman numeral after "Level" text
+        float numeralX = x + 80.0f;  // Offset for "Level " text
+        float numeralY = y - 35.0f;  // Slightly below the text
+        float scale = 0.4f;  // Scale for better readability
+        
+        romanNumeralRenderer->drawRomanNumeral(level, numeralX, numeralY, scale);
+    } else {
+        // Fallback to text-based Roman numerals if renderer not initialized
+        std::string romanStr = RomanNumeralRenderer::toRomanNumeral(level);
+        if (textRenderer) {
+            textRenderer->renderText(romanStr, x + 90.0f, y, 0.8f, 1.0f, 1.0f, 1.0f);
+        }
     }
     
     // Restore matrix state

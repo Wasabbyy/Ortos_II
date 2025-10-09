@@ -255,15 +255,15 @@ void Player::gainXP(int amount) {
     // Update XP state based on current XP progress
     updateXPState();
     
-    // Check for level up
-    while (currentXP >= maxXP && level < 5) {
+    // Check for level up (max level 100)
+    while (currentXP >= maxXP && level < 100) {
         levelUp();
     }
 }
 
 void Player::levelUp() {
-    if (level >= 5) {
-        spdlog::info("Player is already at maximum level (5)");
+    if (level >= 100) {
+        spdlog::info("Player is already at maximum level (100)");
         return;
     }
     
